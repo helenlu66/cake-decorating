@@ -1,13 +1,14 @@
 import logging
-from preferenceModel import get_args
+import argparse
+from PreferenceModel import PreferenceModel
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 
 logger = logging.getLogger("rest_server")
 
-class PreferenceModel(Resource):
+class PreferenceModelQuery(Resource):
     def __init__(self, **kwargs):
-        self.model = kwargs['preference model']
+        self.model = kwargs['preference_model']
 
     def post(self):
         """Helen TODO: call the responsible methods for initializing preference model
@@ -50,12 +51,18 @@ class Server:
     def run(self):
         app = Flask(__name__)
         api = Api(app)
-        api.add_resource(PreferenceModel, '/preference', resource_class_kwargs={'preference model': self.model})
+        api.add_resource(PreferenceModelQuery, '/preference', resource_class_kwargs={'preference_model': self.model})
         
         app.run(debug=True, port=self.port, host="0.0.0.0", threaded=True)
 
+def get_args():
+    parser = argparse.ArgumentParser(description='Description of your program')
+    parser.add_argument('--port', type=str, required=True, help='Port of the rest server')
+    args = parser.parse_args()
+    return args
+
 # run this to test rest server setup
-if __name__=='__main__':
+if __name__=="__main__":
     args = get_args()   
     
     preference_model = PreferenceModel()

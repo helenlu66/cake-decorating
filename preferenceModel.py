@@ -1,6 +1,5 @@
 import argparse
 import uuid
-from rest_server import Server
 from constraint import *
 
 class PreferenceModel:
@@ -46,21 +45,8 @@ class PreferenceModel:
         """
 
 
-
-
-
-def get_args():
-    parser = argparse.ArgumentParser(description='Description of your program')
-    parser.add_argument('--port', type=str, required=True, help='Port of the rest server')
-    args = parser.parse_args()
-
-    return args
-
-# run this to test rest server setup
+# can run this to test preference model
 if __name__=="__main__":
-    args = get_args()   
-    
-    preference_model = PreferenceModel()
-    server = Server(args.port, preference_model)
-    server.run()
+    # TODO: write some tests
+    print("testing")
     
