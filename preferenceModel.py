@@ -2,6 +2,7 @@ import argparse
 import uuid
 from constraint import Domain, Problem, Unassigned, MinConflictsSolver, Constraint, InSetConstraint, BacktrackingSolver
 from copy import deepcopy
+import random
 
 class PreferenceModel:
     def __init__(self) -> None:
@@ -163,7 +164,9 @@ if __name__=="__main__":
     #   that a candle cnanot be placed in a spot where a remembered candle 
     #   already has been
     model = PreferenceModel()
-    model.init_model(10, 10)
+    cake_size = (random.randint(5, 25), random.randint(5, 25))
+    print("creating  cake of size", cake_size)
+    model.init_model(*cake_size)
 
     l0 = model.propose(0)
     l1 = model.propose(1)
