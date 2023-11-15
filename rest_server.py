@@ -20,7 +20,7 @@ class PreferenceModelQuery(Resource):
         request_content = request.get_json(force=True)
         command = self.find_field(request_content, 'command')
         if command == 'init':
-            cake_dim_x = self.find_field(request_content, 'cake_dimension_x')
+            cake_dim_x = self.find_field(request_content, 'cake_dim_x')
             cake_dim_y = self.find_field(request_content, 'cake_dim_y')
             num_candles = self.find_field(request_content, 'num_candles')
             preference_model_id = self.model.init_model(cake_dim_x, cake_dim_y, num_candles)
