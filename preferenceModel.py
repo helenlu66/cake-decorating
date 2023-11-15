@@ -6,6 +6,7 @@ class PreferenceModel:
     def __init__(self) -> None:
         self.model = None
         self.id = uuid.uuid4()
+        self.constraints = [] # save a list of constraints here
 
     def init_model(self, cake_dim_x, cake_dim_y, num_candles=3):
         """TODO: initialize the preference model
@@ -22,6 +23,7 @@ class PreferenceModel:
         Args:
             constraint string: a logic expression such as x0 == x1 == x2 meaning that the 3 candles are on the same horizontal line
         """
+        self.constraints.append(constraint)    
         return self.id
         
 
