@@ -21,7 +21,8 @@ class PreferenceModel:
         Here is a boolean parser library for parsing logic expressions: https://boolean-parser.readthedocs.io/en/latest/intro.html 
 
         Args:
-            constraint string: a logic expression such as x0 == x1 == x2 meaning that the 3 candles are on the same horizontal line
+            constraint string: a logic expression such as x0 == x1 == x2 meaning that the 3 candles are on the same horizontal line, 
+            x0 < bounding_box_max_x / 2 meaning that the first candle is to the left
         """
         self.constraints.append(constraint)    
         return self.id
