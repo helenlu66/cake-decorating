@@ -11,25 +11,37 @@ class PreferenceModelQuery(Resource):
         self.model = kwargs['preference_model']
 
     def post(self):
-        """Helen TODO: call the responsible methods for initializing preference model
+        """Helen: call the responsible methods for initializing preference model
         or for updating preference model
 
         Returns:
             json: the ID of the user's preference model
         """        
         request_content = request.get_json(force=True)
-        result = jsonify({'response':None})
-        return result
+        command = self.find_field(request_content, 'command')
+        if command == 'init':
+            cake_dim_x = self.find_field(request_content, 'cake_dimension_x')
+            cake_dim_y = self.find_field(request_content, 'cake_dim_y')
+            num_candles = self.find_field(request_content, 'num_candles')
+            preference_model_id = self.model.init_model(cake_dim_x, cake_dim_y, num_candles)
+            return jsonify({'preference model id':preference_model_id})
+        else:
+            constraint = self.find_field(request_content, 'constraint')
+            preference_model_id = self.model.update_model(constraint)
+            return jsonify({'preference model id':preference_model_id})
+       
     
     def get(self):
-        """Helen TODO: call the responsible methods for getting the location for the current candle
+        """Helen: call the responsible methods for getting the location for the current candle
         given the current candle's index
 
         Returns:
             json: the (x, y) of the current candle
         """        
         request_content = request.get_json(force=True)
-        result = jsonify({'response':None})
+        candle_idx = self.find_field(request_content, "candle_index")
+        x, y = self.model.propose(candle_idx)
+        result = jsonify({'x':x, 'y': y})
         return result
     
 
