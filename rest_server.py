@@ -1,9 +1,11 @@
 import logging
 import argparse
-from PreferenceModel import PreferenceModel
+import yaml
+from preferenceModel import PreferenceModel
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-
+from llmConstraintsExtraction import ConstraintExtractor
+from prompts import *
 logger = logging.getLogger("rest_server")
 
 class PreferenceModelQuery(Resource):
@@ -11,7 +13,7 @@ class PreferenceModelQuery(Resource):
         self.model = kwargs['preference_model']
 
     def post(self):
-        """Helen: call the responsible methods for initializing preference model
+        """call the responsible methods for initializing preference model
         or for updating preference model
 
         Returns:
@@ -32,7 +34,7 @@ class PreferenceModelQuery(Resource):
        
     
     def get(self):
-        """Helen: call the responsible methods for getting the location for the current candle
+        """call the responsible methods for getting the location for the current candle
         given the current candle's index
 
         Returns:
@@ -44,7 +46,32 @@ class PreferenceModelQuery(Resource):
         result = jsonify({'x':x, 'y': y})
         return result
     
+    def find_field(self, content, field):
+        value = None
+        try:
+            value = content[field]
+        except KeyError:
+            logger.exception("MissingRequiredFieldException: ", field)
+        return value
+    
+class ConstraintExtractorQuery(Resource):
+    def __init__(self, **kwargs):
+        self.model:ConstraintExtractor = kwargs['constraint_extractor']
 
+    def post(self):
+        """call the constraint extractor to extract a list of constraints
+        Returns:
+            json: the ID of the user's preference model
+        """        
+        request_content = request.get_json(force=True)
+        
+        robot_question = self.find_field(request_content, 'robot_question')
+        human_answer = self.find_field(request_content, 'human_answer')
+        # first classify whether human response is valid
+        if not self.model.classify(robot_question=robot_question, human_answer=human_answer):
+            return jsonify({"next_action":"redirect"})
+        constraints_list = self.model.extract_constraints(robot_question=robot_question, human_answer=human_answer)
+        return jsonify({"constraints":constraints_list})
     
     def find_field(self, content, field):
         value = None
@@ -56,27 +83,37 @@ class PreferenceModelQuery(Resource):
     
 
 class Server:
-    def __init__(self, port, model:PreferenceModel):
+    def __init__(self, port, preference_model:PreferenceModel, constraint_extractor:ConstraintExtractor):
         self.port = port
-        self.model = model
+        self.preference_model = preference_model
+        self.constraint_extractor = constraint_extractor
         
     def run(self):
         app = Flask(__name__)
         api = Api(app)
-        api.add_resource(PreferenceModelQuery, '/preference', resource_class_kwargs={'preference_model': self.model})
-        
+        api.add_resource(PreferenceModelQuery, '/preference', resource_class_kwargs={'preference_model': self.preference_model})
+        api.add_resource(PreferenceModelQuery, '/constraint', resource_class_kwargs={'constraint_extractor': self.constraint_extractor})
         app.run(debug=True, port=self.port, host="0.0.0.0", threaded=True)
 
 def get_args():
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('--port', type=str, required=True, help='Port of the rest server')
+    parser.add_argument('--api_key', type=str, required=True, help='api key for llm')
     args = parser.parse_args()
     return args
+
+def load_experiment_config(filename):
+    with open(filename, 'r') as yaml_file:
+        yaml_data = yaml_file.read()
+    yaml_config = yaml.safe_load(yaml_data)
+    return yaml_config
 
 # run this to test rest server setup
 if __name__=="__main__":
     args = get_args()   
-    
+    exp_config = load_experiment_config('experiment_config.yaml')
     preference_model = PreferenceModel()
-    server = Server(args.port, preference_model)
+    preference_model.init_model(cake_dim_x=exp_config['surface_width'], cake_dim_y=exp_config['surface_len'], num_candles=exp_config['num_candles'])
+    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config, api_key=args.api_key)
+    server = Server(args.port, preference_model= preference_model, constraint_extractor=constraint_extractor)
     server.run()
