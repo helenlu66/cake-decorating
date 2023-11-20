@@ -13,7 +13,7 @@ prompts_setup = {
     'variables':variables,
     'example_constraints':example_constraints,
 }
-classification_prompt = PromptTemplate(input_variables=['robot_question', 'human_answer', 'surface_width', 'surface_len'], template="""You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_len} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_len}). You asked 
+classification_prompt = PromptTemplate(input_variables=['robot_question', 'human_answer'], template="""You are an assistant robot helping a human place candles on a cake. You asked 
 '''
 {robot_question}
 '''
@@ -21,7 +21,7 @@ And the human answered
 '''
 {human_answer}
 '''
-Determine whether the human's reply answers your question. Answer with 'yes' or 'no' only.
+Determine whether the human's answer is related to your question. Answer with 'yes' or 'no' only.
 Answer:
 """)
 
