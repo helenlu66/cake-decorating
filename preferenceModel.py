@@ -9,7 +9,7 @@ class PreferenceModel:
         self.model = None
         self.id = uuid.uuid4()
         self.constraints = [] # save a list of constraints here
-        self.candle_locs = {}
+        self.candle_locs = [] # coordinates that already have candles in them
 
     def init_model(self, cake_dim_x, cake_dim_y, num_candles=3):
         """ initialize the preference model
@@ -22,18 +22,18 @@ class PreferenceModel:
         self.cake_dims = (cake_dim_x, cake_dim_y)
         self.num_candles = num_candles
 
-        self.preferences = Problem(MinConflictsSolver())
+        self.base_model = Problem(MinConflictsSolver())
 
         # adding an x and y variable for each candle
         x_dom = Domain([i for i in range(cake_dim_x)])
         y_dom = Domain([i for i in range(cake_dim_y)])
 
         for n in range(num_candles):
-            self.preferences.addVariable(f'x{n}', x_dom)
-            self.preferences.addVariable(f'y{n}', y_dom)
+            self.base_model.addVariable(f'x{n}', x_dom)
+            self.base_model.addVariable(f'y{n}', y_dom)
 
         # adding constraint that no two candles can have the same position
-        self.preferences.addConstraint(PairwiseDiffConstraint(), list(self.preferences._variables.keys()))
+        self.base_model.addConstraint(PairwiseDiffConstraint(), list(self.base_model._variables.keys()))
 
         return self.id
     
@@ -72,29 +72,27 @@ class PreferenceModel:
         Returns: (x, y)
         """
 
-        # pick placement for candle
-        # NOTE: had to do some weird stuff to make the solver not permanently 
-        #   mutate variable domains in order to allow future re-assignment of 
-        #   locations/re-using of the model
-        vars = (f'x{candle_num}', f'y{candle_num}')
-        domains = deepcopy(model.preferences._variables)
-        sln = self.preferences.getSolution()
-        self.preferences._variables = domains
+        problem = deepcopy(self.base_model)
+
+        # excluding coordinates that already have candles in them
+        for i, (x, y) in enumerate(self.candle_locs):
+            problem.addConstraint(InSetConstraint([x]), [f'x{i}'])
+            problem.addConstraint(InSetConstraint([y]), [f'y{i}'])
+        
+        for constraint in self.constraints:
+            problem.addConstraint(constraint)
+        
+        sln = problem.getSolution()
 
         if sln is None:
-           raise Exception("Candle placement could not be found")
-        
-        loc = (sln[vars[0]], sln[vars[1]])
-        
-        # update model to remember placement of this candle
-        self.candle_locs[candle_num] = (InSetConstraint([loc[0]]), InSetConstraint([loc[1]]))
-
-        self.preferences.addConstraint(self.candle_locs[candle_num][0], [vars[0]])
-        self.preferences.addConstraint(self.candle_locs[candle_num][1], [vars[1]])
+            raise Exception("Candle placement could not be found")
+    
+        loc = (sln[f'x{candle_num}'], sln[f'y{candle_num}'])
+        self.candle_locs.append(loc)
 
         return loc
     
-    def reset_locations(self, candle_nums=None):
+    def reset_locations(self):
         """forget previously proposed candle locations
 
         Args:
@@ -103,20 +101,12 @@ class PreferenceModel:
         Returns: (x, y)
         """
 
-        if candle_nums is None:
-            candle_nums = [i for i in range(self.num_candles)]
-        
-        for n in candle_nums:
-            constraints = self.candle_locs.get(n)
-            if constraints is not None:
-                self.remove_constraint(constraints[0])
-                self.remove_constraint(constraints[1])
-                self.candle_locs.pop(n)
+        self.candle_locs = []
     
     def remove_constraint(self, obj):
-        for i in range(len(self.preferences._constraints) - 1, -1, -1):
-            if self.preferences._constraints[i][0] == obj:
-                self.preferences._constraints.pop(i)
+        for i in range(len(self.base_model._constraints) - 1, -1, -1):
+            if self.base_model._constraints[i][0] == obj:
+                self.base_model._constraints.pop(i)
                 break
 
 
@@ -174,8 +164,7 @@ if __name__=="__main__":
 
     # forcing a conflict by constraining 2 to be in 1s spot
     print("forcing candle 2 to go in candle 1's spot")
-    model.preferences.addConstraint(InSetConstraint([l1[0]]), ['x2'])
-    model.preferences.addConstraint(InSetConstraint([l1[1]]), ['y2'])
+    model.candle_locs.append(([l1[0]], [l1[1]]))
 
     try:
         model.propose(2)
@@ -183,7 +172,7 @@ if __name__=="__main__":
         print("could not place candle 2")
 
     print("forgetting location of candle 1")
-    model.reset_locations([1])
+    model.reset_locations()
     print("putting candle 2 at", model.propose(2))
     print("putting candle 1 at", model.propose(1))
     
