@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from llmConstraintsExtraction import ConstraintExtractor
 from prompts import *
+import pandas as pd
 logger = logging.getLogger("rest_server")
 
 class PreferenceModelQuery(Resource):
@@ -80,7 +81,32 @@ class ConstraintExtractorQuery(Resource):
         except KeyError:
             logger.exception("MissingRequiredFieldException: ", field)
         return value
+
+
+class InterfaceResultsQuery(Resource):
+    def __init__(self, **kwargs):
+        self.data_fp = kwargs['data_file']
+
+    def get(self):
+        request_content = request.get_json(force=True)
+        candle_idx = self.find_field(request_content, "candle_index")
+        x, y = self._get_candle_coords(candle_idx)
+        result = jsonify({'x':x, 'y': y})
+        return result
     
+    def find_field(self, content, field):
+        value = None
+        try:
+            value = content[field]
+        except KeyError:
+            logger.exception("MissingRequiredFieldException: ", field)
+        return value
+    
+    def _get_candle_coords(self, candle_index):
+        df = pd.read_csv(self.data_fp, usecols=[f'avg_x{candle_index}', f'avg_y{candle_index}'])
+
+        return df.iloc[-1][0], df.iloc[-1][1]
+
 
 class Server:
     def __init__(self, port, preference_model:PreferenceModel, constraint_extractor:ConstraintExtractor):
@@ -92,6 +118,7 @@ class Server:
         app = Flask(__name__)
         api = Api(app)
         api.add_resource(PreferenceModelQuery, '/preference', resource_class_kwargs={'preference_model': self.preference_model})
+        api.add_resource(InterfaceResultsQuery, '/interface_preference', resource_class_kwargs={'data_file': 'interface_results.csv'})
         api.add_resource(PreferenceModelQuery, '/constraint', resource_class_kwargs={'constraint_extractor': self.constraint_extractor})
         app.run(debug=True, port=self.port, host="0.0.0.0", threaded=True)
 
@@ -115,5 +142,5 @@ if __name__=="__main__":
     preference_model = PreferenceModel()
     preference_model.init_model(cake_dim_x=exp_config['surface_width'], cake_dim_y=exp_config['surface_len'], num_candles=exp_config['num_candles'])
     constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config, api_key=args.api_key)
-    server = Server(args.port, preference_model= preference_model, constraint_extractor=constraint_extractor)
+    server = Server(args.port, preference_model=preference_model, constraint_extractor=constraint_extractor)
     server.run()
