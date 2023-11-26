@@ -27,7 +27,7 @@ class ConstraintExtractor:
             return True
         return False
     
-    def extract_constraints(self, robot_question:str, human_response:str) -> list[str]:
+    def extract_constraints(self, robot_question:str, human_answer:str) -> list[str]:
         """takes in a human response and extracts a list of constraints
 
         Args:
@@ -38,7 +38,7 @@ class ConstraintExtractor:
             list of constraints
         """
         self.input_dict['robot_question'] = robot_question
-        self.input_dict['human_answer'] = human_response
+        self.input_dict['human_answer'] = human_answer
         outputs = self.constraints_extractor(inputs=self.input_dict)
         constraints_list = outputs['constraints'].split(',')
         return constraints_list
@@ -48,6 +48,6 @@ if __name__=="__main__":
     constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup={
         'surface_width':20,
         'surface_len':20
-    }, api_key='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')
-    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_response='Put it on the left side of the cake.'))
+    }, api_key='')
+    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
 

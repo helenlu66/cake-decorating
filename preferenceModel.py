@@ -45,7 +45,7 @@ class PreferenceModel:
 
         Args:
             constraint string: a logic expression such as x0 == x1 == x2 meaning that the 3 candles are on the same horizontal line, 
-            x0 < bounding_box_max_x / 2 meaning that the first candle is to the left
+            x0 < surface_max_x / 2 meaning that the first candle is to the left
         """
         self.constraints.append(constraint)    
         return self.id
