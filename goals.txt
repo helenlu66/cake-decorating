@@ -1,0 +1,18 @@
+# this file contains goals that are going to be sent to DIARC's goal manager
+# pick up a candle
+pickup(candle0, arm)
+pickup(candle1, arm)
+pickup(candle2, arm)
+
+# move to (x, y, z) location where z is hardcoded
+moveObject(candle0, x, y, z)
+moveObject(candle1, x, y, z)
+moveObject(candle2, x, y, z)
+
+# release the candle
+releaseObject(candle0)
+releaseObject(candle1)
+releaseObject(candle2)
+
+# go back to starting pose
+goToPose(prepare)
