@@ -1,10 +1,13 @@
 from pprint import pprint
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain
+from rest_server import get_args
 from prompts import *
+import os
+
 
 class ConstraintExtractor:
-    def __init__(self, prompts_setup:dict, task_setup:dict, api_key=None) -> None:
+    def __init__(self, prompts_setup:dict, task_setup:dict, api_key=os.environ['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in os.environ else None) -> None:
         self.input_dict = {**prompts_setup, **task_setup}
         self.classifier = LLMChain(llm = OpenAI(openai_api_key=api_key, temperature=0), prompt=classification_prompt, output_key='classification')
         self.constraints_extractor = LLMChain(llm = OpenAI(openai_api_key=api_key, temperature=0), prompt=constraints_extraction_prompt, output_key='constraints')
@@ -45,9 +48,10 @@ class ConstraintExtractor:
         
 
 if __name__=="__main__":
+    args = get_args()
     constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup={
         'surface_width':20,
         'surface_len':20
-    }, api_key='')
+    }, api_key=os.environ['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in os.environ else args['api_key'])
     pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
 
