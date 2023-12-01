@@ -5,3 +5,7 @@
 
 ##  Start a rest server at e.g. 8080
 ```python rest_server.py --port 8080```
+
+
+## Running the control condition
+```python control_experiment.py```
