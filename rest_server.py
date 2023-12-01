@@ -1,11 +1,10 @@
 import logging
-import argparse
-import yaml
 from preferenceModel import PreferenceModel
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from llmConstraintsExtraction import ConstraintExtractor
 from prompts import *
+from ConfigUtil import get_args, load_experiment_config
 import pandas as pd
 logger = logging.getLogger("rest_server")
 
@@ -122,18 +121,6 @@ class Server:
         api.add_resource(PreferenceModelQuery, '/constraint', resource_class_kwargs={'constraint_extractor': self.constraint_extractor})
         app.run(debug=True, port=self.port, host="0.0.0.0", threaded=True)
 
-def get_args():
-    parser = argparse.ArgumentParser(description='Description of your program')
-    parser.add_argument('--port', type=str, required=True, help='Port of the rest server')
-    parser.add_argument('--api_key', type=str, required=True, help='api key for llm')
-    args = parser.parse_args()
-    return args
-
-def load_experiment_config(filename):
-    with open(filename, 'r') as yaml_file:
-        yaml_data = yaml_file.read()
-    yaml_config = yaml.safe_load(yaml_data)
-    return yaml_config
 
 # run this to test rest server setup
 if __name__=="__main__":

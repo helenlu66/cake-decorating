@@ -4,6 +4,7 @@ import keyboard
 import threading
 import time
 import yaml
+import pathlib
 
 class AudioRecorder:
     def __init__(self,  record_len = 10, chunk_size=1024, sample_format=pyaudio.paInt16, channels=1, rate=44100):
@@ -16,7 +17,7 @@ class AudioRecorder:
         self.is_recording = False
         self.p = pyaudio.PyAudio()
 
-    def record_human_speech(self, filepath):
+    def record_human_speech(self, filepath:pathlib.PosixPath):
         p = pyaudio.PyAudio()
 
         stream = p.open(format=self.sample_format,
