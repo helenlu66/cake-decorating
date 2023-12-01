@@ -1,6 +1,7 @@
-experiment_num: 0
-num_candles: 3
-surface_width: 20
-surface_len: 20
+task_setup:
+  experiment_num: 0
+  num_candles: 3
+  surface_width: 20
+  surface_len: 20
 user_name: Helen
 human_speech_record_len: 10 # record for this many seconds when it's the human user's turn to speak 

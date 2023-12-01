@@ -1,7 +1,7 @@
 from pprint import pprint
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain
-from ConfigUtil import get_args
+from ConfigUtil import get_args, load_experiment_config
 from prompts import *
 import os
 
@@ -65,11 +65,9 @@ class ConstraintExtractor:
 
 if __name__=="__main__":
     args = get_args()
-    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup={
-        'surface_width':20,
-        'surface_len':20
-    }, api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
-    #pprint(constraint_extractor.classify(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
-    pprint(constraint_extractor.redirect(robot_question='Where should I put the first candle?', human_answer='I do not know. Why are you asking me?'))
-    #pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
+    exp_config = load_experiment_config()
+    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
+    pprint(constraint_extractor.classify(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
+    pprint(constraint_extractor.redirect(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
+    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
 
