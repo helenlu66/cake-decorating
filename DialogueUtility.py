@@ -5,7 +5,6 @@ from AudioRecorder import AudioRecorder
 from openai import OpenAI
 from pydub import AudioSegment
 from pydub.playback import play
-from openai import OpenAI
 
 
 class DialogueUtility:
