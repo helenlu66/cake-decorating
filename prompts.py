@@ -25,6 +25,18 @@ Determine whether the human's answer is related to your question. Answer with 'y
 Answer:
 """)
 
+redirect_prompt = PromptTemplate(input_variables=['robot_question', 'human_answer'], template="""You are an assistant robot helping a human place candles on a cake. You asked 
+'''
+{robot_question}
+'''
+And the human answered
+'''
+{human_answer}
+'''
+Respond and redirect the human back to the candle placement task. Limit your response to three sentences.
+Your response:
+""")
+
 constraints_extraction_prompt = PromptTemplate(input_variables=['example_robot_question', 'example_human_answer', 'variables', 'example_constraints', 'robot_question', 'human_answer', 'surface_width', 'surface_len'], template="""
 You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_len} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_len}). You asked 
 '''
