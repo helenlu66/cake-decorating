@@ -1,5 +1,7 @@
 import uuid
 import ast
+import dill
+from pathlib import Path
 from boolean_parser import parse
 from constraint import Domain, Problem, Unassigned, MinConflictsSolver, Constraint, InSetConstraint
 from copy import deepcopy
@@ -8,6 +10,7 @@ class PreferenceModel:
     def __init__(self, user_name:str) -> None:
         self.model:Problem = Problem(MinConflictsSolver())
         self.id = uuid.uuid4()
+        self.save_path = Path(__file__).parent / 'user_models' / user_name
         self.user_name = user_name
         self.constraints:list[str] = [] # save a list of string repr of the constraints
         self.candle_locs = {} # coordinates that already have candles in them
@@ -131,8 +134,6 @@ class PreferenceModel:
         self.model.addConstraint(InSetConstraint([loc[0]]), [f'x{candle_num}'])
         self.model.addConstraint(InSetConstraint([loc[1]]), [f'y{candle_num}'])
 
-
-
     
     def reset_locations(self):
         """forget previously proposed candle locations
@@ -189,6 +190,27 @@ class PairwiseDiffConstraint(Constraint):
         
         return True
 
+def save_to_dill(model, filepath):
+    """Save the PreferenceModel object to a pickle file.
+
+    Args:
+        filename (str): The filename for the pickle file.
+    """
+    with open(filepath, 'wb') as file:
+        dill.dump(model, file)
+    return filepath
+
+def load_from_dill(filepath) -> PreferenceModel:
+    """Load a PreferenceModel object from a pickle file.
+
+    Args:
+        filename (str): The filename of the pickle file.
+
+    Returns:
+        PreferenceModel: The loaded PreferenceModel object.
+    """
+    with open(filepath, 'rb') as file:
+        return dill.load(file)
         
 # can run this to test preference model
 if __name__=="__main__":
@@ -218,6 +240,16 @@ if __name__=="__main__":
     proposed = model.propose(1)
     model.record_loc(1, proposed)
     proposed = model.propose(2)
+# TEST SAVING AND LOADING
+    model.reset_locations()
+    filepath = save_to_dill(model, Path(__file__).parent / 'user_models' / 'Helen')
+    new_model = load_from_dill(filepath=filepath)
+    proposed = new_model.propose(0)
+    new_model.record_loc(0, proposed)
+    proposed = new_model.propose(1)
+    new_model.record_loc(1, proposed)
+    proposed = new_model.propose(2)
+    new_model.record_loc(2, proposed)
 # FORGETTING TEST - make sure locations can be remembered/forgotten such 
     #   that a candle cnanot be placed in a spot where a remembered candle 
     #   already has been
