@@ -58,13 +58,13 @@ class PreferenceModel:
 
         # go through stored constraints and apply each to the new self.model
         for constraint in self.constraints:
-            self.update_model(constraint)
+            self._update_model(constraint)
         
     def record_and_apply_constraint(self, constraint:str):
         """record the constraint and update the preference model based on constraint""" 
         
         try:
-            self.update_model(constraint=constraint)
+            self._update_model(constraint=constraint)
             self.constraints.append(constraint)
         except:
             # ignore this constraint
@@ -72,7 +72,7 @@ class PreferenceModel:
   
         return self.id
     
-    def update_model(self, constraint:str):
+    def _update_model(self, constraint:str):
         """update the preference model based on constraints. I recommend looking at python libraries
         for constraint satisfaction problems such as https://pypi.org/project/python-constraint/ 
 
