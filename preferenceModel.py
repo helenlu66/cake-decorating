@@ -1,70 +1,107 @@
-import argparse
 import uuid
-from constraint import Domain, Problem, Unassigned, MinConflictsSolver, Constraint, InSetConstraint, BacktrackingSolver
+import ast
+from boolean_parser import parse
+from constraint import Domain, Problem, Unassigned, MinConflictsSolver, Constraint, InSetConstraint
 from copy import deepcopy
 import random
-
 class PreferenceModel:
-    def __init__(self) -> None:
-        self.model = None
+    def __init__(self, user_name:str) -> None:
+        self.model:Problem = Problem(MinConflictsSolver())
         self.id = uuid.uuid4()
-        self.constraints = [] # save a list of constraints here
-        self.candle_locs = [] # coordinates that already have candles in them
+        self.user_name = user_name
+        self.constraints:list[str] = [] # save a list of string repr of the constraints
+        self.candle_locs = {} # coordinates that already have candles in them
 
-    def init_model(self, cake_dim_x, cake_dim_y, num_candles=3):
-        """ initialize the preference model
-
-            Args:
-                cake_dim_x - number of grid squares along cake's x axis
-                cake_dim_y - number of grid squares along cake's y axis
-                num_candles - number of candles to learn preferences for
+    
+    def set_up_model(self, task_setup:dict):
+        """ set up the base model with constraints that will generalize across task specifications
         """
-        self.cake_dims = (cake_dim_x, cake_dim_y)
-        self.num_candles = num_candles
-
-        self.base_model = Problem(MinConflictsSolver())
-
+        self.model = Problem(MinConflictsSolver())
+        self.surface_width = task_setup['surface_width']
+        self.surface_height = task_setup['surface_height']
+        self.num_objs = task_setup['num_candles']
+       
+        # add the variables here with range of values based on cake surface dimensions
         # adding an x and y variable for each candle
-        x_dom = Domain([i for i in range(cake_dim_x)])
-        y_dom = Domain([i for i in range(cake_dim_y)])
+        x_dom = Domain([i for i in range(self.surface_width)])
+        y_dom = Domain([i for i in range(self.surface_height)])
 
-        for n in range(num_candles):
-            self.base_model.addVariable(f'x{n}', x_dom)
-            self.base_model.addVariable(f'y{n}', y_dom)
-
+        # candle location x, y vars and surface_width, surface_height as vars
+        vars = []
+        for n in range(self.num_objs):
+            vars.append(f'x{n}')
+            vars.append(f'y{n}')
+            self.model.addVariable(f'x{n}', x_dom)
+            self.model.addVariable(f'y{n}', y_dom)
+        self.model.addVariable('surface_width', [self.surface_width])
+        self.model.addVariable('surface_height', [self.surface_height])
         # adding constraint that no two candles can have the same position
-        self.base_model.addConstraint(PairwiseDiffConstraint(), list(self.base_model._variables.keys()))
+        self.model.addConstraint(PairwiseDiffConstraint(), vars)
 
+        return self.id
+    
+    
+    def change_setup(self, task_setup:dict):
+        """Change the cake dimension
+
+        Args:
+            task_setup (dict): task setup up specification
+        """
+        # set up a new model
+        self.set_up_model(task_setup=task_setup)
+
+        # forget previously set candle positions
+        self.reset_locations()
+
+        # go through stored constraints and apply each to the new self.model
+        for constraint in self.constraints:
+            self.update_model(constraint)
+        
+    def record_and_apply_constraint(self, constraint:str):
+        """record the constraint and update the preference model based on constraint""" 
+        
+        try:
+            self.update_model(constraint=constraint)
+            self.constraints.append(constraint)
+        except:
+            # ignore this constraint
+            print("something went wrong in update_model")
+  
         return self.id
     
     def update_model(self, constraint:str):
-        """TODO: update the preference model based on constraints. I recommend looking at python libraries
+        """update the preference model based on constraints. I recommend looking at python libraries
         for constraint satisfaction problems such as https://pypi.org/project/python-constraint/ 
-
-        Here is a boolean parser library for parsing logic expressions: https://boolean-parser.readthedocs.io/en/latest/intro.html 
 
         Args:
             constraint string: a logic expression such as x0 == x1 == x2 meaning that the 3 candles are on the same horizontal line, 
-            x0 < surface_max_x / 2 meaning that the first candle is to the left
+            x0 < surface_width / 2 meaning that the first candle is to the left
         """
-        self.constraints.append(constraint)    
-        return self.id
-        
 
-    def visual_center(self, bounding_box:dict):
-        """TODO: a utility function that can be used in update_model to get the visual center of a region
-        given the region's bounding box (x, y) coordinates e.g
-        an example bounding box:
-        {
-            "top left": (0,0),
-            "bottom left": (0, 20),
-            "top right": (10, 0),
-            "bottom right": (10, 20)    
-        }
-        feel free to change the input to whatever works better with update_model
-        """
+        def extract_parameters(lambda_str):
+            try:
+                # Parse the lambda function string into an AST (Abstract Syntax Tree)
+                tree = ast.parse(lambda_str)
+
+                # Extract parameters from the arguments of the lambda function
+                parameters = [arg.arg for arg in tree.body[0].value.args.args]
+
+                return parameters
+            except SyntaxError as e:
+                print(f"Error parsing lambda function: {e}")
+                return None
+        
+        try:
+            lambda_func = eval(constraint)
+            vars = extract_parameters(constraint)
+            self.model.addConstraint(lambda_func, vars)
+        except:
+            # ignore this constraint
+            print("preferenceModel update_constraint constraint didn't parse")
+  
+        
     
-    def propose(self, candle_num):
+    def propose(self, candle_num:int):
         """propose a target location (x, y) for the candle_num'th candle
 
         Args:
@@ -72,25 +109,30 @@ class PreferenceModel:
         Returns: (x, y)
         """
 
-        problem = deepcopy(self.base_model)
-
-        # excluding coordinates that already have candles in them
-        for i, (x, y) in enumerate(self.candle_locs):
-            problem.addConstraint(InSetConstraint([x]), [f'x{i}'])
-            problem.addConstraint(InSetConstraint([y]), [f'y{i}'])
-        
-        for constraint in self.constraints:
-            problem.addConstraint(constraint)
-        
-        sln = problem.getSolution()
-
+        # get solution
+        sln = self.model.getSolution()
         if sln is None:
             raise Exception("Candle placement could not be found")
     
         loc = (sln[f'x{candle_num}'], sln[f'y{candle_num}'])
-        self.candle_locs.append(loc)
-
         return loc
+    
+    def record_loc(self, candle_num:int, loc:tuple):
+        """record the location for the given candle. Usually called when the human user accepts the proposed location.
+
+        Args:
+            candle_num (int): the index (0-based) of the candle
+            loc (tuple): (x, y) of candle
+        """
+        # store candle location in candle locs
+        self.candle_locs[candle_num] = loc
+
+        # add the constraint to exclude configurations in which candle_num is not in loc
+        self.model.addConstraint(InSetConstraint([loc[0]]), [f'x{candle_num}'])
+        self.model.addConstraint(InSetConstraint([loc[1]]), [f'y{candle_num}'])
+
+
+
     
     def reset_locations(self):
         """forget previously proposed candle locations
@@ -101,7 +143,7 @@ class PreferenceModel:
         Returns: (x, y)
         """
 
-        self.candle_locs = []
+        self.candle_locs = {}
     
     def remove_constraint(self, obj):
         for i in range(len(self.base_model._constraints) - 1, -1, -1):
@@ -147,24 +189,57 @@ class PairwiseDiffConstraint(Constraint):
         
         return True
 
-
+        
 # can run this to test preference model
 if __name__=="__main__":
-    # FORGETTING TEST - make sure locations can be remembered/forgotten such 
+# TESTING SQUARE CAKE SETUP
+    model = PreferenceModel(user_name='Helen')
+    model.set_up_model(task_setup = {
+        'surface_width':20,
+        'surface_height':20,
+        'num_candles':3
+    })
+    model.record_and_apply_constraint('lambda x0, x1, x2: x0 == x1 == x2')
+    proposed = model.propose(0)
+    model.record_loc(0, proposed)
+    proposed = model.propose(1)
+    proposed = model.propose(1)
+    model.record_loc(1, proposed)
+    proposed = model.propose(2)
+# TEST CHANGING SETUP
+    model.change_setup(task_setup={
+        'surface_width':10,
+        'surface_height':30,
+        'num_candles':3
+    })
+    proposed = model.propose(0)
+    model.record_loc(0, proposed)
+    proposed = model.propose(1)
+    proposed = model.propose(1)
+    model.record_loc(1, proposed)
+    proposed = model.propose(2)
+# FORGETTING TEST - make sure locations can be remembered/forgotten such 
     #   that a candle cnanot be placed in a spot where a remembered candle 
     #   already has been
     model = PreferenceModel()
     cake_size = (random.randint(5, 25), random.randint(5, 25))
     print("creating  cake of size", cake_size)
-    model.init_model(*cake_size)
+    task_setup = {
+        'surface_width':cake_size[0],
+        'surface_height':cake_size[1],
+        'num_candles':3
+    }
+
 
     l0 = model.propose(0)
+    model.record_loc(candle_num=0, loc=l0)
     l1 = model.propose(1)
+    model.record_loc(candle_num=1, loc=l1)
     print("candle 0 at", l0, "candle 1 at", l1)
 
     # forcing a conflict by constraining 2 to be in 1s spot
     print("forcing candle 2 to go in candle 1's spot")
-    model.candle_locs.append(([l1[0]], [l1[1]]))
+    model.record_loc(candle_num=2, loc=l1)
 
     try:
         model.propose(2)
