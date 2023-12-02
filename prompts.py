@@ -5,7 +5,9 @@ task_desc = "You are an assistant robot helping a human place candles on a cake.
 example_robot_question = "Where should I place the second candle?"
 example_human_answer = "It should be on the top right side of the cake and on the same horizontal line with the first candle."
 variables = "first candle x0, y0, second candle x1, y1, third candle x2, y2, surface_width indicating the width of the 2D surface, surface_height indicating the height of the 2D surface"
-example_constraints_lambda = "lambda y1, surface_height: y1 > surface_height / 2, lambda x1, surface_width: x1 > surface_width / 2, lambda y0, y1: y1==y0"
+example_constraints_lambda = """lambda y1, surface_height: y1 > surface_height / 2
+lambda x1 surface_width: x1 > surface_width / 2
+lambda y0, y1: y1==y0"""
 prompts_setup = {
     'task_desc': task_desc,
     'example_robot_question': example_robot_question,

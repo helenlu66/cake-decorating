@@ -3,20 +3,29 @@ from pprint import pprint
 from pathlib import Path
 from ConfigUtil import get_args, load_experiment_config
 from DialogueUtility import DialogueUtility
-from llmConstraintsExtraction import ConstraintExtractor
+from LLMNLUHelper import LLMNLUHelper
+from preferenceModel import PreferenceModel
 from prompts import *
 
 
 class DialogueActionAgent:
     def __init__(self, task_setup:dict, user_name='user', api_key=os.environ['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in os.environ else None) -> None:
         self.dialogue_util = DialogueUtility(user_name=user_name, api_key=api_key)
-        self.constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=task_setup)
-        
-        
+        self.nlu = LLMNLUHelper(prompts_setup=prompts_setup, task_setup=task_setup, api_key=api_key)
+        self.user_name = user_name
+
+        self.user_preference = PreferenceModel(user_name=user_name)
+        self.user_preference.set_up_model(task_setup=task_setup)
         self.objects_name_var_mapping = {
-            'candle0':'first candle',
-            'candle1':'second candle',
-            'candle2':'third candle'
+            'first candle':'candle0',
+            'second candle':'candle1',
+            'third candle':'candle2'
+        }
+        self.actions = {
+            'left': (-1, 0),
+            'right': (+1, 0),
+            'up': (0, +1),
+            'down': (0, -1)
         }
         if task_setup['num_candles'] > 3:
             for idx in range(4, task_setup['num_candles']):
@@ -33,33 +42,153 @@ class DialogueActionAgent:
         human_speech_text = self.dialogue_util.speech_to_text(human_speech_filepath)
         return human_speech_text
     
-    def get_constraints_for_obj(self, obj_name:str) -> list:
+    def greet(self):
+        self.dialogue_util.text_to_speech(f'Hi, {self.user_name}!')
+    
+    def get_constraints_for_obj(self, obj_name:str, greet:bool=False) -> list:
         """get the spatial constraints for the placement of the object
 
         Args:
             obj_name (str): the name of the object
         """
-        robot_question = f'where should I place {obj_name}'
+        if greet:
+            robot_question = f'Hi, {self.user_name}. Where should I place the {obj_name}?'
+        else:
+            robot_question = f'Where should I place the {obj_name}?'
+        print('robot said: ' + robot_question)
         human_speech_text = self.ask_and_listen(robot_question=robot_question)
-        can_extract = self.constraint_extractor.classify(human_speech_text)
+        print('human said: ' + human_speech_text)
+        can_extract = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         while not can_extract:
-            # redirect
-            robot_question = self.constraint_extractor.redirect(robot_question=robot_question, human_answer=human_speech_text)
+            # can't extract spatial constraint from human answer, redirect them back to the question
+            robot_question = self.nlu.redirect(robot_question=robot_question, human_answer=human_speech_text)
+            print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question)
-            can_extract = self.constraint_extractor.classify(human_answer=human_speech_text)
-        constraints_list = self.constraint_extractor.extract_constraints(robot_question=robot_question, human_answer=human_speech_text)
+            print('human said: ' + human_speech_text)
+            can_extract = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
+        constraints_list = self.nlu.extract_constraints(robot_question=robot_question, human_answer=human_speech_text)
+        
         return constraints_list
+    
+    def update_user_preference_constraints(self, constraints:list[str]):
+        """Update the user's preference model by adding the constraints
+
+        Args:
+            constraints (list[str]): list of constraints    
+
+        Returns:
+            bool: whether constraints are updated 
+        """
+    
+        try:
+            for constraint in constraints:
+                self.user_preference.record_and_apply_constraint(constraint)
+            return True
+        except:
+            print('Something went wrong when updating the user preference model')
+            return False
+    
+    
+    def get_initial_proposed_loc(self, obj_name:str) -> tuple:
+        """get a proposed location for the object"""
+        obj_var = self.objects_name_var_mapping[obj_name]
+        idx = obj_var[-1]
+        loc = self.user_preference.propose(candle_num=idx)
+        return loc
+    
+    
+    def pickUp(self, obj_name:str):
+        pass
+
+    def moveTo(self, loc:tuple):
+        pass
+
+    def release(self):
+        pass
+
+    def local_adjusment(self, obj_name:str, loc:tuple) -> tuple:
+        """locally adjust the object's placement through user instructions
+
+        Args:
+            obj_name (str): the name of the object whose location is being adjusted
+        """
+        self.pickUp(obj_name=obj_name)
+        self.moveTo(loc=loc)
+        robot_question = 'Is this a good location?'
+        print('robot said: ' + robot_question)
+        human_speech_text = self.ask_and_listen(robot_question=robot_question)
+        print('human said: ' + human_speech_text)
+        related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
+        
+        # keep clarifying until human starts saying something related to the question
+        while not related:
+            robot_question = 'Is this a good location? You can say either yes, or to the left, right, up or down.'
+            print('robot said: ' + robot_question)
+            human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            print('human said: ' + human_speech_text)
+            related = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+        
+        # keep adjusting until the human is satisfied with the location
+        human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+        while not human_intent == 'accept':
+            # adjust the location
+            loc = tuple([sum(i) for i in zip(loc, self.actions[human_intent])])
+            # move the object to new_loc
+            self.moveTo(loc=loc)
+
+            robot_question = 'Is this a good location?'
+            print('robot said: ' + robot_question)
+            human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+            print('human said: ' + human_speech_text)
+        
+        # human accepted, record loc
+        self.release()
+        obj_var = self.objects_name_var_mapping[obj_name]
+        obj_idx = obj_var[-1]
+        self.user_preference.record_loc(candle_num=obj_idx, loc=loc)
+        return loc
+
+    def main_dialogue(self):
+        """carry out the main dialogue with the user
+        """
+        
+        for i, name in enumerate(self.objects_name_var_mapping):
+            if i == 0:
+                # a hack to greet the user properly
+                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
+            else:
+                constraints_list = self.get_constraints_for_obj(obj_name=name)
+            self.update_user_preference_constraints(constraints=constraints_list)
+            loc = self.get_initial_proposed_loc(obj_name=name)
+            final_loc = self.local_adjusment(obj_name=name, loc=loc)
+            print(final_loc)
+        
+
+    def easier_dialogue(self):
+        """carry out an easier dialogue with the user (without local adjustments)
+        """
+        
+        for i, name in enumerate(self.objects_name_var_mapping):
+            if i == 0:
+                # a hack to greet the user properly
+                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
+            else:
+                constraints_list = self.get_constraints_for_obj(obj_name=name)
+            self.update_user_preference_constraints(constraints=constraints_list)
+            loc = self.get_initial_proposed_loc(obj_name=name)
+            
+            print(f'loc for {name}', loc)
 
 # can run the following for testing
 if __name__=="__main__":
     exp_config = load_experiment_config('experiment_config.yaml')
     args = get_args()
-    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
-    pprint(constraint_extractor.classify(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
-    pprint(constraint_extractor.redirect(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
-    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
-
+    agent = DialogueActionAgent(task_setup=exp_config['task_setup'], user_name=exp_config['user_name'], api_key=args.api_key)
+    agent.main_dialogue()
+    constraints_list = agent.get_constraints_for_obj('first candle', greet=True)
+    print(constraints_list)
 
    
 
