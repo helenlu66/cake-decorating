@@ -76,7 +76,7 @@ class LLMNLUHelper:
         self.input_dict['robot_question'] = robot_question
         self.input_dict['human_answer'] = human_answer
         outputs = self.constraints_extractor(inputs=self.input_dict)
-        constraints_list = outputs['constraints'].split(',')
+        constraints_list = outputs['constraints'].split('\n')
         return constraints_list
         
 
