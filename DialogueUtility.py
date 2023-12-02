@@ -35,7 +35,8 @@ class DialogueUtility:
         response.stream_to_file(speech_file_path)
         audio_data = AudioSegment.from_file(speech_file_path)
         # Play the audio
-        play(audio_data)        
+        play(audio_data)
+        self.speech_turn_num += 1        
 
     def record_human_speech(self):
         """Record the human user's speech and save to human user speech2text file path
@@ -54,6 +55,7 @@ class DialogueUtility:
             response_format='text',
             language='en'
         )
+        self.listen_turn_num += 1
         return transcript
     
 # can run the following for testing
