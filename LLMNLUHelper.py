@@ -6,7 +6,7 @@ from prompts import *
 import os
 
 
-class ConstraintExtractor:
+class LLMNLUHelper:
     def __init__(self, prompts_setup:dict, task_setup:dict, api_key=os.environ['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in os.environ else None) -> None:
         self.input_dict = {**prompts_setup, **task_setup}
         self.classifier = LLMChain(llm = OpenAI(openai_api_key=api_key, temperature=0), prompt=classification_prompt, output_key='classification')
@@ -37,18 +37,16 @@ class ConstraintExtractor:
 
         Args:
             robot_question (str): proposing a location
-            human_answer (str): yes or no type of answer
+            human_answer (str): yes, left, right, up, down
 
         Returns:
-            bool: whether the human accepted
+            str
         """
         self.input_dict['robot_question'] = robot_question
         self.input_dict['human_answer'] = human_answer
         outputs = self.human_accept_classifier(inputs=self.input_dict)
        
-        if outputs['classification'].lower() == 'yes':
-            return True
-        return False
+        return outputs['classification'].lower()
     
     def redirect(self, robot_question:str, human_answer:str) -> bool:
         """given a human answer that does not answer the robot question, respond in a way to redirect the human back to the task
@@ -85,15 +83,15 @@ class ConstraintExtractor:
 if __name__=="__main__":
     args = get_args()
     exp_config = load_experiment_config('experiment_config.yaml')
-    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
+    constraint_extractor = LLMNLUHelper(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
     pprint(constraint_extractor.classify(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
     pprint(constraint_extractor.redirect(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
     
     pprint(constraint_extractor.classify(robot_question='Is this a good location?', human_answer='I do not know. Can you give me some example locations?'))
     pprint(constraint_extractor.redirect(robot_question='Is this a good location? You can say yes or to the left, right, up, down.', human_answer='I do not know. Can you give me some example locations?'))
     
-    pprint(constraint_extractor.classify(robot_question='Is this a good location?', human_answer='No, to the left.'))
-    pprint(constraint_extractor.classify(robot_question='Is this a good location?', human_answer='Yes.'))
+    pprint(constraint_extractor.classify_human_accept(robot_question='Is this a good location?', human_answer='No, to the left.'))
+    pprint(constraint_extractor.classify_human_accept(robot_question='Is this a good location?', human_answer='Yes.'))
 
     pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it on the left side of the cake.'))
 
