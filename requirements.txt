@@ -1,3 +1,4 @@
+boolean_parser==0.1.4
 Flask==2.3.2
 Flask_RESTful==0.3.10
 langchain==0.0.340
@@ -6,3 +7,4 @@ pandas==2.0.3
 pygame==2.5.2
 python-constraint==1.4.0
 PyYAML==6.0.1
+
