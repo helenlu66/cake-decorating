@@ -100,7 +100,7 @@ class PreferenceModel:
             self.model.addConstraint(lambda_func, vars)
         except:
             # ignore this constraint
-            print("preferenceModel update_constraint constraint didn't parse")
+            print("preferenceModel update_constraint constraint didn't parse: " + constraint)
   
         
     

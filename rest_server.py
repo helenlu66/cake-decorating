@@ -2,7 +2,7 @@ import logging
 from preferenceModel import PreferenceModel
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from llmConstraintsExtraction import ConstraintExtractor
+from LLMNLUHelper import LLMNLUHelper
 from prompts import *
 from ConfigUtil import get_args, load_experiment_config
 import pandas as pd
@@ -56,7 +56,7 @@ class PreferenceModelQuery(Resource):
     
 class ConstraintExtractorQuery(Resource):
     def __init__(self, **kwargs):
-        self.model:ConstraintExtractor = kwargs['constraint_extractor']
+        self.model:LLMNLUHelper = kwargs['constraint_extractor']
 
     def post(self):
         """call the constraint extractor to extract a list of constraints
@@ -108,7 +108,7 @@ class InterfaceResultsQuery(Resource):
 
 
 class Server:
-    def __init__(self, port, preference_model:PreferenceModel, constraint_extractor:ConstraintExtractor):
+    def __init__(self, port, preference_model:PreferenceModel, constraint_extractor:LLMNLUHelper):
         self.port = port
         self.preference_model = preference_model
         self.constraint_extractor = constraint_extractor
@@ -127,7 +127,7 @@ if __name__=="__main__":
     args = get_args()   
     exp_config = load_experiment_config('experiment_config.yaml')
     preference_model = PreferenceModel()
-    preference_model.init_model(cake_dim_x=exp_config['surface_width'], cake_dim_y=exp_config['surface_len'], num_candles=exp_config['num_candles'])
-    constraint_extractor = ConstraintExtractor(prompts_setup=prompts_setup, task_setup=exp_config, api_key=args.api_key)
+    preference_model.init_model(cake_dim_x=exp_config['surface_width'], cake_dim_y=exp_config['surface_height'], num_candles=exp_config['num_candles'])
+    constraint_extractor = LLMNLUHelper(prompts_setup=prompts_setup, task_setup=exp_config, api_key=args.api_key)
     server = Server(args.port, preference_model=preference_model, constraint_extractor=constraint_extractor)
     server.run()
