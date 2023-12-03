@@ -16,4 +16,4 @@ first, check `experiment_config.yaml` to change `user_name` to the participant's
 Set your `OPENAI_API_KEY` environment variable by running this in the command line in any terminal: `export OPENAI_API_KEY={your api key}`.
 
 At last, navigate to this project's directory and run in the command line:
-```python dialogue_experiment.py``` 
+```python DialogueActionAgent.py``` 
