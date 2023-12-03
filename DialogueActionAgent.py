@@ -198,6 +198,7 @@ class DialogueActionAgent:
                 constraints_list = self.get_constraints_for_obj(obj_name=name)
             
             ##logger.info(msg=constraints_list)
+            print(constraints_list)
             self.update_user_preference_constraints(constraints=constraints_list)
             loc = self.get_initial_proposed_loc(obj_name=name)
             ##logger.info(msg=f'loc for {name}: {loc}')
