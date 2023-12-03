@@ -3,6 +3,7 @@ import uuid
 import numpy as np
 import pandas as pd
 import os
+from ConfigUtil import load_experiment_config
 
 # Constants
 WIDTH, HEIGHT = 600, 600
@@ -52,8 +53,7 @@ class CakeDecorator:
         self.title = font.render(f'Cake Number: {len(self.past_cakes) + 1}', True, WHITE)
         self.candles_placed = 0
     
-    def write_to_csv(self):
-        fp = 'interface_results.csv'
+    def write_to_csv(self, fp):
     
         cols = ['ssid']
         data = [self.session_id.hex]
@@ -207,4 +207,6 @@ class CakeDecorator:
 if __name__ == '__main__':
     gui = CakeDecorator()
     cakes = gui.run()
-    gui.write_to_csv()
+    exp_config = load_experiment_config('experiment_config.yaml')
+    user_name = exp_config['user_name']
+    gui.write_to_csv(fp=f'user_interface_results/{user_name}.csv')
