@@ -1,12 +1,19 @@
 import os
-from pprint import pprint
-from pathlib import Path
+import time
+import logging
 from ConfigUtil import get_args, load_experiment_config
 from DialogueUtility import DialogueUtility
 from LLMNLUHelper import LLMNLUHelper
 from preferenceModel import PreferenceModel
 from prompts import *
 
+
+logging.basicConfig(filename='DialogueActions.log',
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+##logger = logging.get##logger('DialogueActionAgent')
 
 class DialogueActionAgent:
     def __init__(self, task_setup:dict, user_name='user', api_key=os.environ['OPENAI_API_KEY'] if 'OPENAI_API_KEY' in os.environ else None) -> None:
@@ -38,6 +45,7 @@ class DialogueActionAgent:
             robot_question (str): the question to ask the human
         """
         self.dialogue_util.text_to_speech(robot_question)
+        time.sleep(0.5)
         human_speech_filepath = self.dialogue_util.record_human_speech()
         human_speech_text = self.dialogue_util.speech_to_text(human_speech_filepath)
         return human_speech_text
@@ -55,16 +63,20 @@ class DialogueActionAgent:
             robot_question = f'Hi, {self.user_name}. Where should I place the {obj_name}?'
         else:
             robot_question = f'Where should I place the {obj_name}?'
+        ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
         human_speech_text = self.ask_and_listen(robot_question=robot_question)
+        ##logger.info('human said: ' + human_speech_text)
         print('human said: ' + human_speech_text)
         can_extract = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         while not can_extract:
             # can't extract spatial constraint from human answer, redirect them back to the question
             robot_question = self.nlu.redirect(robot_question=robot_question, human_answer=human_speech_text)
+            ##logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            ##logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
             can_extract = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         constraints_list = self.nlu.extract_constraints(robot_question=robot_question, human_answer=human_speech_text)
@@ -116,16 +128,20 @@ class DialogueActionAgent:
         self.pickUp(obj_name=obj_name)
         self.moveTo(loc=loc)
         robot_question = 'Is this a good location?'
+        ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
         human_speech_text = self.ask_and_listen(robot_question=robot_question)
+        ##logger.info('human said: ' + human_speech_text)
         print('human said: ' + human_speech_text)
         related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         # keep clarifying until human starts saying something related to the question
         while not related:
             robot_question = 'Is this a good location? You can say either yes, or to the left, right, up or down.'
+            #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
             related = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
         
@@ -138,9 +154,11 @@ class DialogueActionAgent:
             self.moveTo(loc=loc)
 
             robot_question = 'Is this a good location?'
+            #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question)
             human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+            #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
         
         # human accepted, record loc
@@ -153,32 +171,36 @@ class DialogueActionAgent:
     def main_dialogue(self):
         """carry out the main dialogue with the user
         """
-        
+        ##logger.info(msg=f'dialogue with {self.user_name}')
         for i, name in enumerate(self.objects_name_var_mapping):
             if i == 0:
                 # a hack to greet the user properly
                 constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
             else:
                 constraints_list = self.get_constraints_for_obj(obj_name=name)
+            ##logger.info(msg=constraints_list)
             self.update_user_preference_constraints(constraints=constraints_list)
             loc = self.get_initial_proposed_loc(obj_name=name)
             final_loc = self.local_adjusment(obj_name=name, loc=loc)
-            print(final_loc)
+            ##logger.info(msg=f'loc for {name}: {final_loc}')
+            print(f'loc for {name}', final_loc)
         
 
     def easier_dialogue(self):
         """carry out an easier dialogue with the user (without local adjustments)
         """
-        
+        ##logger.info(msg=f'dialogue with {self.user_name}')
         for i, name in enumerate(self.objects_name_var_mapping):
             if i == 0:
                 # a hack to greet the user properly
                 constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
             else:
                 constraints_list = self.get_constraints_for_obj(obj_name=name)
+            
+            ##logger.info(msg=constraints_list)
             self.update_user_preference_constraints(constraints=constraints_list)
             loc = self.get_initial_proposed_loc(obj_name=name)
-            
+            ##logger.info(msg=f'loc for {name}: {loc}')
             print(f'loc for {name}', loc)
 
 # can run the following for testing
@@ -187,8 +209,6 @@ if __name__=="__main__":
     args = get_args()
     agent = DialogueActionAgent(task_setup=exp_config['task_setup'], user_name=exp_config['user_name'], api_key=args.api_key)
     agent.main_dialogue()
-    constraints_list = agent.get_constraints_for_obj('first candle', greet=True)
-    print(constraints_list)
 
    
 
