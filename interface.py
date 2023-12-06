@@ -9,8 +9,8 @@ from ConfigUtil import load_experiment_config
 WIDTH, HEIGHT = 600, 600
 MARGINS = 10, 50
 SPACING = 10
-CAKE_W, CAKE_H = 20, 20
-CELL_SIZE = 20
+CAKE_W, CAKE_H = 5, 5
+CELL_SIZE = 80
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 CANDLE_COLOR = (0, 0, 255)
