@@ -115,7 +115,8 @@ class PreferenceModel:
         # get solution
         sln = self.model.getSolution()
         if sln is None:
-            raise Exception("Candle placement could not be found")
+            # propose random loc
+            return (random.randint(0, self.surface_width), random.randint(0, self.surface_height))
     
         loc = (sln[f'x{candle_num}'], sln[f'y{candle_num}'])
         return loc
