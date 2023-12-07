@@ -32,7 +32,7 @@ class LLMNLUHelper:
             return True
         return False
     
-    def classify_human_accept(self, robot_question:str, human_answer:str) -> bool:
+    def classify_human_accept(self, robot_question:str, human_answer:str):
         """classify whether the human accepted the robot's proposal
 
         Args:

@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+from ActionAgent import ActionAgent
 from ConfigUtil import get_args, load_experiment_config
 from DialogueUtility import DialogueUtility
 from LLMNLUHelper import LLMNLUHelper
@@ -28,6 +29,8 @@ class DialogueActionAgent:
             'second candle':'candle1',
             'third candle':'candle2'
         }
+        
+        self.actionAgent = ActionAgent(server_host=exp_config['server_host'], server_port=exp_config['server_port'])
         self.actions = {
             'left': (-1, 0),
             'right': (+1, 0),
@@ -125,8 +128,9 @@ class DialogueActionAgent:
         Args:
             obj_name (str): the name of the object whose location is being adjusted
         """
-        self.pickUp(obj_name=obj_name)
-        self.moveTo(loc=loc)
+        self.actionAgent.pickUp(obj=obj_name)
+        
+        self.actionAgent.moveToBoardCoords(coords=loc)
         robot_question = 'Is this a good location?'
         ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
@@ -151,7 +155,7 @@ class DialogueActionAgent:
             # adjust the location
             loc = tuple([sum(i) for i in zip(loc, self.actions[human_intent])])
             # move the object to new_loc
-            self.moveTo(loc=loc)
+            self.actionAgent.moveToRelative(dir=human_intent)
 
             robot_question = 'Is this a good location?'
             #logger.info('robot said: ' + robot_question)
@@ -161,10 +165,11 @@ class DialogueActionAgent:
             #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
         
-        # human accepted, record loc
+        # human accepted, put down object and record loc
         self.release()
         obj_var = self.objects_name_var_mapping[obj_name]
         obj_idx = obj_var[-1]
+        self.actionAgent.putDown()
         self.user_preference.record_loc(candle_num=obj_idx, loc=loc)
         return loc
 
@@ -190,7 +195,7 @@ class DialogueActionAgent:
         """carry out an easier dialogue with the user (without local adjustments)
         """
         ##logger.info(msg=f'dialogue with {self.user_name}')
-        for i, name in enumerate(self.objects_name_var_mapping):
+        for i, name in enumerate(self.objects_name_var_mapping.keys()):
             if i == 0:
                 # a hack to greet the user properly
                 constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
@@ -201,6 +206,7 @@ class DialogueActionAgent:
             print(constraints_list)
             self.update_user_preference_constraints(constraints=constraints_list)
             loc = self.get_initial_proposed_loc(obj_name=name)
+            self.actionAgent.pickAndPlaceObjAtBoardCoords(obj=self.objects_name_var_mapping[name], coords=loc)
             ##logger.info(msg=f'loc for {name}: {loc}')
             print(f'loc for {name}', loc)
 
