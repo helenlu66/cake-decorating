@@ -7,3 +7,4 @@ user_name: Helen
 human_speech_record_len: 9 # record for this many seconds when it's the human user's turn to speak 
 server_host: localhost
 server_port: 8080
+wait_for_action_completion: 3.7

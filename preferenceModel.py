@@ -2,7 +2,6 @@ import uuid
 import ast
 import dill
 from pathlib import Path
-from boolean_parser import parse
 from constraint import Domain, Problem, Unassigned, MinConflictsSolver, Constraint, InSetConstraint
 from copy import deepcopy
 import random

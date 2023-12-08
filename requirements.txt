@@ -1,9 +1,13 @@
 dill
 Flask==2.3.2
 Flask_RESTful==0.3.10
+keyboard==0.13.5
 langchain==0.0.340
 numpy==1.25.0
+openai==1.3.6
 pandas==2.0.3
+pyAudio==0.2.14
+pydub==0.25.1
 pygame==2.5.2
 python-constraint==1.4.0
 PyYAML==6.0.1

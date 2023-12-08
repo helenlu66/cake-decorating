@@ -1,5 +1,6 @@
 # this agent interfaces with DIARC's goal manager
 import requests
+import time
 from ConfigUtil import load_experiment_config
 
 class ActionAgent:
@@ -21,6 +22,8 @@ class ActionAgent:
             "goal":goal
         }
         response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
+        print("submitted goal: ", goal)
+        time.sleep(self.exp_config['wait_for_action_completion'])
         return self.check_response(response=response)
     
     def goToPose(self, pose):
@@ -91,7 +94,7 @@ class ActionAgent:
             if not self.moveToRelative(dir='left'):
                 return False
         for _ in range(int(y)):
-            if not self.moveToRelative(dir='up'):
+            if not self.moveToRelative(dir='forward'):
                 return False
         return True
     
@@ -107,7 +110,7 @@ class ActionAgent:
         return success
 
 if __name__ == "__main__":
-    go_to_pose_str = f"goToPose(self, prepare)"
+    go_to_pose_str = f"goToPose(self, board)"
     headers = {'Content-Type': 'application/json'}
     data={
             "goal":go_to_pose_str

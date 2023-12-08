@@ -1,7 +1,6 @@
 import pyaudio
 import wave
 import keyboard
-import threading
 import time
 import yaml
 import pathlib

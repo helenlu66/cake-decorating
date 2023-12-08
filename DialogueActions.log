@@ -1,0 +1,347 @@
+18:04:21,622 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:21,623 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,389 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,390 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,427 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,427 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,463 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,463 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,496 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,496 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,529 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,530 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,562 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,562 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,595 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,596 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,629 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:04:22,629 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:04:22,660 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': 'Hi, Helen. Where should I place the first candle?', 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:04:22,669 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:04:22,702 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f35ba84c810>
+18:04:22,702 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f35ba61c170> server_hostname='api.openai.com' timeout=5.0
+18:04:22,708 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f35ba82a050>
+18:04:22,709 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:04:22,709 httpcore.http11 DEBUG send_request_headers.complete
+18:04:22,709 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:04:22,710 httpcore.http11 DEBUG send_request_body.complete
+18:04:22,710 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:04:23,243 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:04:23 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'362'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'8a1b342bd8f027ad464bf3499661f716'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=_vwJq7f_YtnDfo7kT3LQIpt8PoYRZ42x8IjNJ.tINvU-1701903863-0-Aas5pB/11cVRQt3Cxrc1MGAavRRZILVLQQM2yTrM6F7cUcfsBbudyQBtPUzh3QXYG7S1N3sDO65Yj92PGArdkfU=; path=/; expires=Wed, 06-Dec-23 23:34:23 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=36Qo1ZYu6gQdOCDfqnA4zeNaIqH3vP3YtsEoftUbH2g-1701903863241-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182ae5eceb6ac8-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:04:23,245 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:04:23,245 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:04:23,767 httpcore.http11 DEBUG receive_response_body.complete
+18:04:23,767 httpcore.http11 DEBUG response_closed.started
+18:04:23,767 httpcore.http11 DEBUG response_closed.complete
+18:04:23,768 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:06:10,562 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:10,563 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,328 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,329 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,368 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,369 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,403 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,403 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,436 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,436 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,469 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,469 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,501 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,501 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,534 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,535 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,565 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:06:11,566 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:06:11,596 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': 'Hi, Helen. Where should I place the first candle?', 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:06:11,605 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:06:11,633 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c92add0>
+18:06:11,633 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f986cb33c80> server_hostname='api.openai.com' timeout=5.0
+18:06:11,640 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c935750>
+18:06:11,641 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:06:11,641 httpcore.http11 DEBUG send_request_headers.complete
+18:06:11,641 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:06:11,642 httpcore.http11 DEBUG send_request_body.complete
+18:06:11,642 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:06:12,87 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:06:12 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'359'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'86b27ebb4df5bb027061a47a4a23a408'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=7OBsIGWLKw429wzNfubpBG1w1xPo9p_pn0f6xrLiTKI-1701903972-0-AVz57idx+VRHj3//Be5Xro1KpS6xo5GySIXgt2QxBI0pxs3Yd76f6BKTVjgjrPPIl1JxN1dYCyI003RVuZbX+ZA=; path=/; expires=Wed, 06-Dec-23 23:36:12 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=51BY5i2lwp6sgvCs2Vq.kLOMPs.7fiKtpCi1Sm45j2Y-1701903972084-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182d8ecc8b4cef-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:06:12,88 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:06:12,89 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:06:12,439 httpcore.http11 DEBUG receive_response_body.complete
+18:06:12,439 httpcore.http11 DEBUG response_closed.started
+18:06:12,439 httpcore.http11 DEBUG response_closed.complete
+18:06:12,440 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:06:12,514 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen0.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+18:06:26,287 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/transcriptions', 'headers': {'Content-Type': 'multipart/form-data'}, 'files': [('file', SerializationIterator(index=0, iterator=<_io.BufferedReader name='speech2text/Helen0.wav'>))], 'json_data': {'model': 'whisper-1', 'language': 'en', 'response_format': 'text'}}
+18:06:26,289 httpcore.connection DEBUG close.started
+18:06:26,289 httpcore.connection DEBUG close.complete
+18:06:26,289 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:06:26,292 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c934e10>
+18:06:26,292 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f986cb33c80> server_hostname='api.openai.com' timeout=5.0
+18:06:26,298 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986cc14c10>
+18:06:26,298 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:06:26,299 httpcore.http11 DEBUG send_request_headers.complete
+18:06:26,299 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:06:26,334 httpcore.http11 DEBUG send_request_body.complete
+18:06:26,334 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:06:28,964 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:06:28 GMT'), (b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'1'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'1893'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'5bec98e9862a580d6efccd0d023504a0'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182dea5eef3ba6-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:06:28,965 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "HTTP/1.1 200 OK"
+18:06:28,965 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:06:28,965 httpcore.http11 DEBUG receive_response_body.complete
+18:06:28,965 httpcore.http11 DEBUG response_closed.started
+18:06:28,965 httpcore.http11 DEBUG response_closed.complete
+18:06:28,966 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "200 OK"
+18:06:28,966 openai._response DEBUG Could not read JSON from response data due to <class 'json.decoder.JSONDecodeError'> - Expecting value: line 2 column 1 (char 1)
+18:06:28,975 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["You are an assistant robot helping a human place candles on a cake. You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\n\n\n'''\nDetermine whether the human's answer is related to your question. Answer with 'yes' or 'no' only.\nAnswer:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:06:28,983 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:06:28,985 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c755090>
+18:06:28,985 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f986cb33bf0> server_hostname='api.openai.com' timeout=None
+18:06:28,993 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c7550d0>
+18:06:28,993 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:06:28,994 httpcore.http11 DEBUG send_request_headers.complete
+18:06:28,994 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:06:28,994 httpcore.http11 DEBUG send_request_body.complete
+18:06:28,994 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:06:29,388 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:06:29 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'242'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'f2f42517cf15248f3ff1bb96beab6a74'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=uc5orlaxhb0ZcteprbJs2Xa4CDOyG13cBf8Me1.Rq_0-1701903989-0-AWNKkThf4sgC84DSHjlRsOPq/618IxHhsyu0HQWfFxqcBP2Gjj1N9Lotkd4HyBNAwscdrSR2yBEz+eLB98OJudg=; path=/; expires=Wed, 06-Dec-23 23:36:29 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=duNqR8Wjcid7Omebc9tIirrXdOjFRpKA2suM7guSmc8-1701903989386-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182dfb3c264d14-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:06:29,390 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:06:29,390 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:06:29,390 httpcore.http11 DEBUG receive_response_body.complete
+18:06:29,390 httpcore.http11 DEBUG response_closed.started
+18:06:29,391 httpcore.http11 DEBUG response_closed.complete
+18:06:29,391 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:06:29,400 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["You are an assistant robot helping a human place candles on a cake. You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\n\n\n'''\nRespond and redirect the human back to the candle placement task. Limit your response to three sentences.\nYour response:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:06:29,408 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:06:29,410 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c778610>
+18:06:29,410 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f986ca00290> server_hostname='api.openai.com' timeout=None
+18:06:29,416 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f986c76e290>
+18:06:29,416 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:06:29,417 httpcore.http11 DEBUG send_request_headers.complete
+18:06:29,417 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:06:29,417 httpcore.http11 DEBUG send_request_body.complete
+18:06:29,417 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:06:30,585 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:06:30 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'1065'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'9207908209e01a3602f1fea617be88b9'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=aG4uNt6aPcJ8f5jiDGhP3NjLfnUgCYLh7t7Qnrg2jlI-1701903990-0-AbT4R5pGqX91gzP+zpmAUPxOunDK2SZ2J7NOgnRgNQmEq5d2xDvzBnf8xxA1S4Z6WDztsLrTv6B7CC8FR6VhlzE=; path=/; expires=Wed, 06-Dec-23 23:36:30 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=HGBGp4DM4fSOnAr6j9OrbTutJmgN.vDcFD7qj2NM0yM-1701903990583-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182dfddb863b69-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:06:30,587 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:06:30,587 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:06:30,587 httpcore.http11 DEBUG receive_response_body.complete
+18:06:30,588 httpcore.http11 DEBUG response_closed.started
+18:06:30,588 httpcore.http11 DEBUG response_closed.complete
+18:06:30,588 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:06:30,591 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': "Ok, let's start with the first candle. Can you tell me where you would like me to place it? Please be as specific as possible so I can help you accurately place the candles.", 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:06:30,593 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:06:30,593 httpcore.http11 DEBUG send_request_headers.complete
+18:06:30,593 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:06:30,593 httpcore.http11 DEBUG send_request_body.complete
+18:06:30,594 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:06:31,300 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:06:31 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'591'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'e475a4697f85a0c0194679c8836f47a7'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83182e053d1c3ba6-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:06:31,301 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:06:31,301 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:06:32,910 httpcore.http11 DEBUG receive_response_body.complete
+18:06:32,911 httpcore.http11 DEBUG response_closed.started
+18:06:32,911 httpcore.http11 DEBUG response_closed.complete
+18:06:32,911 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:06:32,978 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen1.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+18:14:23,343 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:23,345 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,108 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,109 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,143 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,144 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,177 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,178 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,209 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,209 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,241 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,241 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,270 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,271 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,301 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,301 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,331 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:14:24,332 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:14:24,361 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': 'Hi, Helen. Where should I place the first candle?', 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:14:24,370 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:14:24,400 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa603364c50>
+18:14:24,400 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7fa603563c80> server_hostname='api.openai.com' timeout=5.0
+18:14:24,405 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa603395f50>
+18:14:24,405 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:14:24,405 httpcore.http11 DEBUG send_request_headers.complete
+18:14:24,406 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:14:24,406 httpcore.http11 DEBUG send_request_body.complete
+18:14:24,406 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:14:24,885 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:14:24 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'397'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'26605efdef44faeb5fa397dab600436d'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=.5_fPErG5K9yT9CzSLuLk4xxrEUHDSPB8HlHAJbSn3s-1701904464-0-AUwZLBAqvU8hvqGFBloYcA/QvYrRDYCiuK9HELpp1xr8kyM+NnOgu27PcE9hjH2sF2XpwPfJiHKanB5K9FsgnVQ=; path=/; expires=Wed, 06-Dec-23 23:44:24 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=RrcE_r3qRBeJA9XO3QDWwJXkPumpU5oUi8W0SM8uHak-1701904464882-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8318399688244d05-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:14:24,887 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:14:24,887 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:14:25,387 httpcore.http11 DEBUG receive_response_body.complete
+18:14:25,387 httpcore.http11 DEBUG response_closed.started
+18:14:25,387 httpcore.http11 DEBUG response_closed.complete
+18:14:25,387 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:14:25,453 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen0.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+18:14:39,676 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/transcriptions', 'headers': {'Content-Type': 'multipart/form-data'}, 'files': [('file', SerializationIterator(index=0, iterator=<_io.BufferedReader name='speech2text/Helen0.wav'>))], 'json_data': {'model': 'whisper-1', 'language': 'en', 'response_format': 'text'}}
+18:14:39,679 httpcore.connection DEBUG close.started
+18:14:39,679 httpcore.connection DEBUG close.complete
+18:14:39,679 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:14:39,682 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa603364d90>
+18:14:39,682 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7fa603563c80> server_hostname='api.openai.com' timeout=5.0
+18:14:39,691 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa603364bd0>
+18:14:39,691 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:14:39,691 httpcore.http11 DEBUG send_request_headers.complete
+18:14:39,691 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:14:39,712 httpcore.http11 DEBUG send_request_body.complete
+18:14:39,712 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:14:40,830 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:14:40 GMT'), (b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'24'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'463'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'f119909bbf016b463e69a8b85f8f7499'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'831839f61ffa4cfc-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:14:40,831 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "HTTP/1.1 200 OK"
+18:14:40,831 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:14:40,831 httpcore.http11 DEBUG receive_response_body.complete
+18:14:40,832 httpcore.http11 DEBUG response_closed.started
+18:14:40,832 httpcore.http11 DEBUG response_closed.complete
+18:14:40,832 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "200 OK"
+18:14:40,832 openai._response DEBUG Could not read JSON from response data due to <class 'json.decoder.JSONDecodeError'> - Expecting value: line 1 column 1 (char 0)
+18:14:40,842 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["You are an assistant robot helping a human place candles on a cake. You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\nHi, put it to the left.\n\n'''\nDetermine whether the human's answer is related to your question. Answer with 'yes' or 'no' only.\nAnswer:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:14:40,849 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:14:40,852 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa6031876d0>
+18:14:40,852 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7fa603563bf0> server_hostname='api.openai.com' timeout=None
+18:14:40,856 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa603185350>
+18:14:40,856 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:14:40,857 httpcore.http11 DEBUG send_request_headers.complete
+18:14:40,857 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:14:40,857 httpcore.http11 DEBUG send_request_body.complete
+18:14:40,857 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:14:41,203 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:14:41 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'248'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'9f8f58dd013b12c3fb666bc2ce803985'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=.puo5hr42Xfy6VXBM2_hu.ajlEasEBr.VZAeHhhdlfk-1701904481-0-AZ5atlemN9efs9P73MdzgjDVfL4fiDIr+iuYSc6oSycd2iIevVRCTmWaougAT7VH3SCIiFSBwdJfg1kQo8HPgok=; path=/; expires=Wed, 06-Dec-23 23:44:41 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=fzLBxL33cqWWyrCo5LxWD3e5yXHVNlNdPtYWLHZWdKg-1701904481201-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'831839fd5a643b87-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:14:41,204 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:14:41,205 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:14:41,205 httpcore.http11 DEBUG receive_response_body.complete
+18:14:41,205 httpcore.http11 DEBUG response_closed.started
+18:14:41,205 httpcore.http11 DEBUG response_closed.complete
+18:14:41,206 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:14:41,217 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["\nYou are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is 20 in the x direction and 20 in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake (20, 20). You asked \n'''\nWhere should I place the second candle?\n'''\nAnd the human answered\n'''\nIt should be on the top right side of the cake and on the same horizontal line with the first candle.\n'''\nExpress the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: first candle x0, y0, second candle x1, y1, third candle x2, y2, surface_width indicating the width of the 2D surface, surface_height indicating the height of the 2D surface.\nAnswer:\nlambda y1, surface_height: y1 > surface_height / 2\nlambda x1 surface_width: x1 > surface_width / 2\nlambda y0, y1: y1==y0\n\nYou are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is 20 in the x direction and 20 in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake (20, 20). You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\nHi, put it to the left.\n\n'''\nExpress the human's preference as a list of logic constraints on the following variables: first candle x0, y0, second candle x1, y1, third candle x2, y2, surface_width indicating the width of the 2D surface, surface_height indicating the height of the 2D surface.\nAnswer:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:14:41,223 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:14:41,226 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa6031a8ad0>
+18:14:41,226 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7fa60342c680> server_hostname='api.openai.com' timeout=None
+18:14:41,233 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7fa60319e650>
+18:14:41,233 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:14:41,233 httpcore.http11 DEBUG send_request_headers.complete
+18:14:41,233 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:14:41,233 httpcore.http11 DEBUG send_request_body.complete
+18:14:41,233 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:14:41,841 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:14:41 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'511'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'bfef72e3ebef5a20041562e23339b414'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=.gLcC.aGbDun4o4tCJNM1Nw9_M9d2J3Lr6ohlWLIWNY-1701904481-0-AfSLW8aiQLGs033TGofP75MYjpOKsDiAAb25q2mvxbJU7t1Mh3QfTKR1AIY0SNeoQNk6jSaIZ7Xw8jb8onC02pE=; path=/; expires=Wed, 06-Dec-23 23:44:41 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=N0n1QIYAmak4GdVuITmDa9uCgDJuv.oVsCGfsEqwf0Q-1701904481838-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'831839ffbcdb3bab-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:14:41,842 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:14:41,842 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:14:41,842 httpcore.http11 DEBUG receive_response_body.complete
+18:14:41,843 httpcore.http11 DEBUG response_closed.started
+18:14:41,843 httpcore.http11 DEBUG response_closed.complete
+18:14:41,843 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:14:41,846 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': 'Is this a good location?', 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:14:41,848 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:14:41,848 httpcore.http11 DEBUG send_request_headers.complete
+18:14:41,848 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:14:41,849 httpcore.http11 DEBUG send_request_body.complete
+18:14:41,849 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:14:42,282 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:14:42 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'363'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'5a01e73ae8692ff7669545c8f6d6d2ae'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83183a038aee4cfc-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:14:42,283 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:14:42,284 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:14:42,546 httpcore.http11 DEBUG receive_response_body.complete
+18:14:42,546 httpcore.http11 DEBUG response_closed.started
+18:14:42,546 httpcore.http11 DEBUG response_closed.complete
+18:14:42,547 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:14:42,614 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen1.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+18:37:39,803 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:39,805 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,587 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,587 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,627 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,628 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,663 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,664 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,696 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,697 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,730 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,731 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,763 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,764 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,796 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,796 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,827 httpx DEBUG load_ssl_context verify=True cert=None trust_env=True http2=False
+18:37:40,828 httpx DEBUG load_verify_locations cafile='/home/hrilab/miniconda3/envs/candlePlacementPilot/lib/python3.11/site-packages/certifi/cacert.pem'
+18:37:40,858 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': 'Hi, Helen. Where should I place the first candle?', 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:37:40,867 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:37:40,898 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f2980ea1910>
+18:37:40,898 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f2980dbfc80> server_hostname='api.openai.com' timeout=5.0
+18:37:40,904 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f2980bc1650>
+18:37:40,905 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:37:40,905 httpcore.http11 DEBUG send_request_headers.complete
+18:37:40,905 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:37:40,906 httpcore.http11 DEBUG send_request_body.complete
+18:37:40,906 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:37:41,340 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:37:41 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'366'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'604426a3dd0bf52bfb7bf8720d30b357'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=de6QToKOzo_TOprGGzP4kqrM4aDhqYNAQShJBa2ekGY-1701905861-0-AW7P/Y78OT1+BpbixU52xxnQl2904QjHRIvGvM8Do11SnvDHIk01CLz6ckixBiLJcC74Q7ShbyWcwhE9SA8dAlo=; path=/; expires=Thu, 07-Dec-23 00:07:41 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=atZXLIi7KvMZ4QIH45s2rsC_OD3On6OmUfS1z8lUQsU-1701905861338-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83185baea9da4d1c-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:37:41,342 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:37:41,342 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:37:41,804 httpcore.http11 DEBUG receive_response_body.complete
+18:37:41,804 httpcore.http11 DEBUG response_closed.started
+18:37:41,804 httpcore.http11 DEBUG response_closed.complete
+18:37:41,804 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:37:41,872 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen0.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])
+18:37:56,194 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/transcriptions', 'headers': {'Content-Type': 'multipart/form-data'}, 'files': [('file', SerializationIterator(index=0, iterator=<_io.BufferedReader name='speech2text/Helen0.wav'>))], 'json_data': {'model': 'whisper-1', 'language': 'en', 'response_format': 'text'}}
+18:37:56,196 httpcore.connection DEBUG close.started
+18:37:56,196 httpcore.connection DEBUG close.complete
+18:37:56,196 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+18:37:56,199 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f2980bc0dd0>
+18:37:56,199 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f2980dbfc80> server_hostname='api.openai.com' timeout=5.0
+18:37:56,204 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f2980bc1650>
+18:37:56,204 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:37:56,204 httpcore.http11 DEBUG send_request_headers.complete
+18:37:56,205 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:37:56,238 httpcore.http11 DEBUG send_request_body.complete
+18:37:56,238 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:37:57,347 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:37:57 GMT'), (b'Content-Type', b'text/plain; charset=utf-8'), (b'Content-Length', b'21'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'390'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'304b683735aad1698e99e070bc91657e'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83185c0e4c4c3b81-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:37:57,348 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "HTTP/1.1 200 OK"
+18:37:57,348 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:37:57,348 httpcore.http11 DEBUG receive_response_body.complete
+18:37:57,348 httpcore.http11 DEBUG response_closed.started
+18:37:57,349 httpcore.http11 DEBUG response_closed.complete
+18:37:57,349 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/transcriptions "200 OK"
+18:37:57,349 openai._response DEBUG Could not read JSON from response data due to <class 'json.decoder.JSONDecodeError'> - Expecting value: line 1 column 1 (char 0)
+18:37:57,359 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["You are an assistant robot helping a human place candles on a cake. You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\nWhat? What the hell?\n\n'''\nDetermine whether the human's answer is related to your question. Answer with 'yes' or 'no' only.\nAnswer:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:37:57,366 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:37:57,373 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f29809e1310>
+18:37:57,373 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f2980dbfbf0> server_hostname='api.openai.com' timeout=None
+18:37:57,383 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f29809e36d0>
+18:37:57,383 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:37:57,383 httpcore.http11 DEBUG send_request_headers.complete
+18:37:57,383 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:37:57,383 httpcore.http11 DEBUG send_request_body.complete
+18:37:57,384 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:37:57,750 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:37:57 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'283'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'0fe0f87f58127da520805ba11a341f02'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=tkIpVU8zlHVgog7ySbANVP48LRNh1ZluWPznK0zxESM-1701905877-0-ASNPR2sFTnIrf9qf2ByHDdZgl5ibgtRO/DVScrwmhYpeK6rZSZTfkbK2fpTcZvVrePEKQconE6kPD/zU1MC8thY=; path=/; expires=Thu, 07-Dec-23 00:07:57 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=LgIa1EKKFXm04ANCyoYfIri1oGws56qPbS76CvFRCN0-1701905877747-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83185c15afe54cd0-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:37:57,751 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:37:57,751 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:37:57,752 httpcore.http11 DEBUG receive_response_body.complete
+18:37:57,752 httpcore.http11 DEBUG response_closed.started
+18:37:57,752 httpcore.http11 DEBUG response_closed.complete
+18:37:57,752 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:37:57,762 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/completions', 'files': None, 'json_data': {'model': 'text-davinci-003', 'prompt': ["You are an assistant robot helping a human place candles on a cake. You asked \n'''\nHi, Helen. Where should I place the first candle?\n'''\nAnd the human answered\n'''\nWhat? What the hell?\n\n'''\nRespond and redirect the human back to the candle placement task. Limit your response to three sentences.\nYour response:\n"], 'frequency_penalty': 0, 'logit_bias': {}, 'max_tokens': 256, 'n': 1, 'presence_penalty': 0, 'temperature': 0.0, 'top_p': 1}}
+18:37:57,769 httpcore.connection DEBUG connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+18:37:57,771 httpcore.connection DEBUG connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f2980a04590>
+18:37:57,772 httpcore.connection DEBUG start_tls.started ssl_context=<ssl.SSLContext object at 0x7f2980c88290> server_hostname='api.openai.com' timeout=None
+18:37:57,781 httpcore.connection DEBUG start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7f29809fa050>
+18:37:57,781 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:37:57,782 httpcore.http11 DEBUG send_request_headers.complete
+18:37:57,782 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:37:57,783 httpcore.http11 DEBUG send_request_body.complete
+18:37:57,783 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:37:58,855 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:37:58 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-allow-origin', b'*'), (b'Cache-Control', b'no-cache, must-revalidate'), (b'openai-model', b'text-davinci-003'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'923'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'3000'), (b'x-ratelimit-limit-tokens', b'250000'), (b'x-ratelimit-limit-tokens_usage_based', b'250000'), (b'x-ratelimit-remaining-requests', b'2999'), (b'x-ratelimit-remaining-tokens', b'249744'), (b'x-ratelimit-remaining-tokens_usage_based', b'249744'), (b'x-ratelimit-reset-requests', b'20ms'), (b'x-ratelimit-reset-tokens', b'61ms'), (b'x-ratelimit-reset-tokens_usage_based', b'61ms'), (b'x-request-id', b'dbdb68d56db24ee3169a697f331e243f'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=ofgQFnumf_P1RqpMbtybZU5_e7FY1Ccj8nWibhFtJkc-1701905878-0-Afy/8PaqwnU4rzj0KppX0Rdp7dW0nza7hqQrPmPsWCGIGKvNdPqZR8Z6qzvJafd3p5y3ZIF6dMaT6M9FYxn+MOw=; path=/; expires=Thu, 07-Dec-23 00:07:58 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Set-Cookie', b'_cfuvid=tZb85p34uxKEet0sTPLGoGvUvbtL.enYL.LCK.gSax4-1701905878853-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83185c1829004ce4-BOS'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:37:58,857 httpx INFO HTTP Request: POST https://api.openai.com/v1/completions "HTTP/1.1 200 OK"
+18:37:58,857 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:37:58,858 httpcore.http11 DEBUG receive_response_body.complete
+18:37:58,858 httpcore.http11 DEBUG response_closed.started
+18:37:58,858 httpcore.http11 DEBUG response_closed.complete
+18:37:58,858 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/completions "200 OK"
+18:37:58,861 openai._base_client DEBUG Request options: {'method': 'post', 'url': '/audio/speech', 'files': None, 'json_data': {'input': "I apologize for the confusion. I'm an assistant robot here to help you place the candles on the cake. Could you please tell me where you would like me to place the first candle?", 'model': 'tts-1', 'voice': 'alloy', 'response_format': 'mp3'}}
+18:37:58,863 httpcore.http11 DEBUG send_request_headers.started request=<Request [b'POST']>
+18:37:58,863 httpcore.http11 DEBUG send_request_headers.complete
+18:37:58,863 httpcore.http11 DEBUG send_request_body.started request=<Request [b'POST']>
+18:37:58,864 httpcore.http11 DEBUG send_request_body.complete
+18:37:58,864 httpcore.http11 DEBUG receive_response_headers.started request=<Request [b'POST']>
+18:37:59,558 httpcore.http11 DEBUG receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 06 Dec 2023 23:37:59 GMT'), (b'Content-Type', b'audio/mpeg'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'openai-organization', b'user-tzqqoz8yhdcf4k0qioopmqhy'), (b'openai-processing-ms', b'563'), (b'openai-version', b'2020-10-01'), (b'strict-transport-security', b'max-age=15724800; includeSubDomains'), (b'x-ratelimit-limit-requests', b'50'), (b'x-ratelimit-remaining-requests', b'49'), (b'x-ratelimit-reset-requests', b'1.2s'), (b'x-request-id', b'd32feb71cc070df82be98a9b0fcb6c5c'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Server', b'cloudflare'), (b'CF-RAY', b'83185c1eeb4b3b81-BOS'), (b'alt-svc', b'h3=":443"; ma=86400')])
+18:37:59,558 httpx INFO HTTP Request: POST https://api.openai.com/v1/audio/speech "HTTP/1.1 200 OK"
+18:37:59,559 httpcore.http11 DEBUG receive_response_body.started request=<Request [b'POST']>
+18:38:00,919 httpcore.http11 DEBUG receive_response_body.complete
+18:38:00,919 httpcore.http11 DEBUG response_closed.started
+18:38:00,919 httpcore.http11 DEBUG response_closed.complete
+18:38:00,920 openai._base_client DEBUG HTTP Request: POST https://api.openai.com/v1/audio/speech "200 OK"
+18:38:00,990 pydub.converter DEBUG subprocess.call(['ffmpeg', '-y', '-i', '/home/hrilab/helen/cake-decorating-preference/text2speech/Helen1.wav', '-acodec', 'pcm_s16le', '-vn', '-f', 'wav', '-'])

@@ -15,9 +15,9 @@ if __name__=="__main__":
    
     # #%%
     # # record 3 examples to csv
-    gui = CakeDecorator()
-    cakes = gui.run()
-    gui.write_to_csv(fp=filename)
+    # gui = CakeDecorator()
+    # cakes = gui.run()
+    # gui.write_to_csv(fp=filename)
 
     #%%
     # get average
