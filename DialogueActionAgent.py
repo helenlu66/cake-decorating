@@ -63,7 +63,7 @@ class DialogueActionAgent:
             obj_name (str): the name of the object
         """
         if greet:
-            robot_question = f'Hi, {self.user_name}. Where should I place the {obj_name}?'
+            robot_question = f'Hi, {self.user_name}. Let us decorate a cake. Where should I place the {obj_name}?'
         else:
             robot_question = f'Where should I place the {obj_name}?'
         ##logger.info('robot said: ' + robot_question)
