@@ -13,10 +13,10 @@ class DialogueUtility:
         self.user_name = user_name # the name of the human user
         self.speech_to_text_path = 'speech2text'  # recording of human user's speech, need to use string relative path
         self.text_to_speech_path = Path(__file__).parent /'text2speech'  # audio file of the robot's speech for the human user
-        
+        self.exp_config = load_experiment_config('experiment_config.yaml')
         self.speech_turn_num = 0 # the number of turns the robot has taken to speak
         self.listen_turn_num = 0 # the number of turns the human has taken to speak / the robot has taken to listen
-        self.recorder = AudioRecorder()
+        self.recorder = AudioRecorder(record_len=self.exp_config['human_speech_record_len'])
 
     def text_to_speech(self, text):
         """Call openai's text to speech to produce an audio file and play the audio file
@@ -38,11 +38,11 @@ class DialogueUtility:
         play(audio_data)
         self.speech_turn_num += 1        
 
-    def record_human_speech(self):
+    def record_human_speech(self, wait_len:float):
         """Record the human user's speech and save to human user speech2text file path
         """
         filepath = self.speech_to_text_path + '/' + (self.user_name + str(self.listen_turn_num) + '.wav')
-        self.recorder.record_human_speech(filepath=filepath)
+        self.recorder.record_human_speech(filepath=filepath, wait_len=wait_len)
         return filepath
     
     def speech_to_text(self, filepath):

@@ -14,10 +14,10 @@ if __name__=="__main__":
     filename = f'user_interface_results/{user_name}.csv'
    
     # #%%
-    # # record 3 examples to csv
-    # gui = CakeDecorator()
-    # cakes = gui.run()
-    # gui.write_to_csv(fp=filename)
+    # record 3 examples to csv
+    gui = CakeDecorator()
+    cakes = gui.run()
+    gui.write_to_csv(fp=filename)
 
     #%%
     # get average

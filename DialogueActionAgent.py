@@ -41,7 +41,7 @@ class DialogueActionAgent:
             for idx in range(4, task_setup['num_candles']):
                 self.objects_name_var_mapping[f'candle{idx}'] = f'{idx}th candle'
 
-    def ask_and_listen(self, robot_question:str) -> str:
+    def ask_and_listen(self, robot_question:str, wait_len:float=0) -> str:
         """prompt the human for answer and listen
 
         Args:
@@ -49,7 +49,7 @@ class DialogueActionAgent:
         """
         self.dialogue_util.text_to_speech(robot_question)
         time.sleep(0.5)
-        human_speech_filepath = self.dialogue_util.record_human_speech()
+        human_speech_filepath = self.dialogue_util.record_human_speech(wait_len=wait_len)
         human_speech_text = self.dialogue_util.speech_to_text(human_speech_filepath)
         return human_speech_text
     
@@ -128,23 +128,23 @@ class DialogueActionAgent:
         Args:
             obj_name (str): the name of the object whose location is being adjusted
         """
-        self.actionAgent.pickUp(obj=obj_name)
+        self.actionAgent.pickUp(obj=self.objects_name_var_mapping[obj_name])
         
         self.actionAgent.moveToBoardCoords(coords=loc)
-        robot_question = 'Is this a good location?'
+        robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
         ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
-        human_speech_text = self.ask_and_listen(robot_question=robot_question)
+        human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
         ##logger.info('human said: ' + human_speech_text)
         print('human said: ' + human_speech_text)
         related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         # keep clarifying until human starts saying something related to the question
         while not related:
-            robot_question = 'Is this a good location? You can say either yes, or to the left, right, up or down.'
+            robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
-            human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
             #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
             related = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
@@ -155,12 +155,18 @@ class DialogueActionAgent:
             # adjust the location
             loc = tuple([sum(i) for i in zip(loc, self.actions[human_intent])])
             # move the object to new_loc
-            self.actionAgent.moveToRelative(dir=human_intent)
+            dir_map = {
+                'up':'forward',
+                'down':'backward',
+                'left':'left',
+                'right':'right'
+            }
+            self.actionAgent.moveToRelative(dir=dir_map[human_intent])
 
             robot_question = 'Is this a good location?'
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
-            human_speech_text = self.ask_and_listen(robot_question=robot_question)
+            human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
             human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
             #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
@@ -186,6 +192,7 @@ class DialogueActionAgent:
             ##logger.info(msg=constraints_list)
             self.update_user_preference_constraints(constraints=constraints_list)
             loc = self.get_initial_proposed_loc(obj_name=name)
+            print(f'initial loc for {name}, {loc}')
             final_loc = self.local_adjusment(obj_name=name, loc=loc)
             ##logger.info(msg=f'loc for {name}: {final_loc}')
             print(f'loc for {name}', final_loc)

@@ -16,7 +16,7 @@ class AudioRecorder:
         self.is_recording = False
         self.p = pyaudio.PyAudio()
 
-    def record_human_speech(self, filepath:pathlib.PosixPath):
+    def record_human_speech(self, filepath:pathlib.PosixPath, wait_len):
         p = pyaudio.PyAudio()
 
         stream = p.open(format=self.sample_format,
@@ -29,13 +29,14 @@ class AudioRecorder:
         print("Recording...")
 
         frames = []  # Initialize array to store frames
-
+        if (not wait_len or wait_len == 0):
+            wait_len = self.record_len 
         # Store data in chunks 
         start_time = time.time()
         while True:
             data = stream.read(self.chunk_size)
             frames.append(data)
-            if time.time() - start_time >= self.record_len:
+            if time.time() - start_time >= wait_len:
                 break
         # Stop and close the stream 
         stream.stop_stream()

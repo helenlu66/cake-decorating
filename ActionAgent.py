@@ -7,6 +7,7 @@ class ActionAgent:
     def __init__(self, server_host, server_port) -> None:
         self.server_url = f"http://{server_host}:{server_port}"
         self.exp_config = load_experiment_config("experiment_config.yaml")
+        self.wait_time = self.exp_config['wait_for_action_completion']
 
     def check_response(self, response:requests.Response) -> bool:
         if response.status_code == 200:
@@ -17,18 +18,20 @@ class ActionAgent:
             return False
 
     
-    def submit_DIARC_goal(self, goal:str):
+    def submit_DIARC_goal(self, goal:str, additional_wait_time:float=0):
         data = {
             "goal":goal
         }
         response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
         print("submitted goal: ", goal)
-        time.sleep(self.exp_config['wait_for_action_completion'])
+        time.sleep(self.wait_time + additional_wait_time)
         return self.check_response(response=response)
     
     def goToPose(self, pose):
          # go to the object's pickup location
         go_to_pose_str = f"goToPose(self, {pose})"
+        if pose == 'prepare' or pose == 'board':
+            return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2)
         return self.submit_DIARC_goal(goal=go_to_pose_str)
 
     def closeGripper(self):
@@ -91,7 +94,7 @@ class ActionAgent:
         x, y = coords
         assert x <= self.exp_config['task_setup']['surface_width'] and y <= self.exp_config['task_setup']['surface_height']
         for _ in range(int(x)):
-            if not self.moveToRelative(dir='left'):
+            if not self.moveToRelative(dir='right'):
                 return False
         for _ in range(int(y)):
             if not self.moveToRelative(dir='forward'):
