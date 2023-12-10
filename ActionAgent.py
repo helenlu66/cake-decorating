@@ -31,7 +31,8 @@ class ActionAgent:
          # go to the object's pickup location
         go_to_pose_str = f"goToPose(self, {pose})"
         if pose == 'prepare' or pose == 'board':
-            return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2)
+            # takes longer to go to the prepare pose and the board pose
+            return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2.7)
         return self.submit_DIARC_goal(goal=go_to_pose_str)
 
     def closeGripper(self):
@@ -47,7 +48,8 @@ class ActionAgent:
     
     def moveToRelative(self, dir:str, distance=0.05):
         move_str = f"moveToRelative(self, {dir}, arm, {distance})"
-        return self.submit_DIARC_goal(goal=move_str)
+        additional_wait_time = 0.4 * (distance / 0.05)
+        return self.submit_DIARC_goal(goal=move_str, additional_wait_time=additional_wait_time)
 
     
     def pickUp(self, obj:str):
@@ -93,12 +95,12 @@ class ActionAgent:
         """move to 2d coords on the board assuming currently at (0, 0)"""
         x, y = coords
         assert x <= self.exp_config['task_setup']['surface_width'] and y <= self.exp_config['task_setup']['surface_height']
-        for _ in range(int(x)):
-            if not self.moveToRelative(dir='right'):
-                return False
-        for _ in range(int(y)):
-            if not self.moveToRelative(dir='forward'):
-                return False
+        
+        if not self.moveToRelative(dir='right', distance= x * 0.05):
+            return False
+        
+        if not self.moveToRelative(dir='forward', distance= y * 0.05):
+            return False
         return True
     
     def pickAndPlaceObjAtBoardCoords(self, obj:str, coords:tuple):

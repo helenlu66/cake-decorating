@@ -3,8 +3,8 @@ task_setup:
   num_candles: 3
   surface_width: 5
   surface_height: 5
-user_name: Vincent
+user_name: Helen
 human_speech_record_len: 8 # record for this many seconds when it's the human user's turn to speak 
 server_host: localhost
 server_port: 8080
-wait_for_action_completion: 5.2
+wait_for_action_completion: 3
