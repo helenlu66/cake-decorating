@@ -68,6 +68,7 @@ class DialogueActionAgent:
             robot_question = f'Where should I place the {obj_name}?'
         ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
+        # wait the default amount of time
         human_speech_text = self.ask_and_listen(robot_question=robot_question)
         ##logger.info('human said: ' + human_speech_text)
         print('human said: ' + human_speech_text)
@@ -161,9 +162,11 @@ class DialogueActionAgent:
                 'left':'left',
                 'right':'right'
             }
-            self.actionAgent.moveToRelative(dir=dir_map[human_intent])
-
-            robot_question = 'Is this a good location?'
+            if human_intent == 'no accept':
+                robot_question = "Which way should I move? You can say move to the left, to the right, move up or move down."
+            else:
+                self.actionAgent.moveToRelative(dir=dir_map[human_intent])
+                robot_question = 'Is this a good location or should I move a bit?'
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
