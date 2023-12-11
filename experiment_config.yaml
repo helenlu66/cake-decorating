@@ -1,8 +1,8 @@
 task_setup:
   experiment_num: 0
   num_candles: 3
-  surface_width: 5
-  surface_height: 5
+  surface_width: 6
+  surface_height: 6
 user_name: Vincent
 human_speech_record_len: 8 # record for this many seconds when it's the human user's turn to speak 
 server_host: localhost
