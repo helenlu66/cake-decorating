@@ -151,6 +151,16 @@ class PreferenceModel:
             if self.base_model._constraints[i][0] == obj:
                 self.base_model._constraints.pop(i)
                 break
+    
+    def save_to_dill(self):
+        """Save the PreferenceModel object to a pickle file.
+
+        Args:
+            filename (str): The filename for the pickle file.
+        """
+        with open(self.save_path, 'wb') as file:
+            dill.dump(self, file)
+        return filepath
 
 
 # constraint for ensuring pairs of variables are not equal. for example, a 
@@ -190,15 +200,6 @@ class PairwiseDiffConstraint(Constraint):
         
         return True
 
-def save_to_dill(model, filepath):
-    """Save the PreferenceModel object to a pickle file.
-
-    Args:
-        filename (str): The filename for the pickle file.
-    """
-    with open(filepath, 'wb') as file:
-        dill.dump(model, file)
-    return filepath
 
 def load_from_dill(filepath) -> PreferenceModel:
     """Load a PreferenceModel object from a pickle file.
