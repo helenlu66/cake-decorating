@@ -19,12 +19,14 @@ class ActionAgent:
 
     
     def submit_DIARC_goal(self, goal:str, additional_wait_time:float=0):
+        wait_time = self.wait_time + additional_wait_time
         data = {
             "goal":goal
         }
         response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
-        print("submitted goal: ", goal)
-        time.sleep(self.wait_time + additional_wait_time)
+        
+        print("submitted goal: ", goal, ' wait time: ', wait_time)
+        time.sleep(wait_time)
         return self.check_response(response=response)
     
     def goToPose(self, pose):
@@ -33,17 +35,17 @@ class ActionAgent:
         if pose == 'prepare' or pose == 'board':
             # takes longer to go to the prepare pose and the board pose
             return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2.7)
-        return self.submit_DIARC_goal(goal=go_to_pose_str)
+        return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=1.7)
 
     def closeGripper(self):
         # close the gripper
         close_gripper_str = "closeGripper(self, gripper)"
-        return self.submit_DIARC_goal(goal=close_gripper_str)
+        return self.submit_DIARC_goal(goal=close_gripper_str, additional_wait_time=-1)
     
     def openGripper(self):
         # open the gripper
         open_gripper_str = "openGripper(self, gripper)"
-        return self.submit_DIARC_goal(goal=open_gripper_str)
+        return self.submit_DIARC_goal(goal=open_gripper_str, additional_wait_time=-1)
 
     
     def moveToRelative(self, dir:str, distance=0.05):

@@ -28,7 +28,7 @@ class LLMNLUHelper:
         self.input_dict['human_answer'] = human_answer
         outputs = self.classifier(inputs=self.input_dict)
        
-        if outputs['classification'].lower() == 'yes':
+        if outputs['classification'].strip().lower() == 'yes':
             return True
         return False
     
@@ -46,7 +46,7 @@ class LLMNLUHelper:
         self.input_dict['human_answer'] = human_answer
         outputs = self.human_accept_classifier(inputs=self.input_dict)
        
-        return outputs['classification'].lower()
+        return outputs['classification'].strip().lower()
     
     def redirect(self, robot_question:str, human_answer:str) -> bool:
         """given a human answer that does not answer the robot question, respond in a way to redirect the human back to the task

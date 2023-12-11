@@ -40,7 +40,7 @@ And the human answered
 '''
 {human_answer}
 '''
-Determine whether the human accepted your proposed location, did not accept your location, or whether the human wants you to move either left, right, up or down. Answer with either 'accept', 'no accept', 'left', 'right', 'up', or 'down' only.
+Determine whether the human accepted your proposed location, did not accept your location but did not specify which way to move, or whether the human wanted you to move either left, right, up or down. Answer with either 'accept', 'no accept', 'left', 'right', 'up', or 'down' only. 
 Answer:
 """)
 

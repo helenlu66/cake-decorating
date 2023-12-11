@@ -48,7 +48,6 @@ class DialogueActionAgent:
             robot_question (str): the question to ask the human
         """
         self.dialogue_util.text_to_speech(robot_question)
-        time.sleep(0.5)
         human_speech_filepath = self.dialogue_util.record_human_speech(wait_len=wait_len)
         human_speech_text = self.dialogue_util.speech_to_text(human_speech_filepath)
         return human_speech_text
@@ -132,7 +131,7 @@ class DialogueActionAgent:
         self.actionAgent.pickUp(obj=self.objects_name_var_mapping[obj_name])
         
         self.actionAgent.moveToBoardCoords(coords=loc)
-        robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
+        robot_question = "Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)"
         ##logger.info('robot said: ' + robot_question)
         print('robot said: ' + robot_question)
         human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
@@ -142,31 +141,33 @@ class DialogueActionAgent:
         
         # keep clarifying until human starts saying something related to the question
         while not related:
-            robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
+            #robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
+            robot_question = self.nlu.redirect(robot_question=robot_question, human_answer=human_speech_text)
             human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
             #logger.info('human said: ' + human_speech_text)
             print('human said: ' + human_speech_text)
-            related = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+            related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         # keep adjusting until the human is satisfied with the location
         human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
         while not human_intent == 'accept':
-            # adjust the location
-            loc = tuple([sum(i) for i in zip(loc, self.actions[human_intent])])
-            # move the object to new_loc
-            dir_map = {
-                'up':'forward',
-                'down':'backward',
-                'left':'left',
-                'right':'right'
-            }
-            if human_intent == 'no accept':
-                robot_question = "Which way should I move? You can say move to the left, to the right, move up or move down."
-            else:
+            robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
+            
+            if human_intent != 'no accept':
+                # need to move as well as speak
+                # adjust the location
+                loc = tuple([sum(i) for i in zip(loc, self.actions[human_intent])])
+                # move the object to new_loc
+                dir_map = {
+                    'up':'forward',
+                    'down':'backward',
+                    'left':'left',
+                    'right':'right'
+                }
                 self.actionAgent.moveToRelative(dir=dir_map[human_intent])
-                robot_question = 'Is this a good location or should I move a bit?'
+                
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
