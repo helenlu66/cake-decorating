@@ -202,8 +202,6 @@ class DialogueActionAgent:
             ##logger.info(msg=f'loc for {name}: {final_loc}')
             print(f'loc for {name}', final_loc)
         
-        self.user_preference.save_to_dill()
-        
 
     def easier_dialogue(self):
         """carry out an easier dialogue with the user (without local adjustments)
@@ -230,6 +228,7 @@ if __name__=="__main__":
     args = get_args()
     agent = DialogueActionAgent(task_setup=exp_config['task_setup'], user_name=exp_config['user_name'], api_key=args.api_key)
     agent.main_dialogue()
+    agent.user_preference.save_to_dill()
 
    
 
