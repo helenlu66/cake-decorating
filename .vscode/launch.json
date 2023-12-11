@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "args": ["--port", "8080", "--api_key", "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"],
+            "args": ["--port", "8080", "--api_key", "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"],
         }
     ]
 }

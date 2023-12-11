@@ -86,9 +86,11 @@ if __name__=="__main__":
     constraint_extractor = LLMNLUHelper(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
     # test responses to general candle placements
     #pprint(constraint_extractor.classify(robot_question='Where should I put the candles?', human_answer='Put them in a straight horizontal line evenly spaced apart'))
-    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put them in a horizontal line evenly spaced apart'))
-    pprint(constraint_extractor.redirect(robot_question='Where should I put the candles?', human_answer='I do not know. Can you give me some example locations?'))
-
+    #pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put them in a horizontal line evenly spaced apart'))
+    #pprint(constraint_extractor.redirect(robot_question='Where should I put the candles?', human_answer='I do not know. Can you give me some example locations?'))
+    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the first candle?', human_answer='Put it in the middle'))
+    pprint(constraint_extractor.extract_constraints(robot_question='Where should I put the second candle?', human_answer='Put it to the right of the first candle'))
+    
     
     pprint(constraint_extractor.classify(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))
     pprint(constraint_extractor.redirect(robot_question='Where should I put the first candle?', human_answer='I do not know. Can you give me some example locations?'))

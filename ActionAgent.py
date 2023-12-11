@@ -34,8 +34,8 @@ class ActionAgent:
         go_to_pose_str = f"goToPose(self, {pose})"
         if pose == 'prepare' or pose == 'board':
             # takes longer to go to the prepare pose and the board pose
-            return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2.7)
-        return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=1.7)
+            return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=3.5)
+        return self.submit_DIARC_goal(goal=go_to_pose_str, additional_wait_time=2)
 
     def closeGripper(self):
         # close the gripper
@@ -117,7 +117,7 @@ class ActionAgent:
         return success
 
 if __name__ == "__main__":
-    go_to_pose_str = f"goToPose(self, board)"
+    go_to_pose_str = f"goToPose(self, candle2_pickup)"
     headers = {'Content-Type': 'application/json'}
     data={
             "goal":go_to_pose_str

@@ -9,7 +9,7 @@ from ConfigUtil import load_experiment_config
 WIDTH, HEIGHT = 600, 600
 MARGINS = 10, 50
 SPACING = 10
-CAKE_W, CAKE_H = 5, 5
+CAKE_W, CAKE_H = 6, 6
 CELL_SIZE = 80
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -33,7 +33,6 @@ class CakeDecorator:
         if session_id is None:
             session_id = uuid.uuid4()
         self.session_id = session_id
-
         self.candle_color = candle_color
         self.past_cakes = []
         self.num_candles = num_candles
@@ -63,8 +62,8 @@ class CakeDecorator:
                 cols.append(f'cake{i}_candle{j}_x')
                 cols.append(f'cake{i}_candle{j}_y')
 
-                data.append(self.past_cakes[j][i][0])
-                data.append(self.past_cakes[j][i][1])
+                data.append(self.past_cakes[i][j][0])
+                data.append(self.past_cakes[i][j][1])
         
         avg = self.average_candles()
         

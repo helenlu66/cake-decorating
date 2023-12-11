@@ -33,5 +33,6 @@ if __name__=="__main__":
     agent = ActionAgent(server_host=exp_config['server_host'], server_port=exp_config['server_port'])
     for i in range(exp_config['task_setup']['num_candles']):
         agent.pickAndPlaceObjAtBoardCoords(obj=f'candle{i}', coords=last_row_tuples[i])
+    agent.goToPose(pose='prepare')
         
 # %%
