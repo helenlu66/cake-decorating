@@ -10,7 +10,7 @@ WIDTH, HEIGHT = 600, 600
 MARGINS = 10, 50
 SPACING = 10
 CAKE_W, CAKE_H = 6, 6
-CELL_SIZE = 80
+CELL_SIZE = 70
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 CANDLE_COLOR = (0, 0, 255)
@@ -72,6 +72,8 @@ class CakeDecorator:
             cols.append(f'avg_y{i}')
             data.append(avg[i][0])
             data.append(avg[i][1])
+            print(i, avg[i][1], data[-1])
+        
         
         df = pd.DataFrame([data], columns=cols)
         df.to_csv(fp, mode='a', header=not os.path.exists(fp))
@@ -159,7 +161,7 @@ class CakeDecorator:
 
         for [x, y, mode] in sorted_candles:
             if mode > 0:
-                self.past_cakes[-1].append([(x - MARGINS[0]) // CELL_SIZE, (y - MARGINS[1]) // CELL_SIZE])
+                self.past_cakes[-1].append([(x - MARGINS[0]) // CELL_SIZE, CAKE_H - 1 - ((y - MARGINS[1]) // CELL_SIZE)])
     
     # place a candle on the cake in current mouse position
     def place_candle(self, mouse_x, mouse_y, candle_i):
