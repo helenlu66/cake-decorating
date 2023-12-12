@@ -160,7 +160,7 @@ class PreferenceModel:
         """
         with open(self.save_path, 'wb') as file:
             dill.dump(self, file)
-        return filepath
+        return self.save_path
 
 
 # constraint for ensuring pairs of variables are not equal. for example, a 
