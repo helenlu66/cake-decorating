@@ -152,9 +152,8 @@ class DialogueActionAgent:
         
         # keep adjusting until the human is satisfied with the location
         human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+        robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
         while not human_intent == 'accept':
-            robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
-            
             if human_intent != 'no accept':
                 # need to move as well as speak
                 # adjust the location
@@ -167,7 +166,15 @@ class DialogueActionAgent:
                     'right':'right'
                 }
                 self.actionAgent.moveToRelative(dir=dir_map[human_intent])
-                
+                # robot_question = "Is this a good location?"
+                # print('robot said: ' + robot_question)
+                # human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
+                # human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+                # #logger.info('human said: ' + human_speech_text)
+                # print('human said: ' + human_speech_text)
+            #else:
+                # clarify the things the human can say
+            robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
             #logger.info('robot said: ' + robot_question)
             print('robot said: ' + robot_question)
             human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
@@ -190,10 +197,10 @@ class DialogueActionAgent:
         for i, name in enumerate(self.objects_name_var_mapping):
             if i == 0:
             # skips the first 2 
-            # if i <= 1:
-            #     continue
+            #if i <= 1:
+                # continue
                 # a hack to greet the user properly
-                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
+                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)S
             else:
                 constraints_list = self.get_constraints_for_obj(obj_name=name)
             ##logger.info(msg=constraints_list)

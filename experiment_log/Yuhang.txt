@@ -1,0 +1,162 @@
+robot said: Hi, Yuhang. Let us decorate a cake. Where should I place the first candle?
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: And put the first one at the center.
+
+constraints extracted:  ['lambda x0, y0, y0, y1, surface_width, surface_height: y0 == surface_height // 2', 'lambda x0, y0, y0, y1, surface_width, surface_height: x0 == surface_width // 2']
+preferenceModel update_constraint constraint didn't parse: lambda x0, y0, y0, y1, surface_width, surface_height: y0 == surface_height // 2
+preferenceModel update_constraint constraint didn't parse: lambda x0, y0, y0, y1, surface_width, surface_height: x0 == surface_width // 2
+initial loc for first candle, (1, 0)
+submitted goal:  goToPose(self, prepare)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, candle0_pickup)  wait time:  5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  closeGripper(self, gripper)  wait time:  2
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, up, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, board)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, right, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, forward, arm, 0.0)  wait time:  3.0
+Success! Response from Java program: POST request received successfully!
+robot said: Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)
+(candlePlacementPilot) hrilab@kinovabase:~/helen/cake-decorating-preference$  cd /home/hrilab/helen/cake-decorating-preference ; /usr/bin/env /home/hrilab/miniconda3/envs/candlePlacementPilot/bin/python /home/hrilab/.vscode/extensions/ms-python.python-2023.20.0/pythonFiles/lib/python/debugpy/adapter/../../debugpy/launcher 50433 -- /home/hrilab/helen/cake-decorating-preference/DialogueActionAgent.py --port 8080 --api_key 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 
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+robot said: Where should I place the second candle?
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: and her. I wonder what he will say.
+
+robot said: I'm sorry, I didn't understand what you said. Could you please tell me where to place the second candle? It would help me complete the task of placing the candles on the cake. Thank you!
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: at the center.
+
+constraints extracted:  ['lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1 == surface_height // 2', 'lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x1 == surface_width // 2']
+initial loc for second candle, (3, 3)
+submitted goal:  goToPose(self, prepare)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, candle1_pickup)  wait time:  5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  closeGripper(self, gripper)  wait time:  2
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, up, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, board)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, right, arm, 0.15000000000000002)  wait time:  4.2
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, forward, arm, 0.15000000000000002)  wait time:  4.2
+Success! Response from Java program: POST request received successfully!
+robot said: Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: Thank you for watching!
+
+robot said: Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: Love.
+
+robot said: I'm sorry, I didn't understand your response. Could you please tell me if this is a good location for the candle? You can say either yes, no, or move to the left, to the right, move up or move down. Let me know what you think.
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: Yes.
+
+robot said: I'm sorry, I don't understand what you mean by "love". Could you please tell me if this is a good location for the candle? You can say either yes, no, or move to the left, to the right, move up or move down. Let me know what you think.
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: I think because it misheard you the previous time, so it's a...
+
+robot said: Great! Let's keep going. Where would you like to place the next candle? You can say either yes, no, or move to the left, to the right, move up or move down. Let me know what you think.
+Recording...
+(candlePlacementPilot) hrilab@kinovabase:~/helen/cake-decorating-preference$  cd /home/hrilab/helen/cake-decorating-preference ; /usr/bin/env /home/hrilab/miniconda3/envs/candlePlacementPilot/bin/python /home/hrilab/.vscode/extensions/ms-python.python-2023.20.0/pythonFiles/lib/python/debugpy/adapter/../../debugpy/launcher 58571 -- /home/hrilab/helen/cake-decorating-preference/DialogueActionAgent.py --port 8080 --api_key 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 
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+robot said: Where should I place the third candle?
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: left top
+
+constraints extracted:  ['lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y2 > surface_height // 2 ', 'lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x2 < surface_width // 2']
+initial loc for third candle, (0, 5)
+submitted goal:  goToPose(self, prepare)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, candle2_pickup)  wait time:  5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  closeGripper(self, gripper)  wait time:  2
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, up, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+submitted goal:  goToPose(self, board)  wait time:  6.5
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, right, arm, 0.0)  wait time:  3.0
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, forward, arm, 0.25)  wait time:  5.0
+Success! Response from Java program: POST request received successfully!
+robot said: Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: Move left.
+
+submitted goal:  moveToRelative(self, left, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+robot said: Is this a good location?
+Recording...
+Finished recording.
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
+human said: yes
+
+submitted goal:  moveToRelative(self, down, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+submitted goal:  openGripper(self, gripper)  wait time:  2
+Success! Response from Java program: POST request received successfully!
+submitted goal:  moveToRelative(self, up, arm, 0.05)  wait time:  3.4
+Success! Response from Java program: POST request received successfully!
+loc for third candle (-1, 5)

@@ -1,33 +1,51 @@
 from langchain.prompts import PromptTemplate
 from langchain.memory import SimpleMemory
+from pprint import pprint
 
 task_desc = "You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height})"
-example_robot_question = "Where should I place the second candle?"
-example_human_answer = "It should be on the top right side of the cake and on the same horizontal line with the first candle."
+example_robot_question_second_candle = "Where should I place the second candle?"
+example_human_answer_second_candle = "It should be on the top right side and on the same horizontal line with the first candle."
 variables = "first candle x0, y0, second candle x1, y1, third candle x2, y2, surface_width indicating the width of the 2D surface, surface_height indicating the height of the 2D surface"
 
-example_constraints_lambda = """lambda y1, surface_height: y1 > surface_height // 2 
-lambda x1, surface_width: x1 > surface_width // 2 
-lambda y0, y1: y1==y0"""
+example_constraints_second_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1 > surface_height // 2 
+lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x1 > surface_width // 2 
+lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1==y0"""
 
-example_human_answer2 = "Put it in the center."
-example_constraints_lambda2 = """lambda y1, surface_height: y1 == surface_height // 2
-lambda x1, surface_width: x1 == surface_width // 2"""
+example_human_answer_second_candle2 = "Put it in the center."
+example_constraints_second_candle2 = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1 == surface_height // 2
+lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x1 == surface_width // 2"""
 
-example_human_answer3 = "Put it directly below the first."
-example_constraints_lambda3 = """lambda y1, y0: y1 == y0 - 1
-lambda x1, x0: x1==x0"""
+example_robot_question_third_candle = "Where should I place the third candle?"
+example_human_answer_third_candle = "Put it directly below the first."
+example_constraints_third_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y2 == y0 - 1
+lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x2==x0"""
+
+example_human_answer_third_candle2 = "Put it on the top."
+example_constraints_third_candle2 = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y2 > surface_height // 2
+"""
+
+example_robot_question_first_candle = "Where should I place the first candle?"
+example_human_answer_first_candle = "Put it on the lower side."
+example_constraints_first_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y0 < surface_height // 2
+"""
 
 prompts_setup = {
     'task_desc': task_desc,
-    'example_robot_question': example_robot_question,
-    'example_human_answer': example_human_answer,
+    'example_robot_question_first_candle': example_robot_question_first_candle,
+    'example_robot_question_second_candle': example_robot_question_second_candle,
+    'example_robot_question_third_candle': example_robot_question_third_candle,
+    'example_human_answer_first_candle': example_human_answer_first_candle,
     'variables': variables,
-    'example_constraints': example_constraints_lambda,
-    'example_human_answer2': example_human_answer2,
-    'example_constraints2': example_constraints_lambda2,
-    'example_human_answer3': example_human_answer3,
-    'example_constraints3': example_constraints_lambda3,
+    'example_constraints_first_candle': example_constraints_first_candle,
+    'example_human_answer_second_candle': example_human_answer_second_candle,
+    'example_constraints_second_candle': example_constraints_second_candle,
+    'example_human_answer_second_candle2': example_human_answer_second_candle2,
+    'example_constraints_second_candle2': example_constraints_second_candle2,
+    'example_constraints_third_candle': example_constraints_third_candle,
+    'example_human_answer_third_candle': example_human_answer_third_candle,
+    'example_constraints_third_candle': example_constraints_third_candle,
+    'example_human_answer_third_candle2': example_human_answer_third_candle2,
+    'example_constraints_third_candle2': example_constraints_third_candle2,
 }
 classification_prompt = PromptTemplate(input_variables=['robot_question', 'human_answer'], template="""You are an assistant robot helping a human place candles on a cake. You asked 
 '''
@@ -65,47 +83,72 @@ Respond and redirect the human back to the candle placement task. Limit your res
 Your response:
 """)
 
-constraints_extraction_prompt = PromptTemplate(input_variables=['example_robot_question', 'example_human_answer', 'example_human_answer2', 'example_human_answer3','example_constraints2', 'example_constraints3', 'variables', 'example_constraints', 'robot_question', 'human_answer', 'surface_width', 'surface_height'], template="""
-You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height}). You asked 
+constraints_extraction_prompt = PromptTemplate(input_variables=['robot_question', 'human_answer', *prompts_setup.keys()], template="""
+You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height}). You asked:
 '''
-{example_robot_question}
+{example_robot_question_first_candle}
 '''
-And the human answered
-'''
-{example_human_answer}
-'''
-Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
-Answer:
-{example_constraints}
                                                
-You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height}). You asked 
-'''
-{example_robot_question}
-'''
 And the human answered
 '''
-{example_human_answer2}
+{example_human_answer_first_candle}
 '''
 Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
 Answer:
-{example_constraints2}                                               
+{example_constraints_first_candle}
+                                               
+You asked:
+'''
+{example_robot_question_second_candle}
+'''                                                                                       
+And the human answered
+'''
+{example_human_answer_second_candle}
+'''
+Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
+Answer:
+{example_constraints_second_candle}                                               
 
-You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height}). You asked 
+You asked:
 '''
-{example_robot_question}
-'''
+{example_robot_question_second_candle}
+'''                                              
 And the human answered
 '''
-{example_human_answer3}
+{example_human_answer_second_candle2}
 '''
 Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
 Answer:
-{example_constraints3}                                                
+{example_constraints_second_candle2}
                                                
+You asked:
+'''
+{example_robot_question_third_candle}
+'''
+And the human answered
+'''
+{example_human_answer_third_candle}
+'''
+Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
+Answer:
+{example_constraints_third_candle}                                    
+
+You asked:
+'''
+{example_robot_question_third_candle}
+'''
+And the human answered
+'''
+{example_human_answer_third_candle2}
+'''
+Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
+Answer:
+{example_constraints_third_candle2}
+                                                                                   
 You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height}). You asked 
 '''
 {robot_question}
-'''
+'''                                                                                         
 And the human answered
 '''
 {human_answer}
@@ -116,5 +159,5 @@ Answer:
 
 
 if __name__ == "__main__":
-    print(classification_prompt)
-    print(constraints_extraction_prompt)
+    #print(classification_prompt)
+    pprint(constraints_extraction_prompt)

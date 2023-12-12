@@ -115,6 +115,7 @@ class PreferenceModel:
         sln = self.model.getSolution()
         if sln is None:
             # propose random loc
+            print("proposing random location")
             return (random.randint(0, self.surface_width), random.randint(0, self.surface_height))
     
         loc = (sln[f'x{candle_num}'], sln[f'y{candle_num}'])
