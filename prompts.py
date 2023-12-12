@@ -61,7 +61,7 @@ And the human answered
 '''
 {human_answer}
 '''
-Redirect the human back to the candle placement task. Limit your response to three sentences.
+Respond and redirect the human back to the candle placement task. Limit your response to three sentences.
 Your response:
 """)
 

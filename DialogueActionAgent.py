@@ -189,6 +189,9 @@ class DialogueActionAgent:
         ##logger.info(msg=f'dialogue with {self.user_name}')
         for i, name in enumerate(self.objects_name_var_mapping):
             if i == 0:
+            # skips the first 2 
+            # if i <= 1:
+            #     continue
                 # a hack to greet the user properly
                 constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
             else:
