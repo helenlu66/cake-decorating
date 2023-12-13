@@ -1,5 +1,5 @@
 import os
-import time
+import warnings
 import logging
 from ActionAgent import ActionAgent
 from ConfigUtil import get_args, load_experiment_config
@@ -14,6 +14,8 @@ logging.basicConfig(filename='DialogueActions.log',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
+# Filter out ALSA warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="ALSA")
 ##logger = logging.get##logger('DialogueActionAgent')
 
 class DialogueActionAgent:
@@ -133,9 +135,9 @@ class DialogueActionAgent:
         self.actionAgent.moveToBoardCoords(coords=loc)
         robot_question = "Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)"
         ##logger.info('robot said: ' + robot_question)
-        print('robot said: ' + robot_question)
         human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
         ##logger.info('human said: ' + human_speech_text)
+        print('robot said: ' + robot_question)
         print('human said: ' + human_speech_text)
         related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
@@ -143,16 +145,15 @@ class DialogueActionAgent:
         while not related:
             #robot_question = 'Is this a good location? You can say either yes, or move to the left, to the right, move up or move down.'
             #logger.info('robot said: ' + robot_question)
-            print('robot said: ' + robot_question)
             robot_question = self.nlu.redirect(robot_question=robot_question, human_answer=human_speech_text)
-            human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
+            human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=6)
             #logger.info('human said: ' + human_speech_text)
+            print('robot said: ' + robot_question)
             print('human said: ' + human_speech_text)
             related = self.nlu.classify(robot_question=robot_question, human_answer=human_speech_text)
         
         # keep adjusting until the human is satisfied with the location
         human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
-        robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
         while not human_intent == 'accept':
             if human_intent != 'no accept':
                 # need to move as well as speak
@@ -166,21 +167,21 @@ class DialogueActionAgent:
                     'right':'right'
                 }
                 self.actionAgent.moveToRelative(dir=dir_map[human_intent])
-                # robot_question = "Is this a good location?"
-                # print('robot said: ' + robot_question)
-                # human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
-                # human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
-                # #logger.info('human said: ' + human_speech_text)
-                # print('human said: ' + human_speech_text)
-            #else:
+                robot_question = "Is this a good location?"
+                human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
+                print('robot said: ' + robot_question)
+                print('human said: ' + human_speech_text)
+                human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+                #logger.info('human said: ' + human_speech_text)
+            else:
                 # clarify the things the human can say
-            robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
-            #logger.info('robot said: ' + robot_question)
-            print('robot said: ' + robot_question)
-            human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
-            human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
-            #logger.info('human said: ' + human_speech_text)
-            print('human said: ' + human_speech_text)
+                robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" 
+                #logger.info('robot said: ' + robot_question)
+                human_speech_text = self.ask_and_listen(robot_question=robot_question, wait_len=5)
+                print('robot said: ' + robot_question)
+                print('human said: ' + human_speech_text)
+                human_intent = self.nlu.classify_human_accept(robot_question=robot_question, human_answer=human_speech_text)
+                #logger.info('human said: ' + human_speech_text)
         
         # human accepted, put down object and record loc
         self.release()
@@ -200,7 +201,7 @@ class DialogueActionAgent:
             #if i <= 1:
                 # continue
                 # a hack to greet the user properly
-                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)S
+                constraints_list = self.get_constraints_for_obj(obj_name=name, greet=True)
             else:
                 constraints_list = self.get_constraints_for_obj(obj_name=name)
             ##logger.info(msg=constraints_list)

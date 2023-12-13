@@ -3,40 +3,50 @@ from langchain.memory import SimpleMemory
 from pprint import pprint
 
 task_desc = "You are an assistant robot helping a human place candles on a cake. The task is to place 3 candles on the 2D top surface of the cake. The cake is {surface_width} in the x direction and {surface_height} in the y direction. The bottom left corner of the cake is (0,0). The top right corner of the cake ({surface_width}, {surface_height})"
-example_robot_question_second_candle = "Where should I place the second candle?"
-example_human_answer_second_candle = "It should be on the top right side and on the same horizontal line with the first candle."
 variables = "first candle x0, y0, second candle x1, y1, third candle x2, y2, surface_width indicating the width of the 2D surface, surface_height indicating the height of the 2D surface"
 
-example_constraints_second_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1 > surface_height // 2 
-lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x1 > surface_width // 2 
-lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1==y0"""
 
-example_human_answer_second_candle2 = "Put it in the center."
-example_constraints_second_candle2 = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y1 == surface_height // 2
-lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x1 == surface_width // 2"""
-
-example_robot_question_third_candle = "Where should I place the third candle?"
-example_human_answer_third_candle = "Put it directly below the first."
-example_constraints_third_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y2 == y0 - 1
-lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: x2==x0"""
-
-example_human_answer_third_candle2 = "Put it on the top."
-example_constraints_third_candle2 = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y2 > surface_height // 2
-"""
 
 example_robot_question_first_candle = "Where should I place the first candle?"
 example_human_answer_first_candle = "Put it on the lower side."
-example_constraints_first_candle = """lambda x0, y0, x1, y1, x2, y2, surface_width, surface_height: y0 < surface_height // 2
+example_constraints_first_candle = """lambda x0, y0, surface_width, surface_height: y0 < surface_height // 2
+"""
+
+example_human_answer_first_candle2 = "Put it on bottom left."
+example_constraints_first_candle2 = """lambda x0, y0, surface_width, surface_height: x0 < surface_width // 2
+lambda x0, y0, surface_width, surface_height: y0 < surface_height // 2
+"""
+
+example_robot_question_second_candle = "Where should I place the second candle?"
+example_human_answer_second_candle = "It should be on the top right side and on the same horizontal line with the first candle."
+example_constraints_second_candle = """lambda x1, y1, surface_width, surface_height: y1 > surface_height // 2 
+lambda x1, y1, surface_width, surface_height: x1 > surface_width // 2 
+lambda x0, y0, x1, y1, surface_width, surface_height: y1==y0"""
+
+example_human_answer_second_candle2 = "Put it in the center."
+example_constraints_second_candle2 = """lambda x1, y1, surface_width, surface_height: y1 == surface_height // 2
+lambda x1, y1, surface_width, surface_height: x1 == surface_width // 2"""
+
+example_robot_question_third_candle = "Where should I place the third candle?"
+example_human_answer_third_candle = "Put it directly below the first."
+example_constraints_third_candle = """lambda x2, y2, surface_width, surface_height: y2 == y0 - 1
+lambda x2, y2, surface_width, surface_height: x2==x0"""
+
+example_human_answer_third_candle2 = "Put it on the top right side."
+example_constraints_third_candle2 = """lambda x2, y2, surface_width, surface_height: x2 > surface_width // 2
+lambda x2, y2, surface_width, surface_height: y2 > surface_height // 2
 """
 
 prompts_setup = {
     'task_desc': task_desc,
+    'variables': variables,
     'example_robot_question_first_candle': example_robot_question_first_candle,
     'example_robot_question_second_candle': example_robot_question_second_candle,
     'example_robot_question_third_candle': example_robot_question_third_candle,
     'example_human_answer_first_candle': example_human_answer_first_candle,
-    'variables': variables,
     'example_constraints_first_candle': example_constraints_first_candle,
+    'example_human_answer_first_candle2': example_human_answer_first_candle2,
+    'example_constraints_first_candle2': example_constraints_first_candle2,
     'example_human_answer_second_candle': example_human_answer_second_candle,
     'example_constraints_second_candle': example_constraints_second_candle,
     'example_human_answer_second_candle2': example_human_answer_second_candle2,
@@ -79,7 +89,7 @@ And the human answered
 '''
 {human_answer}
 '''
-Respond and redirect the human back to the candle placement task. Limit your response to three sentences.
+Respond and redirect the human back to your question. Limit your response to three sentences.
 Your response:
 """)
 
@@ -96,7 +106,20 @@ And the human answered
 Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
 Answer:
 {example_constraints_first_candle}
+
+You asked:
+'''
+{example_robot_question_first_candle}
+'''
                                                
+And the human answered
+'''
+{example_human_answer_first_candle2}
+'''
+Express the human's preference for candle placement as a list of lambda functions with logic constraints on the following variables: {variables}. Your answer should always be a list of lambda functions.
+Answer:
+{example_constraints_first_candle2}
+                                                            
 You asked:
 '''
 {example_robot_question_second_candle}

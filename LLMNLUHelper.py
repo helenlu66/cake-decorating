@@ -85,7 +85,11 @@ if __name__=="__main__":
     exp_config = load_experiment_config('experiment_config.yaml')
     constraint_extractor = LLMNLUHelper(prompts_setup=prompts_setup, task_setup=exp_config['task_setup'], api_key=args.api_key if args.api_key else os.environ['OPENAI_API_KEY'])
     # test responses to general candle placements
+<<<<<<< Updated upstream
     robot_question = "Where should I place the second candle?" + '\n'
+=======
+    robot_question = "Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?" + '\n'
+>>>>>>> Stashed changes
     human_answer = input(robot_question)
     related = constraint_extractor.classify(robot_question=robot_question, human_answer=human_answer)
     while not related:
