@@ -25,8 +25,8 @@ class PreferenceModel:
        
         # add the variables here with range of values based on cake surface dimensions
         # adding an x and y variable for each candle
-        x_dom = Domain([i for i in range(self.surface_width)])
-        y_dom = Domain([i for i in range(self.surface_height)])
+        x_dom = Domain([i for i in range(self.surface_width + 1)])
+        y_dom = Domain([i for i in range(self.surface_height + 1)])
 
         # candle location x, y vars and surface_width, surface_height as vars
         vars = []
