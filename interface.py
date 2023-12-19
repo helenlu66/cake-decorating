@@ -13,13 +13,13 @@ CAKE_W, CAKE_H = 6, 6
 CELL_SIZE = 70
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-CANDLE_COLOR = (0, 0, 255)
+CANDLE_COLORS = [(252, 144, 3), (245, 226, 56), (0, 0, 255)]
 CAKES_TO_DECORATE = 1
 
 
 
 class CakeDecorator:
-    def __init__(self, session_id=None, num_candles=3, candle_color=CANDLE_COLOR, cakes_to_decorate=CAKES_TO_DECORATE):
+    def __init__(self, session_id=None, num_candles=3, candle_colors=CANDLE_COLORS, cakes_to_decorate=CAKES_TO_DECORATE):
         # Initialize Pygame
         pygame.init()
 
@@ -33,12 +33,11 @@ class CakeDecorator:
         if session_id is None:
             session_id = uuid.uuid4()
         self.session_id = session_id
-        self.candle_color = candle_color
         self.past_cakes = []
         self.num_candles = num_candles
         self.cakes_to_decorate = cakes_to_decorate
 
-        self.set_up_cake()
+        self.set_up_cake(candle_colors)
 
         font = pygame.font.Font(None, 30)
         self.submit_text = font.render("Done", True, BLACK)
@@ -46,8 +45,8 @@ class CakeDecorator:
         self.submit_button_coords = (WIDTH // 2 - (self.submit_button_size[0] // 2), MARGINS[1] * 2 + CAKE_H * CELL_SIZE)
 
     
-    def set_up_cake(self):
-        self.candles = self.init_candles(self.num_candles)
+    def set_up_cake(self, candle_colors):
+        self.candles = self.init_candles(self.num_candles, candle_colors)
         font = pygame.font.Font(None, 36)
         self.title = font.render(f'Cake Number: {len(self.past_cakes) + 1}', True, WHITE)
         self.candles_placed = 0
@@ -72,7 +71,6 @@ class CakeDecorator:
             cols.append(f'avg_y{i}')
             data.append(avg[i][0])
             data.append(avg[i][1])
-            print(i, avg[i][1], data[-1])
         
         
         df = pd.DataFrame([data], columns=cols)
@@ -108,12 +106,12 @@ class CakeDecorator:
     #   coordinate, y coordinate, and integer mode
     # mode should be -1 for unplaced, 0 for in the process of being placed, and 
     #   otherwise denote order in which placement occured
-    def init_candles(self, num_candles):
+    def init_candles(self, num_candles, candle_colors):
         candles = []
         x = CAKE_W * CELL_SIZE + MARGINS[0] + SPACING
 
         for i in range(num_candles):
-            candles.append([x, i * (CELL_SIZE + SPACING) + MARGINS[1], -1])
+            candles.append([x, i * (CELL_SIZE + SPACING) + MARGINS[1], -1, candle_colors[i if i < len(candle_colors) else -1]])
 
         return candles
 
@@ -126,11 +124,11 @@ class CakeDecorator:
         pygame.draw.rect(self.screen, WHITE, (MARGINS[0], MARGINS[1], CAKE_W * CELL_SIZE, CAKE_H * CELL_SIZE))
 
         # candles
-        for [x, y, candle_mode] in self.candles:
+        for [x, y, candle_mode, color] in self.candles:
             if candle_mode != 0:
-                pygame.draw.rect(self.screen, self.candle_color, (x, y, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(self.screen, color, (x, y, CELL_SIZE, CELL_SIZE))
             else:
-                pygame.draw.rect(self.screen, self.candle_color, (*self.normalize_to_corner(mouse_x, mouse_y), CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(self.screen, color, (*self.normalize_to_corner(mouse_x, mouse_y), CELL_SIZE, CELL_SIZE))
         
         # done button
         pygame.draw.rect(self.screen, WHITE, (*self.submit_button_coords, *self.submit_button_size))
@@ -143,7 +141,7 @@ class CakeDecorator:
     
     # check if a click is on a candle
     def on_candle(self, x, y, unplaced=True):
-        for i, [cx, cy, mode] in enumerate(self.candles):
+        for i, [cx, cy, mode, _] in enumerate(self.candles):
             if (unplaced and mode == -1) or (not unplaced and mode > 0):
                 if cx <= x < cx + CELL_SIZE and cy <= y < cy + CELL_SIZE:
                     return i
@@ -159,7 +157,7 @@ class CakeDecorator:
         sorted_candles = sorted(self.candles, key=lambda x: x[2])
         self.past_cakes.append([])
 
-        for [x, y, mode] in sorted_candles:
+        for [x, y, mode, _] in sorted_candles:
             if mode > 0:
                 self.past_cakes[-1].append([(x - MARGINS[0]) // CELL_SIZE, CAKE_H - 1 - ((y - MARGINS[1]) // CELL_SIZE)])
     
@@ -191,7 +189,7 @@ class CakeDecorator:
                         else:
                             running = False
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    for i, (_, _, candle_mode) in enumerate(self.candles):
+                    for i, (_, _, candle_mode, _) in enumerate(self.candles):
                         if candle_mode == 0:
                             self.place_candle(*mouse_pos, i)
 
