@@ -1,10 +1,6 @@
 robot said: Hi, Emeka. Let us decorate a cake. Where should I place the first candle?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: Place the first candle a few inches to the right.
 
 constraints extracted:  ['lambda x0, surface_width: x0 < surface_width - 3']
@@ -26,19 +22,11 @@ Success! Response from Java program: POST request received successfully!
 robot said: Is this a good location? (You can say either yes, no, or move to the left, to the right, move up or move down)
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: No, move to the right.
 
 robot said: Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: Move to the right.
 
 submitted goal:  moveToRelative(self, right, arm, 0.05)  wait time:  3.4
@@ -46,10 +34,6 @@ Success! Response from Java program: POST request received successfully!
 robot said: Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: move to the right
 
 submitted goal:  moveToRelative(self, right, arm, 0.05)  wait time:  3.4
@@ -57,10 +41,6 @@ Success! Response from Java program: POST request received successfully!
 robot said: Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: Move to the right.
 
 submitted goal:  moveToRelative(self, right, arm, 0.05)  wait time:  3.4
@@ -68,10 +48,6 @@ Success! Response from Java program: POST request received successfully!
 robot said: Is this a good location (You can say either yes, no, or move to the left, to the right, move up or move down)?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: move to the right
 
 submitted goal:  moveToRelative(self, right, arm, 0.05)  wait time:  3.4
@@ -95,10 +71,6 @@ loc for first candle (4, 3)
 robot said: Where should I place the second candle?
 Recording...
 Finished recording.
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
-ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
-ALSA lib pcm_route.c:867:(find_matching_chmap) Found no matching channel map
 human said: Place the candle somewhere on the left.
 
 constraints extracted:  ['lambda x1, surface_width: x1 < surface_width // 2']
