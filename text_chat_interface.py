@@ -6,8 +6,8 @@ from ConfigUtil import load_experiment_config
 class ChatInterface:
     def __init__(self, root):
         self.root = root
-        self.root.title("Robot")
-        self.welcome_message = f"Hello {exp_config['user_name']}, let's decorate a cake together. When you are done with the decoration, type 'done' to end the conversation."
+        self.root.title(exp_config["exp_chat_interface_title"])
+        self.welcome_message = f"Hello {exp_config['user_name']}, let's decorate a cake together. "
         self.goodbye_message = "Goodbye! Have a nice day!"
 
         # Setting up the chat area
@@ -21,8 +21,9 @@ class ChatInterface:
 
         # logging
         # Open or create a log file for this session
-        self.log_file = open(f"experiment_log/{exp_config['user_name']}.log", "a")
+        self.log_file = open(f"experiment_log/{exp_config['user_name']}_{exp_config['exp_condition']}.log", "a")
 
+        self.robot_response_enabled = exp_config['exp_condition'] != 'base'
         self.initialize_chat()
 
 
@@ -32,21 +33,23 @@ class ChatInterface:
 
     def handle_user_input(self, event=None):
         user_input = self.user_input_area.get()
-        if user_input.lower() == 'exit':
-            self.append_message("Robot", self.goodbye_message)
+        if user_input.lower() == 'done':
+            self.append_message(self.goodbye_message, "Robot")
             self.root.after(2000, self.root.destroy)  # Wait 2 seconds before closing
         else:
-            self.append_message("You", user_input)
+            self.append_message(user_input, "You")
             self.user_input_area.delete(0, tk.END)
             # handle the action if there's any
             # Get the AI response immediately, but don't display it yet
             self.prepared_response = self.get_text_response(user_input)
             # Show typing indicator on a new line
             self.typing_indicator_id = self.chat_area.index(tk.END)
-            self.chat_area.config(state='normal')
-            self.chat_area.insert(tk.END, "The robot is processing your message ...\n")
-            self.chat_area.config(state='disabled')
+            self.append_message("The robot is processing your message ...")
+            # self.chat_area.config(state='normal')
+            # self.chat_area.insert(tk.END, "The robot is processing your message ...\n")
+            # self.chat_area.config(state='disabled')
             self.update_typing_indicator(repetitions=exp_config['wait_for_action_completion'])
+    
 
     def update_typing_indicator(self, repetitions):
         if repetitions > 0:
@@ -61,7 +64,7 @@ class ChatInterface:
             # Schedule the next update
             self.root.after(1000, self.update_typing_indicator, repetitions - 1)
         else:
-            # After the last repetition, display the prepared response
+            # After the last repetition, append the next message
             self.respond()
 
     def respond(self):
@@ -72,27 +75,42 @@ class ChatInterface:
         if not self.chat_area.get('1.0', tk.END).endswith('\n'):
             self.chat_area.insert(tk.END, "\n")
         self.chat_area.config(state='disabled')
-        self.append_message("Robot", self.prepared_response)
+        if self.robot_response_enabled:
+            self.append_message(self.prepared_response, "Robot")
+        else:
+            #TODO:get a default response for the base condition
+            self.append_message(self.report_system_status())
+
     
-    def append_message(self, sender, message):
+    def report_system_status(self):
+        #TODO:generate system status message
+        return "system status"
+
+    def append_message(self, message, sender=None):
         self.chat_area.config(state='normal')
-        if not self.chat_area.get('1.0', tk.END).strip():
-            # If the chat area is empty, don't add a newline at the start
+        # Ensure the message starts on a new line if the chat area is not empty
+        if not self.chat_area.get('1.0', tk.END).strip().endswith('\n'):
+            self.chat_area.insert(tk.END, "\n")
+        if sender:
             formatted_message = f"{sender}: {message}\n"
         else:
-            # Otherwise, add a newline before the sender
-            formatted_message = f"\n{sender}: {message}\n"
+            formatted_message = f"{message}\n"
         self.chat_area.insert(tk.END, formatted_message)
         self.chat_area.config(state='disabled')
         self.chat_area.see(tk.END)
 
         # Write message to log file with timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.log_file.write(f"{timestamp} - {sender}: {message}\n")
+        self.log_file.write(f"{timestamp} - {sender if sender else 'System'}: {message}\n")
         self.log_file.flush()
 
+
     def initialize_chat(self):
-        self.append_message("Robot", self.welcome_message)
+        if self.robot_response_enabled:
+            self.append_message(exp_config['exp_welcome_message'])
+            self.append_message(self.welcome_message, "Robot")
+        else:
+            self.append_message(exp_config['exp_welcome_message'])
     
 
     def __del__(self):
