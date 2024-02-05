@@ -1,4 +1,4 @@
-exp_condition: base
+exp_condition: reasonable
 exp_welcome_message: "You are collaborating with a robot to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 \n
 \n\t- Jo is 2 years old
@@ -12,7 +12,8 @@ The decorative items are currently in their staging locations. You may decorate 
 \n\t- “take the cherry off the cake”
 \n
 \nWhen you are done with the decoration, you may type \"done\" to end the conversation."
-exp_chat_interface_title: "command interface"
+exp_chat_interface_title: "Command Interface"
+#exp_chat_interface_title: "Robot Chat"
 user_name: Test
 server_host: localhost
 server_port: 8080

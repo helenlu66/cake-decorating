@@ -3,8 +3,9 @@ import random
 from langchain.agents.openai_assistant import OpenAIAssistantRunnable
 from prompts import task_instructions
 from langchain.chains import LLMChain
-from langchain_openai import ChatOpenAI, OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate
 from ConfigUtil import load_experiment_config
 from prompts import *
 from DIARCInterface import DIARCInterface
@@ -15,33 +16,30 @@ class ChatAgent:
         self.exp_config = load_experiment_config('experiment_config.yaml')
         self.response_enabled = self.exp_config['exp_condition'] != 'base'
  
-        self.messages = [
-            SystemMessage(
-                content=task_instructions
-            ),
-        ]
+        self.messages = ChatPromptTemplate.from_messages([("system",task_instructions)])
+    
 
         if self.response_enabled:
-            self.messages.append(AIMessage(content=f"Hello {self.exp_config['user_name']}, let's decorate a cake together. What would you like me to do first?"))
+            self.messages += AIMessage(content=f"Hello {self.exp_config['user_name']}, let's decorate a cake together. What would you like me to do first?")
 
         self.chat = ChatOpenAI(model="gpt-4")
         self.random_suggestion_rephraser = LLMChain(
             prompt=rephrase_prompt,
             llm=ChatOpenAI(model='gpt-4')
         )
-        self.action_agent = DIARCInterface(server_host='localhost', server_port='8080')
+        self.diarc = DIARCInterface(server_host='localhost', server_port='8080')
         self.should_proactively_suggest_next_action = False
 
     def process_human_input(self, human_message:str):
         """generate a response to the human message and append it to messages"""
-        self.messages.append(HumanMessage(content=human_message))
+        self.messages += HumanMessage(content=human_message)
         # introspect on beliefs about the environment
         self.introspect()
         # extract important information from the chat messages according to instructions in the system prompt
         ai_message:AIMessage = self.chat(self.messages)
         # process the extracted information into a response to the human
         ai_message:AIMessage = self.post_process_ai_message(ai_message)
-        self.messages.append(ai_message)
+        self.messages += ai_message
         return ai_message.content
     
     def classify_ai_message(self, ai_message:AIMessage) -> str:
@@ -92,20 +90,16 @@ class ChatAgent:
                 return ai_message
             # action status is success, ask the human what they like to do next
             elif action_success and not self.should_proactively_suggest_next_action:
-                self.messages.append(SystemMessage(
-                    content="You have successfully completed the action. Ask what action the human would like you to take next."
-                ))
+                self.messages += SystemMessage(content="You have successfully completed the action. Ask what action the human would like you to take next.")
                 ai_message = self.chat(self.messages)
                 # the next human input is expected to be a command, the ai should proactively suggest an action after carrying out the command
                 self.should_proactively_suggest_next_action = True
                 return ai_message
             # action status is failure, ask to try another action
             else:
-                self.messages.append(
-                    SystemMessage(
+                self.messages += SystemMessage(
                         content="You didn't successfully complete the action. Ask the human to double-check their request or try some other action."
                     )
-                )
                 ai_message = self.chat(self.messages)
                 return ai_message
         elif parsed_message[0].lower() == 'suggestion':
@@ -123,13 +117,13 @@ class ChatAgent:
         if self.exp_config['exp_condition'] == 'random':
             # randomly suggest a valid next move
             ai_message = self.generate_random_suggestion()
+            self.should_proactively_suggest_next_action = False
             return ai_message
         
         # otherwise make sure to generate a reasonable suggestion
         ai_message = self.chat(self.messages)
         while self.classify_ai_message(ai_message=ai_message) != 'suggestion':
-            self.messages.append(SystemMessage(
-                content=
+            self.messages += SystemMessage(content=
                 """the response you generated was not in the correct format for a suggestion. Suggest an action you can take next in the following format:
                 ```
                 suggestion
@@ -137,18 +131,20 @@ class ChatAgent:
                 ```
                 Keep your reason in 1 sentence.
                 """
-            ))
+            )
+            
             ai_message:AIMessage = self.chat(self.messages)
         ai_message = AIMessage(content=self.remove_first_line(ai_message.content))
+        self.should_proactively_suggest_next_action = False 
         return ai_message
 
     def generate_random_suggestion(self):
         """generate a random suggestion on next action given the current beliefs about the environment"""
-        decorative_items_beliefs = self.introspect(predicate='decorativeitem(X)')
+        canpickup_items_beliefs = self.introspect(predicate='canpickup(X)')
         free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(Y)')
 
         suggestions = []
-        for decorative_item, free_cake_loc in list(itertools.product(decorative_items_beliefs, free_cake_locs_beliefs)):
+        for decorative_item, free_cake_loc in list(itertools.product(canpickup_items_beliefs, free_cake_locs_beliefs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
             random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}.{random_reason}.{ask the human what they think of this suggestion}.""".format(
@@ -183,20 +179,27 @@ class ChatAgent:
 
     def introspect(self, predicate:str):
         """introspect on current beliefs and fill in the task instructions with information about the enviornment"""
-        #TODO: implement this
-        pass
+        beliefs = self.diarc.queryBelief(predicate=predicate)
+        return beliefs
     
     def act(self, action:str, action_args:str):
         """take the action with the action arguments"""
         goal_predicate = f'{action}({action_args})'
-        return self.action_agent.submit_DIARC_goal(goal=goal_predicate)
+        return self.diarc.submit_DIARC_goal(goal=goal_predicate)
 
 
 
 if __name__ == "__main__":
     chatAgent = ChatAgent()
-    human_input = input()
-    while human_input != "done":
-        ai_response=chatAgent.random_suggestion_rephraser.run(sentences=human_input)
-        # ai_response = chatAgent.process_human_input(human_input)
-        human_input = input('\n' + ai_response + '\n')
+    observable_objects = chatAgent.introspect('object(X, physobj)')
+    beliefs = chatAgent.introspect('canpickup(X)')
+    beliefs += chatAgent.introspect('at(X, Y)')
+    beliefs += chatAgent.introspect('on(X, cake)')
+    messages = chatAgent.messages.partial(observable_objects=str(observable_objects), beliefs=str(beliefs))
+    chatAgent.process_human_input("can you give a suggestion?")
+    #pprint(chatAgent.introspect('canpickup(X)'))
+    # human_input = input()
+    # while human_input != "done":
+    #     ai_response=chatAgent.random_suggestion_rephraser.run(sentences=human_input)
+    #     # ai_response = chatAgent.process_human_input(human_input)
+    #     human_input = input('\n' + ai_response + '\n')
