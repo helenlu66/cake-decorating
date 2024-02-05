@@ -3,6 +3,7 @@ import threading
 from datetime import datetime
 from tkinter import simpledialog
 from ConfigUtil import load_experiment_config
+from ChatAgent import ChatAgent
 
 class ChatInterface:
     def __init__(self, root):
@@ -25,13 +26,15 @@ class ChatInterface:
         self.log_file = open(f"experiment_log/{exp_config['user_name']}_{exp_config['exp_condition']}.log", "a")
 
         self.robot_response_enabled = exp_config['exp_condition'].lower() != 'base'
+        self.chat = ChatAgent()
+        self.prepared_response = "something went wrong"
+        self.response_ready = threading.Event()
         self.initialize_chat()
 
 
     def get_text_response(self, user_input):
-        # Implement your AI logic here. For now, it just echoes the user input
-        output = agent_executor.invoke({"content": user_input})
-        return output['output']
+        response = self.chat.process_human_input(user_input)
+        return response
 
     def handle_user_input(self, event=None):
         user_input = self.user_input_area.get()
@@ -42,16 +45,26 @@ class ChatInterface:
             self.append_message(user_input, "You")
             self.user_input_area.delete(0, tk.END)
             # Start get_text_response in a separate thread
-            threading.Thread(target=self.process_user_input, args=(user_input,), daemon=True).start()
+            response_thread = threading.Thread(target=self.process_user_input, args=(user_input,))
+            response_thread.start()
             # Show typing indicator on a new line
             self.typing_indicator_id = self.chat_area.index(tk.END)
             self.append_message("The robot is processing your message ...")
+            
+            #self.update_typing_indicator(exp_config['wait_for_action_completion'])
             self.root.after(1000 * exp_config['wait_for_action_completion'], self.update_typing_indicator, exp_config['wait_for_action_completion'])
             
     
     def process_user_input(self, user_input):
         self.prepared_response = self.get_text_response(user_input)
-        # self.root.after(1000 * exp_config['wait_for_action_completion'], self.update_typing_indicator, exp_config['wait_for_action_completion'])
+        self.response_ready.set()
+    
+    def wait_for_response(self):
+        if self.response_ready.is_set():
+            self.respond()
+        else:
+            # Check again after a short delay
+            self.root.after(100, self.wait_for_response)
 
     def update_typing_indicator(self, repetitions):
         if repetitions > 0:
@@ -67,7 +80,7 @@ class ChatInterface:
             self.root.after(1000, self.update_typing_indicator, repetitions - 1)
         else:
             # After the last repetition, append the next message
-            self.respond()
+            self.root.after(1000, self.wait_for_response)
 
     def respond(self):
         # Remove typing indicator before showing the response
@@ -84,8 +97,8 @@ class ChatInterface:
 
     
     def report_system_status(self):
-        #TODO:generate system status message
-        return "system status"
+        
+        return self.prepared_response
 
     def append_message(self, message, sender=None):
         self.chat_area.config(state='normal')

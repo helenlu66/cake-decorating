@@ -21,19 +21,19 @@ putOnCakeAtLoc["put the object on the cake at the target location"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
-if asked to perform an action, output the action in the following format:
+if asked to perform an action, output the action in the following example format:
 ```
 action
-{action}
-{action parameter(s)}
+putOnCakeAtLoc
+pinkcandle, a1
 ```
 
 if asked to give suggestions, give a suggestion on what next action you can take in the following format:
 ```
 suggestion
-Let's {description of action}.{reason for selecting the action}.{ask what the human user thinks of this idea}
+Let's {description_of_action}.{reason_for_selecting_the_action}.{ask_what_the_human_user_thinks_of_this_idea}
 ```
-Keep your reason in 1 sentence.
+Keep your reason in 1 sentence. Make your reason human-readable.
 Don't answer questions unrelated to the task and redirect the human back to the task.
 """
 
