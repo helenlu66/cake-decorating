@@ -1,5 +1,6 @@
 import tkinter as tk
 import threading
+from tkinter import font
 from datetime import datetime
 from tkinter import simpledialog
 from ConfigUtil import load_experiment_config
@@ -7,19 +8,31 @@ from ChatAgent import ChatAgent
 
 class ChatInterface:
     def __init__(self, root):
+        # Define a larger font
+        self.custom_font = font.Font(family="Helvetica", size=14)
+
+        # Setting up the chat area with a larger font
+        self.chat_area = tk.Text(root, state='disabled', wrap='word', font=self.custom_font)
+        self.chat_area.pack(padx=10, pady=10, expand=True, fill='both')
+
+        # Setting up the user input area with larger font
+        self.user_input_area = tk.Entry(root, font=self.custom_font)
+        self.user_input_area.pack(padx=10, pady=10, fill='x')
+        self.user_input_area.bind("<Return>", self.handle_user_input)
+
         self.root = root
         self.root.title(exp_config["exp_chat_interface_title"])
         self.welcome_message = f"Hello {exp_config['user_name']}, let's decorate a cake together. What would you like me to do first?"
         self.goodbye_message = "Goodbye! Have a nice day!"
 
-        # Setting up the chat area
-        self.chat_area = tk.Text(root, state='disabled', wrap='word')
-        self.chat_area.pack(padx=10, pady=10, expand=True, fill='both')
+        # # Setting up the chat area
+        # self.chat_area = tk.Text(root, state='disabled', wrap='word')
+        # self.chat_area.pack(padx=10, pady=10, expand=True, fill='both')
 
-        # Setting up the user input area
-        self.user_input_area = tk.Entry(root)
-        self.user_input_area.pack(padx=10, pady=10, fill='x')
-        self.user_input_area.bind("<Return>", self.handle_user_input)
+        # # Setting up the user input area
+        # self.user_input_area = tk.Entry(root)
+        # self.user_input_area.pack(padx=10, pady=10, fill='x')
+        # self.user_input_area.bind("<Return>", self.handle_user_input)
 
         # logging
         # Open or create a log file for this session

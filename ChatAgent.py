@@ -268,7 +268,7 @@ class ChatAgent:
     
     def act(self, action:str, action_args:str):
         """take the action with the action arguments"""
-        goal_predicate = f'{action}({action_args.lower()})'
+        goal_predicate = f'{action}(self,{action_args.lower()})'
         return self.diarc.submit_DIARC_goal(goal=goal_predicate)
 
 
