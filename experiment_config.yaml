@@ -1,20 +1,23 @@
-exp_condition: base
+exp_condition: reasonable
 exp_welcome_message: "You are collaborating with a robot to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 \n
 \n\t- Jo is 2 years old
-\n\t- Jo likes sweet foods
-\n\t- Jo dislikes sour foods
+\n\t- Jo likes foods that taste sweet
+\n\t- Jo dislikes foods that might taste bitter
+\n\t- Jo strongly dislikes foods that might taste sour
+\n\t- Jo prefers blue over red
+\n\t- Jo doesn't like green
 \n
 \nThe cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top.
 The decorative items are currently in their staging locations. You may decorate the cake however you like by moving some of them onto the cake. Here is an example of how you might communicate with the robot:
 \n
-\n\t- “put the pink candle at location a1”
+\n\t- “put the pink candle at location a2”
 \n\t- “take the cherry off the cake”
 \n
 \nWhen you are done with the decoration, you may type \"done\" to end the conversation."
-exp_chat_interface_title: "Command Interface"
-#exp_chat_interface_title: "Robot Chat"
-user_name: Test
+#exp_chat_interface_title: "Command Interface"
+exp_chat_interface_title: "Robot Chat"
+user_name: Test User
 server_host: localhost
 server_port: 8080
 wait_for_action_completion: 5
