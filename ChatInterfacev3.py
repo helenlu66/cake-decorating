@@ -68,7 +68,6 @@ class ChatInterface:
             return
         if count > 3:
             count = 1
-        print("generating .")
        
         self.chat_area.config(state='normal')
         self.chat_area.delete(self.processing_message_id, tk.END)

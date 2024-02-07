@@ -23,7 +23,10 @@ class ChatAgent:
         self.exp_config = load_experiment_config('experiment_config.yaml')
         self.response_enabled = self.exp_config['exp_condition'] != 'base'
         self.max_retries = 5
-        self.messages = [SystemMessage(content=task_instructions)]
+        if self.exp_config['exp_condition'] != 'reasonable':
+            self.messages = [SystemMessage(content=random_suggestion_prompt)]
+        else:
+            self.messages = [SystemMessage(content=task_instructions)]
     
 
         if self.response_enabled:
@@ -35,7 +38,7 @@ class ChatAgent:
         
         self.random_suggestion_rephraser = LLMChain(
             prompt=rephrase_prompt,
-            llm=ChatOpenAI(model='gpt-4')
+            llm=ChatOpenAI(model='gpt-3.5-turbo')
         )
         self.diarc = DIARCInterface(server_host='localhost', server_port='8080')
         self.should_proactively_suggest_next_action = True
@@ -43,8 +46,9 @@ class ChatAgent:
     def process_human_input(self, human_message:str):
         """generate a response to the human message and append it to messages"""
         self.messages.append(HumanMessage(content=human_message))
-        # introspect on beliefs about the environment
-        self.update_prompt_with_beliefs()
+        # introspect on beliefs about the environment for better reasonable suggestions
+        if self.exp_config['exp_condition'] != 'base':
+            self.update_prompt_with_beliefs()
         # extract important information from the chat messages according to instructions in the system prompt
         ai_message:AIMessage = self.chat.invoke(self.messages)
         print(ai_message)
@@ -57,15 +61,41 @@ class ChatAgent:
         print(ai_message)
         return ai_message.content
     
+    
     def update_prompt_with_beliefs(self) -> ChatPromptTemplate:
         """update the system messages with current beliefs"""
-        observable_objects = self.introspect('object(X, physobj)')
-        beliefs = self.introspect('canpickup(X)')
-        beliefs += self.introspect('at(X, Y)')
-        beliefs += self.introspect('on(X, cake)')
+        observable_objects_desc = []
+        observable_objects_pred = self.introspect('object(X, physobj)')
+        # translate predicates into NL descriptions for LLM
+        for pred in observable_objects_pred:
+            observable_object_binding = self.get_X_var_binding(filledin_predicate=pred)
+            observable_object_desc = self.translate_pred(pred='object(X, physobj)', bindings=observable_object_binding)
+            observable_objects_desc.append(observable_object_desc)
+        
+        beliefs_pred = self.introspect('canpickup(X)')
+        beliefs_desc = []
+        # translate beliefs predicates into NL descriptions for LLM
+        for pred in beliefs_pred:
+            belief_binding = self.get_X_var_binding(filledin_predicate=pred)
+            belief_desc = self.translate_pred(pred='canpickup(X)', bindings=belief_binding)
+            beliefs_desc.append(belief_desc)
+    
+        beliefs_pred = self.introspect('at(X, Y)')
+        for pred in beliefs_pred:
+            belief_binding = self.get_X_Y_var_binding(filledin_predicate=pred)
+            belief_desc = self.translate_pred(pred='at(X, Y)', bindings=belief_binding)
+            beliefs_desc.append(belief_desc)
+        
+        beliefs_pred = self.introspect('on(X, cake)')
+        for pred in beliefs_pred:
+            belief_binding = self.get_X_var_binding(filledin_predicate=pred)
+            belief_desc = self.translate_pred(pred='on(X, cake)', bindings=belief_binding)
+            beliefs_desc.append(belief_desc)
+
+        # fill in the prompt with observable objects and beliefs
         self.messages[0].content=self.messages[0].content.format(
-            observable_objects=str(observable_objects), 
-            beliefs=str(beliefs),
+            observable_objects=str(observable_objects_desc), 
+            beliefs=str(beliefs_desc),
             # action="{action}",
             # action_parameters="{action parameters}",
             description_of_action="{description_of_action}",
@@ -73,16 +103,54 @@ class ChatAgent:
             ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}"
         )
         self.suggestion_messages[0].content = self.messages[0].content.format(
-            observable_objects=str(observable_objects), 
-            beliefs=str(beliefs),
+            observable_objects=str(observable_objects_desc), 
+            beliefs=str(beliefs_desc),
             # action="{action}",
             # action_parameters="{action parameters}",
             description_of_action="{description_of_action}",
             reason_for_selecting_the_action="{reason_for_selecting_the_action}",
             ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}"
         )
+        print(self.suggestion_messages[0].content)
+
+    import re
+
+    def get_X_var_binding(self, filledin_predicate):
+        # Updated regex to match any string after X, separated by a comma
+        match = re.search(r'\(([^,)]*)', filledin_predicate)
+
+        if match:
+            value_of_x = match.group(1)
+            return {'X': value_of_x}
+        else:
+            print("No X match found")
+            return {'X':filledin_predicate}
 
     
+    def get_X_Y_var_binding(self, filledin_predicate):
+        # Regular expression to extract X and Y
+        match = re.search(r"\w+\s*\(\s*(.*?)\s*,\s*(.*?)\s*\)", filledin_predicate)
+
+        if match:
+            x, y = match.groups()
+            result = {"X": x, "Y": y}
+            return result
+        else:
+            print("No X, Y match found")
+            return {"X": filledin_predicate, "Y": filledin_predicate}
+
+    def translate_pred(self, pred:str, bindings:dict):
+        pred_translations = {
+            'object(X, physobj)':"there is a {X}.",
+            'canpickup(X)':"you have the capability of picking up {X}.",
+            'at(X, Y)':"{X} is at location {Y}.",
+            'on(X, cake)':"{X} is on the cake."
+        }
+        translation = pred_translations[pred]
+        filledin_translation = translation.format(**bindings)
+        return filledin_translation
+        
+
     def classify_ai_message(self, ai_message:AIMessage) -> str:
         """classify the ai message as one of `action`, `suggestion` or `other`
 
@@ -263,26 +331,18 @@ class ChatAgent:
         canpickup_items_beliefs = self.introspect(predicate='canpickup(X)')
         free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(Y)')
 
-        def get_var_binding(filledin_predicate):
-            match = re.search(r'\((.*?)\)', filledin_predicate)
-
-            if match:
-                value_of_x = match.group(1)
-                return value_of_x
-            else:
-                print("No match found")
         
         suggestions = []
         for decorative_item, free_cake_loc in list(itertools.product(canpickup_items_beliefs, free_cake_locs_beliefs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
-            decorative_item = get_var_binding(decorative_item)
-            free_cake_loc = get_var_binding(free_cake_loc)
-            random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}.{random_reason}.{ask_what_the_human_user_thinks_of_this_idea}.""".format(
+            decorative_item = self.get_X_var_binding(decorative_item)['X']
+            free_cake_loc = self.get_X_var_binding(free_cake_loc)['X']
+            random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}.{random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 free_cake_loc=free_cake_loc,
                 random_reason=random_reason,
-                ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"
+                #ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"
             )
             suggestions.append(random_suggestion)
         
@@ -290,11 +350,11 @@ class ChatAgent:
         for decorative_item in on_cake_decorative_items_beliefs:
             # suggest taking a random item off the cake
             random_reason = random.choice(random_reasons)
-            decorative_item = get_var_binding(decorative_item)
-            random_suggestion = """Let's take the {decorative_item} off the cake.{random_reason}.{ask_what_the_human_user_thinks_of_this_idea}.""".format(
+            decorative_item = self.get_X_var_binding(decorative_item)['X']
+            random_suggestion = """Let's take the {decorative_item} off the cake.{random_reason}.What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 random_reason=random_reason,
-                ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"
+                #ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"
             )
             suggestions.append(random_suggestion)
         
@@ -305,6 +365,9 @@ class ChatAgent:
         suggestion = self.random_suggestion_rephraser.invoke({'sentences':suggestion})['text']
         ai_message = AIMessage(content=suggestion)
         self.messages.append(ai_message)
+        # self.messages.append(SystemMessage(content="rephrase your last suggestion according to the human's message and make it human readable."))
+        # print('raw suggestion': suggestion)
+        # ai_message = self.chat.invoke(self.messages)
         return ai_message
         
     
