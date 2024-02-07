@@ -4,8 +4,9 @@ from pprint import pprint
 
 task_instructions = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 Jo is 2 years old
-Jo likes sweet foods
-Jo dislikes sour foods
+Jo likes foods that taste sweet
+Jo dislikes foods that might taste sour
+jo dislikes foods that might taste bitter
 
 The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```

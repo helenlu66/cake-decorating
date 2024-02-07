@@ -52,21 +52,41 @@ class ChatInterface:
     def handle_user_input(self, event=None):
         user_input = self.user_input_area.get()
         if user_input.lower() == 'done':
-            self.append_message(self.goodbye_message)
+            self.append_message("Goodbye! Have a nice day!", "Robot")
             self.root.after(2000, self.root.destroy)  # Wait 2 seconds before closing
         else:
             self.append_message(user_input, "You")
             self.user_input_area.delete(0, tk.END)
-            # Start get_text_response in a separate thread
-            response_thread = threading.Thread(target=self.process_user_input, args=(user_input,))
+            # Reset the event before starting the thread
+            self.response_ready.clear()
+            response_thread = threading.Thread(target=self.process_response, args=(user_input,))
             response_thread.start()
             # Show typing indicator on a new line
             self.typing_indicator_id = self.chat_area.index(tk.END)
             self.append_message("The robot is processing your message ...")
-            
-            #self.update_typing_indicator(exp_config['wait_for_action_completion'])
-            self.root.after(1000 * exp_config['wait_for_action_completion'], self.update_typing_indicator, exp_config['wait_for_action_completion'])
-            
+            self.update_typing_indicator(repetitions=exp_config['wait_for_action_completion'])
+
+    def process_response(self, user_input):
+        response = self.get_text_response(user_input)
+        self.prepared_response = response
+        # Signal that processing is done and the response is ready
+        self.response_ready.set()
+        # Update the UI after processing is done (using the main thread)
+        self.root.after(0, lambda: self.respond(response))
+
+    def respond(self, response):
+        # Remove typing indicator before showing the response
+        self.chat_area.config(state='normal')
+        self.chat_area.delete(self.typing_indicator_id, tk.END)
+        # Ensure the next message starts on a new line
+        if not self.chat_area.get('1.0', tk.END).endswith('\n'):
+            self.chat_area.insert(tk.END, "\n")
+        self.chat_area.config(state='disabled')
+        if self.robot_response_enabled:
+            self.append_message(response, "Robot")
+        else:
+            #TODO:get a default response for the base condition
+            self.append_message(response)
     
     def process_user_input(self, user_input):
         self.prepared_response = self.get_text_response(user_input)
@@ -74,7 +94,7 @@ class ChatInterface:
     
     def wait_for_response(self):
         if self.response_ready.is_set():
-            self.respond()
+            self.respond(self.prepared_response)
         else:
             # Check again after a short delay
             self.root.after(100, self.wait_for_response)
@@ -94,19 +114,6 @@ class ChatInterface:
         else:
             # After the last repetition, append the next message
             self.root.after(1000, self.wait_for_response)
-
-    def respond(self):
-        # Remove typing indicator before showing the response
-        self.chat_area.config(state='normal')
-        self.chat_area.delete(self.typing_indicator_id, tk.END)
-        # Ensure the next message starts on a new line
-        if not self.chat_area.get('1.0', tk.END).endswith('\n'):
-            self.chat_area.insert(tk.END, "\n")
-        self.chat_area.config(state='disabled')
-        if self.robot_response_enabled:
-            self.append_message(self.prepared_response, "Robot")
-        else:
-            self.append_message(self.report_system_status())
 
     
     def report_system_status(self):

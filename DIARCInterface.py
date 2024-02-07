@@ -26,8 +26,7 @@ class DIARCInterface:
         }
         response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
         
-        print("submitted goal: ", goal, ' wait time: ', wait_time)
-        time.sleep(wait_time)
+        print("submitted goal: ", goal)
         return self.check_response(response=response)
     
 
