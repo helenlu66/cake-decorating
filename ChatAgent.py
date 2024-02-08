@@ -1,3 +1,4 @@
+import logging
 import itertools
 import random
 import re
@@ -16,6 +17,7 @@ from langchain.prompts.chat import (
     AIMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
+logging.basicConfig(filename='chat_agent.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class ChatAgent:
@@ -23,10 +25,11 @@ class ChatAgent:
         self.exp_config = load_experiment_config('experiment_config.yaml')
         self.response_enabled = self.exp_config['exp_condition'] != 'base'
         self.max_retries = 5
-        if self.exp_config['exp_condition'] != 'reasonable':
-            self.messages = [SystemMessage(content=random_suggestion_prompt)]
-        else:
-            self.messages = [SystemMessage(content=task_instructions)]
+        self.messages = [SystemMessage(content=classification_instructions)]
+        # if self.exp_config['exp_condition'] != 'reasonable':
+        #     self.messages = [SystemMessage(content=classification_instructions)]
+        # else:
+        #     self.messages = [SystemMessage(content=task_instructions)]
     
 
         if self.response_enabled:
@@ -38,27 +41,34 @@ class ChatAgent:
         
         self.random_suggestion_rephraser = LLMChain(
             prompt=rephrase_prompt,
-            llm=ChatOpenAI(model='gpt-3.5-turbo')
+            llm=ChatOpenAI(model='gpt-3.5-turbo', temperature=0)
         )
         self.diarc = DIARCInterface(server_host='localhost', server_port='8080')
         self.should_proactively_suggest_next_action = True
+        
+        # Log initialization message
+        logging.info("ChatAgent initialized with response_enabled=%s", self.response_enabled)
+
 
     def process_human_input(self, human_message:str):
         """generate a response to the human message and append it to messages"""
         self.messages.append(HumanMessage(content=human_message))
         # introspect on beliefs about the environment for better reasonable suggestions
-        if self.exp_config['exp_condition'] != 'base':
-            self.update_prompt_with_beliefs()
+        self.update_prompt_with_beliefs()
         # extract important information from the chat messages according to instructions in the system prompt
+        print(self.messages)
         ai_message:AIMessage = self.chat.invoke(self.messages)
-        print(ai_message)
+        # Log the human message and AI message
+
+        print('classification: ', ai_message)
         # process the extracted information into a response to the human
         self.messages.append(ai_message)
-        ai_message:AIMessage | str = self.post_process_ai_message(ai_message)
+        ai_message:AIMessage | str = self.post_process_ai_message(ai_message, human_message)
         if not self.response_enabled:
             return ai_message.content
         
         print(ai_message)
+        logging.info("messages: %s", self.messages)
         return ai_message.content
     
     
@@ -91,6 +101,12 @@ class ChatAgent:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
             belief_desc = self.translate_pred(pred='on(X, cake)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
+        
+        beliefs_pred = self.introspect('freecakeloc(X)')
+        for pred in beliefs_pred:
+            belief_binding = self.get_X_var_binding(filledin_predicate=pred)
+            belief_desc = self.translate_pred(pred='freecakeloc(X)', bindings=belief_binding)
+            beliefs_desc.append(belief_desc)
 
         # fill in the prompt with observable objects and beliefs
         self.messages[0].content=self.messages[0].content.format(
@@ -100,7 +116,9 @@ class ChatAgent:
             # action_parameters="{action parameters}",
             description_of_action="{description_of_action}",
             reason_for_selecting_the_action="{reason_for_selecting_the_action}",
-            ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}"
+            ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}",
+            inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
+            redirect_the_user_back_to_task="{redirect_the_user_back_to_task}"
         )
         self.suggestion_messages[0].content = self.messages[0].content.format(
             observable_objects=str(observable_objects_desc), 
@@ -109,11 +127,12 @@ class ChatAgent:
             # action_parameters="{action parameters}",
             description_of_action="{description_of_action}",
             reason_for_selecting_the_action="{reason_for_selecting_the_action}",
-            ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}"
+            ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}",
+            inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
+            redirect_the_user_back_to_task="{redirect_the_user_back_to_task}"
         )
         print(self.suggestion_messages[0].content)
 
-    import re
 
     def get_X_var_binding(self, filledin_predicate):
         # Updated regex to match any string after X, separated by a comma
@@ -144,7 +163,8 @@ class ChatAgent:
             'object(X, physobj)':"there is a {X}.",
             'canpickup(X)':"you have the capability of picking up {X}.",
             'at(X, Y)':"{X} is at location {Y}.",
-            'on(X, cake)':"{X} is on the cake."
+            'on(X, cake)':"{X} is on the cake.",
+            'freecakeloc(X)':"the location {X} on the cake is not occupied."
         }
         translation = pred_translations[pred]
         filledin_translation = translation.format(**bindings)
@@ -152,17 +172,17 @@ class ChatAgent:
         
 
     def classify_ai_message(self, ai_message:AIMessage) -> str:
-        """classify the ai message as one of `action`, `suggestion` or `other`
+        """classify the ai message as one of `action`, `suggestion`, `alternative suggestion` or `other`
 
         Args:
             ai_message (AIMessage): the ai's message
         """
         parsed_message = ai_message.content.split('\n')
-        if parsed_message[0].lower() not in ('action', 'suggestion'):
-            return 'other'
-        return parsed_message[0]
+        if parsed_message[0].lower() not in ('action', 'suggestion', 'alternative suggestion', 'other'):
+            return 'incorrect format'
+        return parsed_message[0].lower().strip()
 
-    def post_process_ai_message(self, ai_message:AIMessage):
+    def post_process_ai_message(self, ai_message:AIMessage, human_message:HumanMessage):
         """need processing to get action status, generate proper response, and then append ai_message
         if action status is success, generate a suggestion for next step
         if action status is failure, say that there's a problem
@@ -198,6 +218,7 @@ class ChatAgent:
             print("action status: ", action_success)
             if action_success and self.should_proactively_suggest_next_action:
                 ai_message = self.generate_suggestion(following_an_action=True)
+                
                 self.should_proactively_suggest_next_action = False
                 return ai_message
             # action status is success, ask the human what they like to do next
@@ -221,22 +242,23 @@ class ChatAgent:
                 self.messages.append(ai_message)
                 self.should_proactively_suggest_next_action = True
                 return ai_message
-        elif parsed_message[0].lower() == 'suggestion': #this happens if the user asks for suggestions
+        elif parsed_message[0].lower() in {'suggestion', 'alternative suggestion', 'alternativesuggestion'}: #this happens if the user asks for a suggestion
+            # and the robot needs to respond with a suggestion instead of proactive giving one
             self.should_proactively_suggest_next_action = False
-            if self.exp_config['exp_condition'].lower() == 'random':
-                ai_message = self.generate_random_suggestion()
-                return ai_message
+            if self.exp_config['exp_condition'].lower() != 'base':
+                ai_message = self.generate_suggestion(following_an_action=False)
             if not self.response_enabled: #should not be giving suggestions
                 return AIMessage(content="The robot cannot respond to your request")
-            self.messages.append(ai_message)
+            
             return AIMessage(content=self.remove_first_line(ai_message.content))
-        else: # ai message is a regular response. Display it directly to the human.
+        else: # human is off course, redirect
             if not self.response_enabled: #should not be giving suggestions
                 return AIMessage(content="The robot cannot respond to your request")
+            ai_message = self.redirect(human_message=human_message)
             self.messages.append(ai_message)
             return ai_message
         
-    
+
     def generate_suggestion(self, following_an_action=False):
         """suggest the next step to take based on the kind of condition. Either `random` or `reasonable`.
         """
@@ -244,36 +266,17 @@ class ChatAgent:
             # randomly suggest a valid next move
             ai_message = self.generate_random_suggestion(following_an_action=following_an_action)
             self.should_proactively_suggest_next_action = False
+            self.messages.append(ai_message)
             return ai_message
         
         # otherwise make sure to generate a reasonable suggestion
         if following_an_action:
-            self.messages.append(SystemMessage(content=
-                    """You just completed an action. Suggest to the human user an action you can take next in the following format:
-                    ```
-                    suggestion
-                    I have completed the action. Let's {description of action}.{reason for selecting the action}.{ask what the human user thinks of this suggestion}
-                    ```
-                    Keep your reason in 1 sentence.
-                    """
-                ))
+            self.messages.append(SystemMessage(content=minimal_suggestion_prompt_following_action))
             ai_message = self.suggestion_chat.invoke(self.messages)
             i = 0
-            while self.classify_ai_message(ai_message=ai_message) != 'suggestion':
+            while self.classify_ai_message(ai_message=ai_message) not in {'suggestion', 'alternative suggestion'}:
                 self.messages.append(ai_message)
-                self.messages.append(SystemMessage(content=
-                    """the response you generated was not in the correct format for a suggestion. Suggest an action you can take next in the following format:
-                    ```
-                    suggestion
-                    I have completed the action. Let's {description of action}.{reason for selecting the action}.{ask what the human user thinks of this suggestion}
-                    ```
-                    Keep your reason in 1 sentence. For example:
-                    ```
-                    suggestion
-                    I have completed the action. Let's take the dark chocolate off since Jo dislikes bitter and the dark chocolate might be perceived as bitter. What do you think of this idea?
-                    ```
-                    """
-                ))
+                self.messages.append(SystemMessage(content=minimal_resuggest_prompt_following_action))
                 print("inside suggestion loop", ai_message)
                 if i >= self.max_retries:
                     ai_message = self.generate_random_suggestion(following_an_action=following_an_action)
@@ -285,32 +288,12 @@ class ChatAgent:
                     ai_message:AIMessage = self.chat.invoke(self.messages)
                 i += 1
         else:
-            self.messages.append(SystemMessage(content=
-                    """Suggest an action you can take next in the following format:
-                    ```
-                    suggestion
-                    Let's {description of action}.{reason for selecting the action}.{ask what the human user thinks of this suggestion}
-                    ```
-                    Keep your reason in 1 sentence. 
-                    """
-                ))
+            self.messages.append(SystemMessage(content=minimal_suggestion_prompt))
             ai_message = self.chat.invoke(self.messages)
             i = 0
-            while self.classify_ai_message(ai_message=ai_message) != 'suggestion' and i < self.max_retries:
+            while self.classify_ai_message(ai_message=ai_message) not in {'suggestion', 'alternative suggestion'} and i < self.max_retries:
                 self.messages.append(ai_message)
-                self.messages.append(SystemMessage(content=
-                    """the response you generated was not in the correct format for a suggestion. Suggest an action you can take next in the following format:
-                    ```
-                    suggestion
-                    Let's {description of action}.{reason for selecting the action}.{ask what the human user thinks of this suggestion}
-                    ```
-                    Keep your reason in 1 sentence. For example:
-                    ```
-                    suggestion
-                    Let's take the dark chocolate off since Jo dislikes bitter and the dark chocolate might be perceived as bitter. What do you think of this idea?
-                    ```
-                    """
-                ))
+                self.messages.append(SystemMessage(content=minimal_resuggest_prompt))
                 print("inside suggestion loop", ai_message)
                 if i >= self.max_retries:
                     ai_message = self.generate_random_suggestion(following_an_action=following_an_action)
@@ -329,7 +312,7 @@ class ChatAgent:
     def generate_random_suggestion(self, following_an_action=False):
         """generate a random suggestion on next action given the current beliefs about the environment"""
         canpickup_items_beliefs = self.introspect(predicate='canpickup(X)')
-        free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(Y)')
+        free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(X)')
 
         
         suggestions = []
@@ -364,13 +347,19 @@ class ChatAgent:
             suggestion = "I have completed the action. " + suggestion
         suggestion = self.random_suggestion_rephraser.invoke({'sentences':suggestion})['text']
         ai_message = AIMessage(content=suggestion)
-        self.messages.append(ai_message)
+        #self.messages.append(ai_message)
         # self.messages.append(SystemMessage(content="rephrase your last suggestion according to the human's message and make it human readable."))
         # print('raw suggestion': suggestion)
         # ai_message = self.chat.invoke(self.messages)
         return ai_message
         
-    
+    def redirect(self, human_message:HumanMessage):
+        """redirect the user back to the task"""
+        ai_message:AIMessage = self.chat.invoke([human_message, SystemMessage(content=
+            redirect_prompt
+        )])
+        return ai_message
+
     def remove_first_line(self, paragraph):
         lines = paragraph.split('\n')  # Split the paragraph into a list of lines
         if len(lines) > 1:  # Check if there is more than one line
