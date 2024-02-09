@@ -242,8 +242,24 @@ random_reasons = [
     "Opting for this is great because it should lead to good results.",
     "This is the right move, as it brings advantages.",
     "It's a beneficial step, so it's definitely a good idea.",
-    "Choosing this way is smart because it leads to better outcomes."
+    "Doing this action is good because it'll lead to better outcomes."
 ]
+
+object_names = {
+    "mintmacaron":"mint macaron",
+    "strawberry":"strawberry",
+    "blueberries":"blueberries",
+    "yellowcandle":"yellow candle",
+    "pinkcandle":"pink candle",
+    "bluecandle":"blue candle",
+    "bluemarshmallow":"blue marshmallow",
+    "extremelydarkchocolate":"extremely dark chocolate",
+    "cherry":"cherry",
+    "cubewhitechocolate":"white chocolate cube",
+    "raspberries":"raspberries",
+    "letterj":"letter J",
+    "lettero":"letter O"
+}
 
 if __name__ == "__main__":
     pprint(rephrase_prompt)

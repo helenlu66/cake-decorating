@@ -328,14 +328,13 @@ class ChatAgent:
         """generate a random suggestion on next action given the current beliefs about the environment"""
         canpickup_items_beliefs = self.introspect(predicate='canpickup(X)')
         free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(X)')
-
+        free_cake_locs = set(self.get_X_var_binding(x)['X'] for x in free_cake_locs_beliefs)
+        canpickup_items = set(object_names[self.get_X_var_binding(x)['X']] for x in canpickup_items_beliefs)
         
         suggestions = []
-        for decorative_item, free_cake_loc in list(itertools.product(canpickup_items_beliefs, free_cake_locs_beliefs)):
+        for decorative_item, free_cake_loc in list(itertools.product(canpickup_items, free_cake_locs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
-            decorative_item = self.get_X_var_binding(decorative_item)['X']
-            free_cake_loc = self.get_X_var_binding(free_cake_loc)['X']
             random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}.{random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 free_cake_loc=free_cake_loc,
@@ -345,10 +344,13 @@ class ChatAgent:
             suggestions.append(random_suggestion)
         
         on_cake_decorative_items_beliefs = self.introspect(predicate='on(X, cake)')
-        for decorative_item in on_cake_decorative_items_beliefs:
+        on_cake_decorative_items = set(object_names[self.get_X_var_binding(x)['X']] for x in on_cake_decorative_items_beliefs)
+        on_cake_canpickup_decorative_items = canpickup_items.intersection(on_cake_decorative_items)
+        print(on_cake_canpickup_decorative_items)
+        for decorative_item in on_cake_canpickup_decorative_items:
             # suggest taking a random item off the cake
             random_reason = random.choice(random_reasons)
-            decorative_item = self.get_X_var_binding(decorative_item)['X']
+            decorative_item = object_names[self.get_X_var_binding(decorative_item)['X']]
             random_suggestion = """Let's take the {decorative_item} off the cake.{random_reason}.What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 random_reason=random_reason,
@@ -360,7 +362,7 @@ class ChatAgent:
         suggestion = random.choice(suggestions)
         if following_an_action:
             suggestion = "I have completed the action. " + suggestion
-        suggestion = self.random_suggestion_rephraser.invoke({'sentences':suggestion})['text']
+        #suggestion = self.random_suggestion_rephraser.invoke({'sentences':suggestion})['text']
         ai_message = AIMessage(content=suggestion)
         #self.messages.append(ai_message)
         # self.messages.append(SystemMessage(content="rephrase your last suggestion according to the human's message and make it human readable."))
@@ -370,10 +372,10 @@ class ChatAgent:
         
     def redirect(self, human_message:HumanMessage):
         """redirect the user back to the task"""
-        ai_message:AIMessage = self.chat.invoke([human_message, SystemMessage(content=
-            redirect_prompt
-        )])
-        return ai_message
+        # ai_message:AIMessage = self.chat.invoke([human_message, SystemMessage(content=
+        #     redirect_prompt
+        # )])
+        return AIMessage(content="I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the cake or take things off.")
 
     def remove_first_line(self, paragraph):
         lines = paragraph.split('\n')  # Split the paragraph into a list of lines
