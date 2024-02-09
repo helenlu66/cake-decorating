@@ -210,22 +210,39 @@ fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can eith
 # random "reasons" for why an idea is good. All within 15 - 40 words
 # 15 different ways of saying "because this will make the cake look better".
 # used in generating random suggestions.
+# random_reasons = [
+#     "Because this will make the cake look nicer.",
+#     "Doing it this way should make the cake prettier.",
+#     "This will help the cake look better.",
+#     "It's to improve how the cake looks.",
+#     "So the cake can look more appealing.",
+#     "This should make the cake's appearance better.",
+#     "To make the cake look good.",
+#     "This makes the cake more attractive.",
+#     "To beautify the cake.",
+#     "It'll enhance the cake's look.",
+#     "This is to make the cake look its best.",
+#     "To give the cake a better look.",
+#     "This will pretty up the cake.",
+#     "So the cake looks more inviting.",
+#     "To boost the cake's appearance."
+# ]
 random_reasons = [
-    "Because this will make the cake look nicer.",
-    "Doing it this way should make the cake prettier.",
-    "This will help the cake look better.",
-    "It's to improve how the cake looks.",
-    "So the cake can look more appealing.",
-    "This should make the cake's appearance better.",
-    "To make the cake look good.",
-    "This makes the cake more attractive.",
-    "To beautify the cake.",
-    "It'll enhance the cake's look.",
-    "This is to make the cake look its best.",
-    "To give the cake a better look.",
-    "This will pretty up the cake.",
-    "So the cake looks more inviting.",
-    "To boost the cake's appearance."
+    "It's a smart move because it will bring good results.",
+    "Doing this is a good idea because it will help a lot.",
+    "This is the right move because it should work out well.",
+    "It's a smart move, meaning things will go better.",
+    "Choosing this is good because it will make things better.",
+    "It's the best option since it will lead to a better outcome.",
+    "This is wise, as it means things will improve.",
+    "Going this way is good because it fixes things.",
+    "It's a good call, which means it's the right move.",
+    "This decision is smart because it makes a positive difference.",
+    "It's a solid choice, meaning it's a good way to go.",
+    "Opting for this is great because it should lead to good results.",
+    "This is the right move, as it brings advantages.",
+    "It's a beneficial step, so it's definitely a good idea.",
+    "Choosing this way is smart because it leads to better outcomes."
 ]
 
 if __name__ == "__main__":
