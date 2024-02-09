@@ -80,7 +80,7 @@ if you should give an `alternative suggestion` on what next action you can take,
 ```
 alternative suggestion
 ```
-if the classification is `other`, output `other`.
+if the classification is `other`, output `other`. If asked for a reason, repeat the same reason you gave before.
 """
 # prompt telling LLM how to parse actions
 action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -187,12 +187,12 @@ I have completed the action. Let's take the dark chocolate off since Jo dislikes
 """
 
 redirect_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top.
-As a robot arm, you can do the following two actions:
+As a robot arm, you can do the following two actions or give suggestions on what next action to take.
 ```
 putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-The user seems to be off-course. Inform the user that you cannot respond to their request and redirect them back to the task.
+The user seems to be off-course. If they ask about how you Inform the user that you cannot respond to their request and redirect them back to the task.
 """
 
 rephrase_prompt = PromptTemplate.from_template(
@@ -202,6 +202,9 @@ rephrase_prompt = PromptTemplate.from_template(
 ```
 """    
 )
+
+fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the cake or take things off. I can also give suggestions. What would you like me to do next?"
+
 
 
 # random "reasons" for why an idea is good. All within 15 - 40 words

@@ -20,7 +20,7 @@ class DIARCInterface:
 
     
     def submit_DIARC_goal(self, goal:str, additional_wait_time:float=0):
-        wait_time = self.wait_time + additional_wait_time
+        
         data = {
             "goal":goal
         }

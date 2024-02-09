@@ -2,6 +2,7 @@ import logging
 import itertools
 import random
 import re
+import time
 from langchain.agents.openai_assistant import OpenAIAssistantRunnable
 from prompts import task_instructions
 from langchain.chains import LLMChain
@@ -45,9 +46,8 @@ class ChatAgent:
         )
         self.diarc = DIARCInterface(server_host='localhost', server_port='8080')
         self.should_proactively_suggest_next_action = True
+        self.log_file = open(f"experiment_log/{self.exp_config['user_name']}_{self.exp_config['exp_condition']}_prompts.log", "a")
         
-        # Log initialization message
-        logging.info("ChatAgent initialized with response_enabled=%s", self.response_enabled)
 
 
     def process_human_input(self, human_message:str):
@@ -68,7 +68,8 @@ class ChatAgent:
             return ai_message.content
         
         print(ai_message)
-        logging.info("messages: %s", self.messages)
+        self.log_file.write(str(self.messages) + "\n")
+        self.log_file.flush()
         return ai_message.content
     
     
@@ -248,15 +249,29 @@ class ChatAgent:
             if self.exp_config['exp_condition'].lower() != 'base':
                 ai_message = self.generate_suggestion(following_an_action=False)
             if not self.response_enabled: #should not be giving suggestions
+                time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
             
             return AIMessage(content=self.remove_first_line(ai_message.content))
-        else: # human is off course, redirect
+        elif parsed_message[0].lower()=='other': # human is off course, redirect
             if not self.response_enabled: #should not be giving suggestions
+                time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
             ai_message = self.redirect(human_message=human_message)
             self.messages.append(ai_message)
             return ai_message
+        else: # response is a follow up, send it directly to human
+            if not self.response_enabled: #should not be giving suggestions
+                time.sleep(2)
+                return AIMessage(content="The robot cannot respond to your request")
+            ai_message = self.redirect(human_message=human_message)
+            self.messages.append(ai_message)
+            return ai_message
+            # if not self.response_enabled: #should not be giving suggestions
+            #     time.sleep(2)
+            #     return AIMessage(content="The robot cannot respond to your request")
+            # self.messages.append(ai_message)
+            # return ai_message
         
 
     def generate_suggestion(self, following_an_action=False):
@@ -376,6 +391,11 @@ class ChatAgent:
         """take the action with the action arguments"""
         goal_predicate = f'{action}(self,{action_args.lower()})'
         return self.diarc.submit_DIARC_goal(goal=goal_predicate)
+    
+    def __del__(self):
+        # Close the log file when the ChatAgent object is destroyed
+        if self.log_file:
+            self.log_file.close()
 
 
 

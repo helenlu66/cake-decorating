@@ -79,7 +79,7 @@ class ChatInterface:
 
     def process_user_input(self, user_input):
         self.response_received = False
-        response = self.get_text_response(user_input)  # Simulate long-running task
+        response = self.get_text_response(user_input)  
         self.response_received = True
         if self.robot_response_enabled:
             self.append_message(response, "Robot")
