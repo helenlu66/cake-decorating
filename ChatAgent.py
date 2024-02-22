@@ -38,6 +38,7 @@ class ChatAgent:
 
         self.chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.suggestion_chat = ChatOpenAI(model="gpt-4", temperature=0)
+        self.explain_chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.suggestion_messages = [SystemMessage(content=suggestion_prompt)]
         
         self.random_suggestion_rephraser = LLMChain(
@@ -253,14 +254,14 @@ class ChatAgent:
                 return AIMessage(content="The robot cannot respond to your request")
             
             return AIMessage(content=self.remove_first_line(ai_message.content))
-        elif parsed_message[0].lower()=='other': # human is off course, redirect
-            if not self.response_enabled: #should not be giving suggestions
+        elif parsed_message[0].lower()=='explain': # human is asking for more explanation to a suggestion
+            if not self.response_enabled: #should not be giving explanations
                 time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
-            ai_message = self.redirect(human_message=human_message)
+            ai_message = self.explain()
             self.messages.append(ai_message)
             return ai_message
-        else: # response is a follow up, send it directly to human
+        else: # human is off course, need to redirect
             if not self.response_enabled: #should not be giving suggestions
                 return AIMessage(content="The robot cannot respond to your request")
             ai_message = self.redirect(human_message=human_message)
@@ -273,6 +274,17 @@ class ChatAgent:
             # return ai_message
         
 
+    def explain(self) -> AIMessage:
+        """human is asking for additional explanation. Explain the reasoning behind the last suggestion."""
+        
+        if self.exp_config['exp_condition'] == 'random':
+            random_explanation = random.choice(longer_random_reasons)
+            ai_message = AIMessage(content=random_explanation)
+        else:
+            self.messages.append(SystemMessage(content=explain_prompt))
+            ai_message = self.explain_chat(self.messages)
+        return ai_message
+    
     def generate_suggestion(self, following_an_action=False):
         """suggest the next step to take based on the kind of condition. Either `random` or `reasonable`.
         """

@@ -65,7 +65,7 @@ As a robot arm, you can do the following two actions:
 putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, or `other`.
+classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, 'explain', 'other'.
 if you should perform an action, output the action in the following example format:
 ```
 action
@@ -113,6 +113,9 @@ putOnCakeAtLoc
 pinkcandle, a1
 ```
 """
+
+# prompt telling the LLM to generate additional explanation for the last suggestion. Used when the human asked for more explanation.
+explain_prompt = """explain the reasoning behind your last suggestion in one sentence."""
 
 # prompt telling the LLM how to parse suggestion with state information, used when the main chat agent doesn't come up with the correct suggestion format
 suggestion_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -210,23 +213,6 @@ fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can eith
 # random "reasons" for why an idea is good. All within 15 - 40 words
 # 15 different ways of saying "because this will make the cake look better".
 # used in generating random suggestions.
-# random_reasons = [
-#     "Because this will make the cake look nicer.",
-#     "Doing it this way should make the cake prettier.",
-#     "This will help the cake look better.",
-#     "It's to improve how the cake looks.",
-#     "So the cake can look more appealing.",
-#     "This should make the cake's appearance better.",
-#     "To make the cake look good.",
-#     "This makes the cake more attractive.",
-#     "To beautify the cake.",
-#     "It'll enhance the cake's look.",
-#     "This is to make the cake look its best.",
-#     "To give the cake a better look.",
-#     "This will pretty up the cake.",
-#     "So the cake looks more inviting.",
-#     "To boost the cake's appearance."
-# ]
 random_reasons = [
     "It's a smart move because it will bring good results",
     "Doing this is a good idea because it will help a lot",
@@ -244,6 +230,26 @@ random_reasons = [
     "It's a beneficial step, so it's definitely a good idea",
     "Doing this action is good because it'll lead to better outcomes"
 ]
+
+# used in generating random explanation for suggestion
+longer_random_reasons = [
+    "It's really smart to do this next because it will help us move forward and keep things going in the right direction, which is what we need.",
+    "This should be our next thing to do because it fits perfectly with our plans and it's exactly what we should do to make things better for us.",
+    "We should definitely do this next because it will make a big difference in our situation and help us out a lot more than we think.",
+    "We really need to do this next because it's the right thing that fits our needs and will guide us closer to what we want to achieve.",
+    "Next up, we should tackle this because it's going to really help us solve our problems and get closer to finishing our goals.",
+    "This is a really good next step for us because it is a good action to take and makes sure we take a step in the right direction.",
+    "It's a smart idea to take this step next because it's exactly what we need at this moment to keep going and stay on track.",
+    "Let's choose this as our next step because it's a really beneficial move that can bring us a lot of good changes and advantages.",
+    "Making this our next move is smart because it fits right in with our goals and adds nicely to what we're already doing.",
+    "It's a wise choice to go ahead with this next because it matches our desires and offers a good solution to the problems we're facing.",
+    "Let's make this the next thing we do because it's the most efficient way to move forward and ensures we're heading in the right direction.",
+    "This is definitely the right action to take next because it will give us a boost and lay down the groundwork for even more success later.",
+    "We should get on this next because it's going to bring us a lot of benefits and perfectly lines up with where we want to go in the future.",
+    "Choosing this as our next step is a very smart decision because it shows we're focused on getting better and constantly improving what we're doing.",
+    "Going ahead with this as our next action is the best decision because it will make things a lot better and help our work go a lot smoother."
+]
+
 
 object_names = {
     "mintmacaron":"mint macaron",
