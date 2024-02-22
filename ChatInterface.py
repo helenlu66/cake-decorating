@@ -46,7 +46,7 @@ class ChatInterface:
         user_input = self.user_input_area.get()
         self.append_message(user_input, "You")
         self.user_input_area.delete(0, tk.END)
-        if user_input.lower() == 'done':
+        if user_input.lower() in ('done', 'done!', 'done.'):
             if self.robot_response_enabled:
                 self.append_message(self.goodbye_message, "Robot")
             else:
