@@ -262,7 +262,6 @@ class ChatAgent:
             return ai_message
         else: # response is a follow up, send it directly to human
             if not self.response_enabled: #should not be giving suggestions
-                time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
             ai_message = self.redirect(human_message=human_message)
             self.messages.append(ai_message)
@@ -335,7 +334,7 @@ class ChatAgent:
         for decorative_item, free_cake_loc in list(itertools.product(canpickup_items, free_cake_locs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
-            random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}.{random_reason}. What do you think of this idea?""".format(
+            random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}. {random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 free_cake_loc=free_cake_loc,
                 random_reason=random_reason,
@@ -350,8 +349,7 @@ class ChatAgent:
         for decorative_item in on_cake_canpickup_decorative_items:
             # suggest taking a random item off the cake
             random_reason = random.choice(random_reasons)
-            decorative_item = object_names[self.get_X_var_binding(decorative_item)['X']]
-            random_suggestion = """Let's take the {decorative_item} off the cake.{random_reason}.What do you think of this idea?""".format(
+            random_suggestion = """Let's take the {decorative_item} off the cake. {random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 random_reason=random_reason,
                 #ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"

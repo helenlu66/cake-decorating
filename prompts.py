@@ -228,21 +228,21 @@ fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can eith
 #     "To boost the cake's appearance."
 # ]
 random_reasons = [
-    "It's a smart move because it will bring good results.",
-    "Doing this is a good idea because it will help a lot.",
-    "This is the right move because it should work out well.",
-    "It's a smart move, meaning things will go better.",
-    "Choosing this is good because it will make things better.",
-    "It's the best option since it will lead to a better outcome.",
-    "This is wise, as it means things will improve.",
-    "Going this way is good because it fixes things.",
-    "It's a good call, which means it's the right move.",
-    "This decision is smart because it makes a positive difference.",
-    "It's a solid choice, meaning it's a good way to go.",
-    "Opting for this is great because it should lead to good results.",
-    "This is the right move, as it brings advantages.",
-    "It's a beneficial step, so it's definitely a good idea.",
-    "Doing this action is good because it'll lead to better outcomes."
+    "It's a smart move because it will bring good results",
+    "Doing this is a good idea because it will help a lot",
+    "This is the right move because it should work out well",
+    "It's a smart move, meaning things will go better",
+    "Choosing this is good because it will make things better",
+    "It's the best option since it will lead to a better outcome",
+    "This is wise, as it means things will improve",
+    "Going this way is good because it fixes things",
+    "It's a good call, which means it's the right move",
+    "This decision is smart because it makes a positive difference",
+    "It's a solid choice, meaning it's a good way to go",
+    "Opting for this is great because it should lead to good results",
+    "This is the right move, as it brings advantages",
+    "It's a beneficial step, so it's definitely a good idea",
+    "Doing this action is good because it'll lead to better outcomes"
 ]
 
 object_names = {
@@ -258,7 +258,10 @@ object_names = {
     "cubewhitechocolate":"white chocolate cube",
     "raspberries":"raspberries",
     "letterj":"letter J",
-    "lettero":"letter O"
+    "lettero":"letter O",
+    "letters":"letter S",
+    "lettera":"letter A",
+    "letterm":"letter M"
 }
 
 if __name__ == "__main__":

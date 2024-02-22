@@ -16,9 +16,8 @@ The decorative items are currently in their staging locations. You may decorate 
 \n\t- “take the cherry off the cake”
 \n
 \nThe robot can only take one action at a time. The letters on the cake cannot be moved. When you are done with the decoration, you may type \"done\" to end the conversation."
-exp_chat_interface_title: "Command Interface"
-#exp_chat_interface_title: "Robot Chat"
-user_name: Test User
+exp_chat_interface_title: "Robot"
+user_name: Human
 server_host: localhost
 server_port: 8080
 wait_for_action_completion: 5
