@@ -282,8 +282,8 @@ class ChatAgent:
             ai_message = AIMessage(content=random_explanation)
         else:
             self.messages.append(SystemMessage(content=explain_prompt))
-            ai_message = self.explain_chat(self.messages)
-        return ai_message
+            ai_message = self.explain_chat.invoke(self.messages)
+        return AIMessage(content=ai_message.content + " What would you like me to do next?")
     
     def generate_suggestion(self, following_an_action=False):
         """suggest the next step to take based on the kind of condition. Either `random` or `reasonable`.
@@ -346,7 +346,7 @@ class ChatAgent:
         for decorative_item, free_cake_loc in list(itertools.product(canpickup_items, free_cake_locs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
-            random_suggestion = """Let's put the {decorative_item} at location {free_cake_loc}. {random_reason}. What do you think of this idea?""".format(
+            random_suggestion = """Let's move the {decorative_item} to location {free_cake_loc}. {random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 free_cake_loc=free_cake_loc,
                 random_reason=random_reason,

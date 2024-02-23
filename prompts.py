@@ -22,14 +22,14 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
 if asked to perform an action, output the action in the following example format:
 ```
 action
-putOnCakeAtLoc
+moveToCakeLoc
 pinkcandle, a1
 ```
 
@@ -62,14 +62,14 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, 'explain', 'other'.
+classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
 if you should perform an action, output the action in the following example format:
 ```
 action
-putOnCakeAtLoc
+moveToCakeLoc
 pinkcandle, a1
 ```
 if you should give a `suggestion` on what next action you can take, output the following:
@@ -80,7 +80,11 @@ if you should give an `alternative suggestion` on what next action you can take,
 ```
 alternative suggestion
 ```
-if the classification is `other`, output `other`. If asked for a reason, repeat the same reason you gave before.
+if you should `explain`, output the following:
+```
+explain
+```
+if the classification is `other`, output `other`.
 """
 # prompt telling LLM how to parse actions
 action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -102,14 +106,14 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
 if asked to perform an action, output the action in the following example format:
 ```
 action
-putOnCakeAtLoc
+moveToCakeLoc
 pinkcandle, a1
 ```
 """
@@ -137,7 +141,7 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
@@ -192,7 +196,7 @@ I have completed the action. Let's take the dark chocolate off since Jo dislikes
 redirect_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top.
 As a robot arm, you can do the following two actions or give suggestions on what next action to take.
 ```
-putOnCakeAtLoc["put the object on the cake at the target location"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 The user seems to be off-course. If they ask about how you Inform the user that you cannot respond to their request and redirect them back to the task.
