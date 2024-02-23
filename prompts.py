@@ -106,10 +106,9 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
+moveToCakeLoc["move the object to the specified location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-
 if asked to perform an action, output the action in the following example format:
 ```
 action
@@ -145,7 +144,7 @@ moveToCakeLoc["move the object to the target location on the cake"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
-Give a suggestion on what next action you can take in the following format:
+Give a suggestion on one next action you can take in the following format:
 ```
 suggestion
 Let's {description_of_action}.{reason_for_selecting_the_action}.{ask_what_the_human_user_thinks_of_this_idea}
@@ -237,8 +236,8 @@ random_reasons = [
 
 # used in generating random explanation for suggestion
 longer_random_reasons = [
-    "It's really smart to do this next because it will help us move forward and keep things going in the right direction, which is what we need.",
-    "This should be our next thing to do because it fits perfectly with our plans and it's exactly what we should do to make things better for us.",
+    "It's really smart to do this next because it will help us move forward and keep things going in the right direction.",
+    "This should be our next thing to do because it fits perfectly with our plans and it's exactly what we should do.",
     "We should definitely do this next because it will make a big difference in our situation and help us out a lot more than we think.",
     "We really need to do this next because it's the right thing that fits our needs and will guide us closer to what we want to achieve.",
     "Next up, we should tackle this because it's going to really help us solve our problems and get closer to finishing our goals.",
