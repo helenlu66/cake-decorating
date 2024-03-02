@@ -69,8 +69,6 @@ classify whether you should do one of the following: `action`, `suggestion`, `al
 if you should perform an action, output the action in the following example format:
 ```
 action
-moveToCakeLoc
-pinkcandle, a1
 ```
 if you should give a `suggestion` on what next action you can take, output the following:
 ```
@@ -84,7 +82,7 @@ if you should `explain`, output the following:
 ```
 explain
 ```
-if the classification is `other`, output `other`.
+if the classification is `other`, output `other`. Your answer should be either `action`, `suggetion`, `alternative suggestion`, or `other`.
 """
 # prompt telling LLM how to parse actions
 action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -109,9 +107,8 @@ As a robot arm, you can do the following two actions:
 moveToCakeLoc["move the object to the specified location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-if asked to perform an action, output the action in the following example format:
+You can only take one action at a time. You are asked to perform an action, output the one next action you should perform in the following example format:
 ```
-action
 moveToCakeLoc
 pinkcandle, a1
 ```
