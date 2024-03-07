@@ -66,17 +66,17 @@ moveToCakeLoc["move the object to the target location on the cake"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
-if you should perform an action, output the action in the following example format:
+if you should perform an action, output the one action in the following example format:
 ```
 action
 moveToCakeLoc
 pinkcandle, a1
 ```
-if you should give a `suggestion` on what next action you can take, output the following:
+if you should give a `suggestion` on what one next action you can take, output the following:
 ```
 suggestion
 ```
-if you should give an `alternative suggestion` on what next action you can take, output the following:
+if you should give an `alternative suggestion` on what one next action you can take, output the following:
 ```
 alternative suggestion
 ```
@@ -109,7 +109,7 @@ As a robot arm, you can do the following two actions:
 moveToCakeLoc["move the object to the specified location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-if asked to perform an action, output the action in the following example format:
+if asked to perform an action, output the one action in the following example format:
 ```
 action
 moveToCakeLoc
@@ -134,7 +134,7 @@ The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from 
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+There is only one of each object available in the environment. The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
 ```
 {beliefs}
 ```
@@ -214,7 +214,7 @@ fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can eith
 
 
 # random "reasons" for why an idea is good. All within 15 - 40 words
-# 15 different ways of saying "because this will make the cake look better".
+# different vague ways of saying "it's a good action because it's good".
 # used in generating random suggestions.
 random_reasons = [
     "It's a smart move because it will bring good results",

@@ -53,11 +53,12 @@ class ChatAgent:
 
     def process_human_input(self, human_message:str):
         """generate a response to the human message and append it to messages"""
-        self.messages.append(HumanMessage(content=human_message))
         # introspect on beliefs about the environment for better reasonable suggestions
         self.update_prompt_with_beliefs()
+        self.messages.append(HumanMessage(content=human_message))
         # extract important information from the chat messages according to instructions in the system prompt
-        print(self.messages)
+        print("PROMPT=============", self.messages[0].content)
+        print("SUGGESTION PROMPT=============", self.suggestion_messages[0].content)
         ai_message:AIMessage = self.chat.invoke(self.messages)
         # Log the human message and AI message
 
@@ -133,7 +134,6 @@ class ChatAgent:
             inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
             redirect_the_user_back_to_task="{redirect_the_user_back_to_task}"
         )
-        print(self.suggestion_messages[0].content)
 
 
     def get_X_var_binding(self, filledin_predicate):
@@ -229,6 +229,7 @@ class ChatAgent:
                     return AIMessage(content="The robot has successfully completed the action")
                 self.messages.append(SystemMessage(content="You have successfully completed the action. Ask what action the human would like you to take next."))
                 ai_message = self.chat.invoke(self.messages)
+                # ai_message = AIMessage(content="I have successfully completed the action. What action would you like me to take next?")
                 self.messages.append(ai_message)
                 # the next human input is expected to be a command, the ai should proactively suggest an action after carrying out the command
                 self.should_proactively_suggest_next_action = True
@@ -241,6 +242,7 @@ class ChatAgent:
                         content="You didn't successfully complete the action. Ask the human to double-check their request or try some other action."
                     ))
                 ai_message = self.chat.invoke(self.messages)
+                # ai_message = AIMessage(content="I didn't successfully complete the action. Could you double-check your request or try some other action?")
                 self.messages.append(ai_message)
                 self.should_proactively_suggest_next_action = True
                 return ai_message
