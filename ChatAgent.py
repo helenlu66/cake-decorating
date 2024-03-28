@@ -110,9 +110,9 @@ class ChatAgent:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
             belief_desc = self.translate_pred(pred='freecakeloc(X)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
-
+        print(beliefs_desc)
         # fill in the prompt with observable objects and beliefs
-        self.messages[0].content=self.messages[0].content.format(
+        self.messages[0].content=classification_instructions.format(
             observable_objects=str(observable_objects_desc), 
             beliefs=str(beliefs_desc),
             # action="{action}",
@@ -123,7 +123,7 @@ class ChatAgent:
             inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
             redirect_the_user_back_to_task="{redirect_the_user_back_to_task}"
         )
-        self.suggestion_messages[0].content = self.messages[0].content.format(
+        self.suggestion_messages[0].content = suggestion_prompt.format(
             observable_objects=str(observable_objects_desc), 
             beliefs=str(beliefs_desc),
             # action="{action}",
