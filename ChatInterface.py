@@ -2,7 +2,6 @@ import tkinter as tk
 import threading
 from tkinter import font
 from datetime import datetime
-from tkinter import simpledialog
 from ConfigUtil import load_experiment_config
 from ChatAgent import ChatAgent
 
