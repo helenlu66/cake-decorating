@@ -58,7 +58,6 @@ class ChatAgent:
         # introspect on beliefs about the environment for better reasonable suggestions
         self.update_prompt_with_beliefs()
         # extract important information from the chat messages according to instructions in the system prompt
-        print(self.messages)
         ai_message:AIMessage = self.chat.invoke(self.messages)
         # Log the human message and AI message
 
@@ -69,7 +68,7 @@ class ChatAgent:
         if not self.response_enabled:
             return ai_message.content
         
-        print(ai_message)
+        print("===AI Message======\n" + ai_message.content)
         self.log_file.write(str(self.messages) + "\n")
         self.log_file.flush()
         return ai_message.content
@@ -217,7 +216,7 @@ class ChatAgent:
         if classification == 'action':
             self.messages.append(SystemMessage(content=action_prompt))
             action_msg = self.action_chat.invoke(self.messages)
-            print(action_msg)
+            print("action message", action_msg)
             parsed_message = action_msg.content.split("\n")
             action = parsed_message[0]
             action_args = parsed_message[1]
@@ -225,7 +224,8 @@ class ChatAgent:
             # if action status is success, generate a suggestion for the next step
             print("action status: ", action_success)
             if action_success and self.should_proactively_suggest_next_action:
-                ai_message = self.generate_suggestion(following_an_action=True)
+                ai_message = self.generate_question(following_an_action=True)
+                #ai_message = self.generate_suggestion(following_an_action=True)
                 
                 self.should_proactively_suggest_next_action = False
                 return ai_message
@@ -290,6 +290,13 @@ class ChatAgent:
             self.messages.append(SystemMessage(content=explain_prompt))
             ai_message = self.explain_chat.invoke(self.messages)
         return AIMessage(content=ai_message.content + " What would you like me to do next?")
+    
+    def generate_question(self, following_an_action=False):
+        """ask a question to stimulate the human's thinking"""
+        if following_an_action:
+            self.messages.append(SystemMessage(content=question_prompt))
+            ai_question = self.chat.invoke(self.messages)
+            return ai_question
     
     def generate_suggestion(self, following_an_action=False):
         """suggest the next step to take based on the kind of condition. Either `random` or `reasonable`.

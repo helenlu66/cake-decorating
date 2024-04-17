@@ -74,7 +74,7 @@ if you should give a `suggestion` on what next action you can take, output the f
 ```
 suggestion
 ```
-if you should give an `alternative suggestion` on what next action you can take, output the following:
+if the human asks for an `alternative suggestion` on what next action you should take, output the following:
 ```
 alternative suggestion
 ```
@@ -84,6 +84,38 @@ explain
 ```
 if the classification is `other`, output `other`. Your answer should be either `action`, `suggetion`, `alternative suggestion`, or `other`.
 """
+
+# prompt telling LLM to ask a question
+question_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
+Jo is 2 years old
+Jo wants to try macarons
+Jo dislikes cherry
+Jo likes foods that taste sweet
+Jo dislikes foods that might taste bitter
+Jo strongly dislikes foods that might taste sour
+Jo prefers blue over red
+
+The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+```
+{observable_objects}
+```
+The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+```
+{beliefs}
+```
+As a robot arm, you can do the following two actions:
+```
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
+takeOffCake["take the object off of the cake and put it back in its staging area](object)
+```
+
+Ask a divergent question to stimulate the human to think of more possible next actions to take in the following format:
+```
+question
+{question}
+```
+"""
+
 # prompt telling LLM how to parse actions
 action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 Jo is 2 years old
