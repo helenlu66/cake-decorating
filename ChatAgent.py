@@ -38,6 +38,7 @@ class ChatAgent:
 
         self.chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.suggestion_chat = ChatOpenAI(model="gpt-4", temperature=0)
+        self.action_chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.explain_chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.suggestion_messages = [SystemMessage(content=suggestion_prompt)]
         
@@ -211,10 +212,15 @@ class ChatAgent:
         """
         if self.exp_config['exp_condition'] == 'base':
             self.should_proactively_suggest_next_action = False
-        parsed_message = ai_message.content.split('\n')
-        if parsed_message[0].lower() == 'action':
-            action = parsed_message[1]
-            action_args = parsed_message[2]
+        #parsed_message = ai_message.content.split('\n')
+        classification = self.classify_ai_message(ai_message=ai_message)
+        if classification == 'action':
+            self.messages.append(SystemMessage(content=action_prompt))
+            action_msg = self.action_chat.invoke(self.messages)
+            print(action_msg)
+            parsed_message = action_msg.content.split("\n")
+            action = parsed_message[0]
+            action_args = parsed_message[1]
             action_success = self.act(action, action_args)
             # if action status is success, generate a suggestion for the next step
             print("action status: ", action_success)
@@ -227,6 +233,7 @@ class ChatAgent:
             elif action_success and not self.should_proactively_suggest_next_action:
                 if not self.response_enabled: # robot not allowed to talk. Return a system status message
                     return AIMessage(content="The robot has successfully completed the action")
+
                 self.messages.append(SystemMessage(content="You have successfully completed the action. Ask what action the human would like you to take next."))
                 ai_message = self.chat.invoke(self.messages)
                 # ai_message = AIMessage(content="I have successfully completed the action. What action would you like me to take next?")
@@ -242,11 +249,10 @@ class ChatAgent:
                         content="You didn't successfully complete the action. Ask the human to double-check their request or try some other action."
                     ))
                 ai_message = self.chat.invoke(self.messages)
-                # ai_message = AIMessage(content="I didn't successfully complete the action. Could you double-check your request or try some other action?")
                 self.messages.append(ai_message)
                 self.should_proactively_suggest_next_action = True
                 return ai_message
-        elif parsed_message[0].lower() in {'suggestion', 'alternative suggestion', 'alternativesuggestion'}: #this happens if the user asks for a suggestion
+        elif classification in {'suggestion', 'alternative suggestion', 'alternativesuggestion'}: #this happens if the user asks for a suggestion
             # and the robot needs to respond with a suggestion instead of proactive giving one
             self.should_proactively_suggest_next_action = False
             if self.exp_config['exp_condition'].lower() != 'base':
@@ -256,24 +262,24 @@ class ChatAgent:
                 return AIMessage(content="The robot cannot respond to your request")
             
             return AIMessage(content=self.remove_first_line(ai_message.content))
-        elif parsed_message[0].lower()=='explain': # human is asking for more explanation to a suggestion
+        elif classification=='explain': # human is asking for more explanation to a suggestion
             if not self.response_enabled: #should not be giving explanations
                 time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
             ai_message = self.explain()
             self.messages.append(ai_message)
             return ai_message
-        else: # human is off course, need to redirect
-            if not self.response_enabled: #should not be giving suggestions
+        elif classification=='other': # human is off course, need to redirect
+            if not self.response_enabled: #should not be giving responses
                 return AIMessage(content="The robot cannot respond to your request")
             ai_message = self.redirect(human_message=human_message)
             self.messages.append(ai_message)
             return ai_message
-            # if not self.response_enabled: #should not be giving suggestions
-            #     time.sleep(2)
-            #     return AIMessage(content="The robot cannot respond to your request")
-            # self.messages.append(ai_message)
-            # return ai_message
+        else: # message is a direct response
+            if not self.response_enabled: #should not be giving suggestions
+                return AIMessage(content="The robot cannot respond to your request")
+            self.messages.append(ai_message)
+            return ai_message
         
 
     def explain(self) -> AIMessage:
@@ -359,7 +365,7 @@ class ChatAgent:
         on_cake_decorative_items_beliefs = self.introspect(predicate='on(X, cake)')
         on_cake_decorative_items = set(object_names[self.get_X_var_binding(x)['X']] for x in on_cake_decorative_items_beliefs)
         on_cake_canpickup_decorative_items = canpickup_items.intersection(on_cake_decorative_items)
-        print(on_cake_canpickup_decorative_items)
+        print("currently on cake: ", on_cake_canpickup_decorative_items)
         for decorative_item in on_cake_canpickup_decorative_items:
             # suggest taking a random item off the cake
             random_reason = random.choice(random_reasons)
