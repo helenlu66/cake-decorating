@@ -65,28 +65,32 @@ As a robot arm, you can do the following two actions:
 moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
-if you should perform an action, output the action in the following example format:
+classify whether you should do one of the following: `action`, `location question`, `item question`, `explain`, or `other`.
+if you should perform an action, output the action in the following example formats:
 ```
 action
+moveToCakeLoc
+cubewhitechocolate,c1
 ```
-if you should give a `suggestion` on what next action you can take, output the following:
+if there are multiple items the human wants to move, you need to clarify which one to move next. Output the following:
 ```
-suggestion
+item question
+Which of these items would you like me to move next?
 ```
-if the human asks for an `alternative suggestion` on what next action you should take, output the following:
+if you should ask a question to clarify the target location of an item, output the following:
 ```
-alternative suggestion
+location question
+Where would you like me to put the item?
 ```
 if you should `explain`, output the following:
 ```
 explain
 ```
-if the classification is `other`, output `other`. Your answer should be either `action`, `suggetion`, `alternative suggestion`, or `other`.
+if the classification is `other`, output `other`. Your answer should be either `action`, `location question`, `item question`, `explain`, or `other`.
 """
 
-# prompt telling LLM to ask a question
-question_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
+# prompt telling LLM to ask an open-ended question
+open_question_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 Jo is 2 years old
 Jo wants to try macarons
 Jo dislikes cherry
@@ -109,15 +113,24 @@ moveToCakeLoc["move the object to the target location on the cake"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
-Ask a divergent question to stimulate the human to think of more possible next actions to take in the following format:
-```
-question
-{question}
-```
+Ask one open-ended "what" question that stimulates the user to think of the next action that you can take.
+question: Since Jo likes sweet foods and prefers blue over red, what action should I take that would cater to both Jo's color preference and taste preferece?
+
+Ask one open-ended "where" question that stimulates the user to think of the next action that you can take.
+question: Where should I place the mint macaron on the cake since Jo wants to try macarons?
+
+Ask one open-ended "how" question that stimulates the user to think of the next action that you can take.
+question: Given that Jo strongly dislikes bitter, How can we make sure that there is nothing bitter on the cake?
+
+Ask one open-ended "which" question that stimulates the user to think of the next action that you can take.
+question: Considering that Jo is 2 years old and prefers blue over red, which candle do you think I should put on the cake next?
+
+Ask one open-ended "{question_type}" question that stimulates the user to think of the next action that you can take.
+question: 
 """
 
-# prompt telling LLM how to parse actions
-action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
+# prompt telling LLM to ask a closed-ended question
+closed_question_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
 Jo is 2 years old
 Jo wants to try macarons
 Jo dislikes cherry
@@ -136,18 +149,54 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 As a robot arm, you can do the following two actions:
 ```
-moveToCakeLoc["move the object to the specified location on the cake"](object, target_location)
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
-You can only take one action at a time. You are asked to perform an action, output the one next action you should perform in the following example format:
+
+Ask one closed-ended "should" question that stimulates the user to think of the next action that you can take.
+question: Considering Jo's preference of the color blue and sweet taste, should I put the blue marshmallow at location a2?
+
+Ask one closed-ended "does" question that stimulates the user to think of the next action that you can take.
+question: Considering that Jo wants to try macarons, does putting the mint macaron at b1 sound good to you?
+
+Ask one closed-ended "do" question that stimulates the user to think of the next action that you can take.
+question: Considering that Jo dislikes cherry, do you think taking it off the cake will be better?
+
+Ask one closed-ended "can" question that stimulates the user to think of the next action that you can take.
+question: Since Jo dislikes foods that might taste bitter and the dark chocolate might taste bitter, can we take it off the cake?
+
+Ask one closed-ended "could" question that stimulates the user to think of the next action that you can take.
+question: Since Jo prefers blue over red, could moving the blue candle to c1 be visually pleasing to Jo?
+
+Ask one closed-ended "will" question that stimulates the user to think of the next action that you can take.
+question: Since some people find raspberries sour and Jo strongly dislikes sour, will taking the raspberries off be better?
+
+Ask one closed-ended "would" question that stimulates the user to think of the next action that you can take.
+question: Considering that Jo is 2 years old, would putting the yellow candle at b3 make the cake look better?
+
+Ask one closed-ended "is" question that stimulates the user to think of the next action that you can take.
+question: Considering that Jo prefers blue over red, are they going to like it if we put the pink candle at d2? 
+
+Ask one closed-ended "{question_type}" question that stimulates the user to think of the next action that you can take.
+question: 
+"""
+
+# prompt telling LLM how to parse actions
+action_prompt = """As a robot arm, you can do the following two actions:
 ```
+moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
+takeOffCake["take the object off of the cake and put it back in its staging area](object)
+```
+You can only take one action at a time. If asked to perform an action, output the one next action you should perform in the following example format:
+```
+action
 moveToCakeLoc
-pinkcandle, a1
+pinkcandle,a1
 ```
 """
 
 # prompt telling the LLM to generate additional explanation for the last suggestion. Used when the human asked for more explanation.
-explain_prompt = """explain the reasoning behind your last suggestion in one sentence."""
+explain_prompt = """explain your last response."""
 
 # prompt telling the LLM how to parse suggestion with state information, used when the main chat agent doesn't come up with the correct suggestion format
 suggestion_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -241,6 +290,15 @@ rephrase_prompt = PromptTemplate.from_template(
 fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the cake or take things off. I can also give suggestions. What would you like me to do next?"
 
 
+# words that open-ended questions start with
+open_question_starters = [
+    "what", "where", "which", "how"
+]
+
+# words that closed-ended questions start with
+closed_question_starters = [
+    "should", "does", "do", "can", "could", "will", "would", "are", "is"
+]
 
 # random "reasons" for why an idea is good. All within 15 - 40 words
 # 15 different ways of saying "because this will make the cake look better".

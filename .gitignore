@@ -1,5 +1,5 @@
 __pycache__
 .vscode/*
 env/*
-experiment_log/*
+.experiment_log/*
 *.log
