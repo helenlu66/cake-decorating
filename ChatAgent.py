@@ -119,15 +119,6 @@ class ChatAgent:
             beliefs_desc.append(belief_desc)
 
         # fill in the prompt with observable objects and beliefs
-        # self.messages[0].content=self.messages[0].content.format(
-        #     observable_objects=str(observable_objects_desc), 
-        #     beliefs=str(beliefs_desc),
-        #     description_of_action="{description_of_action}",
-        #     reason_for_selecting_the_action="{reason_for_selecting_the_action}",
-        #     ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}",
-        #     inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
-        #     redirect_the_user_back_to_task="{redirect_the_user_back_to_task}"
-        # )
         prompt.content = prompt.content.format(
             observable_objects=str(observable_objects_desc), 
             beliefs=str(beliefs_desc),
@@ -136,7 +127,9 @@ class ChatAgent:
             ask_what_the_human_user_thinks_of_this_idea="{ask_what_the_human_user_thinks_of_this_idea}",
             inform_the_user_that_you_cannot_respond_to_this="{inform_the_user_that_you_cannot_respond_to_this}",
             redirect_the_user_back_to_task="{redirect_the_user_back_to_task}",
-            question_type="{question_type}"
+            question_type="{question_type}",
+            multiple_items = "{multiple items}",
+            the_item = "{the item}"
         )
         print(prompt.content)
         return prompt
@@ -186,7 +179,7 @@ class ChatAgent:
             ai_message (AIMessage): the ai's message
         """
         parsed_message = ai_message.content.split('\n')
-        if parsed_message[0].lower() not in ('action', 'item question', 'location question', 'explain', 'other'):
+        if parsed_message[0].lower() not in ('action', 'item question', 'location question', 'do nothing', 'explain', 'other'):
             return 'incorrect format'
         return parsed_message[0].lower().strip()
 
@@ -217,16 +210,16 @@ class ChatAgent:
             self.should_proactively_respond = False
         
         classification = self.classify_ai_message(ai_message=ai_message)
-        if classification == 'action':
-            # action_prompt_msg = self.update_prompt_with_beliefs(prompt=self.action_messages[0])
-            # self.messages.append(action_prompt_msg)
-            # action_msg = self.action_chat.invoke(self.messages)
+        if classification in {'action', 'do nothing'}:
             parsed_message = ai_message.content.split("\n")
             print("action message", ai_message)
-            action = parsed_message[1]
-            action_args = parsed_message[2]
-            action_success = self.act(action, action_args)
-            # del self.action_messages[-1]
+            if classification == 'do nothing': # action status is automatically success if asked to do nothing
+                action_success = True
+            else:
+                action = parsed_message[1]
+                action_args = parsed_message[2]
+                action_success = self.act(action, action_args)
+            
             # if action status is success, ask either a closed- or open-ended question to stimulate the user to think about the next action
             print("action status: ", action_success)
             if action_success and self.should_proactively_respond:
@@ -237,8 +230,10 @@ class ChatAgent:
             elif action_success and not self.should_proactively_respond:
                 if not self.response_enabled: # robot not allowed to talk. Return a system status message
                     return AIMessage(content="The robot has successfully completed the action")
-                #self.messages.append(SystemMessage(content="You have successfully completed the action. Ask what action the human would like you to take next."))
-                ai_message = AIMessage(content="I have successfully completed the action. Please let me know what action you would like me to take next.")
+                if classification == 'do nothing':
+                    ai_message = AIMessage(content="Please let me know what action you would like me to take next.")
+                else:
+                    ai_message = AIMessage(content="I have successfully completed the action. Please let me know what action you would like me to take next.")
                 # the next human input is expected to be a command, the ai should proactively suggest an action after carrying out the command
                 self.should_proactively_respond = True
                 return ai_message
@@ -254,7 +249,16 @@ class ChatAgent:
             if not self.response_enabled: #should not be giving response
                 time.sleep(2)
                 return AIMessage(content="The robot cannot respond to your request")
-            return AIMessage(content=self.remove_first_line(ai_message.content))
+            elif self.exp_config['exp_condition'] == 'closed': 
+                open_ended_question = self.remove_first_line(ai_message.content)
+                rephrase_prompt = open_to_close_rephraser.format(
+                    question=open_ended_question
+                )
+                self.messages.append(SystemMessage(content=rephrase_prompt))
+                closed_ended_question = self.chat.invoke(self.messages)
+                return closed_ended_question
+            else: # ask the original follow-up open-question that starts with "which" or "where"
+                return AIMessage(content=self.remove_first_line(ai_message.content))
         elif classification in {'suggestion', 'alternative suggestion', 'alternativesuggestion'}: #this happens if the user asks for a suggestion
             # and the robot needs to respond with a suggestion instead of proactive giving one
             self.should_proactively_respond = False
