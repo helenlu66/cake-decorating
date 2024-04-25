@@ -34,7 +34,7 @@ class ChatAgent:
         if self.response_enabled:
             self.messages.append(AIMessage(content=f"Hello {self.exp_config['user_name']}, let's decorate a cake together. Please let me know what action you would like me to take first."))
 
-        self.chat = ChatOpenAI(model="gpt-4", temperature=0)
+        self.chat = ChatOpenAI(model="gpt-4", temperature=0.3)
         self.suggestion_chat = ChatOpenAI(model="gpt-4", temperature=0)
         self.action_chat = ChatOpenAI(model="gpt-4", temperature=0)
         action_prompt_msg = self.update_prompt_with_beliefs(prompt=SystemMessage(content=action_prompt))
