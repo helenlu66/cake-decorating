@@ -117,22 +117,22 @@ moveToCakeLoc["move the object to the target location on the cake"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
-Ask one open-ended "what" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one open-ended "what" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Since Jo likes sweet foods and prefers blue over red, what action should I take that would cater to both Jo's color preference and taste preferece?
 
-# Ask one open-ended "where" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s..
+# Ask one open-ended "where" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s..
 # question: Since Jo wants to try macarons, where should I place the mint macaron on the cake so that it is visually pleasing?
 
-Ask one open-ended "how" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one open-ended "how" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Given that Jo strongly dislikes bitter, how can we make sure that there is nothing bitter on the cake?
 
-Ask one open-ended "how" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one open-ended "how" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: How can we move the items on the cake so that the cake is more visually pleasing?
 
-Ask one open-ended "which" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one open-ended "which" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering that Jo is 2 years old and prefers blue over red, which candle do you think I should put on the cake next?
 
-Ask one open-ended "{question_type}" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one open-ended "{question_type}" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: 
 """
 # open_question_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
@@ -201,28 +201,28 @@ moveToCakeLoc["move the object to the target location on the cake"](object, targ
 takeOffCake["take the object off of the cake and put it back in its staging area](object)
 ```
 
-Ask one closed-ended "should" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "should" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering Jo's preference of the color blue and sweet taste, should I put the blue marshmallow at location a2?
 
-Ask one closed-ended "does" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "does" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering that Jo wants to try macarons, does putting the mint macaron at b1 sound good to you?
 
-Ask one closed-ended "do" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "do" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering that Jo dislikes cherry, do you think taking it off the cake will be better?
 
-Ask one closed-ended "can" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "can" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Since Jo dislikes foods that might taste bitter and the dark chocolate might taste bitter, can we take it off the cake?
 
-Ask one closed-ended "could" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "could" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Since Jo prefers blue over red, could moving the blue candle to c1 be visually pleasing to Jo?
 
-Ask one closed-ended "will" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "will" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Since some people find raspberries sour and Jo strongly dislikes sour, will taking the raspberries off be better?
 
-Ask one closed-ended "would" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "would" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering that Jo is 2 years old, would putting the yellow candle at b3 make the cake look better?
 
-Ask one closed-ended "is" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
+Ask one closed-ended "is" question different than the ones you've asked before that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
 question: Considering that Jo prefers blue over red, are they going to like it if we put the pink candle at d2? 
 
 Ask one closed-ended "{question_type}" question that stimulates the user to think of the next action that you can take while bringing up Jo's relevant preference/s.
