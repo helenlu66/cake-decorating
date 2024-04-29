@@ -320,6 +320,7 @@ class ChatAgent:
             question_prompt_msg = fill_in_question_phrase(question_prompt_msg, closed_question=False)
             self.messages.append(question_prompt_msg)
         ai_question = self.chat.invoke(self.messages)
+        del self.messages[-1] # remove it from messages to avoid exceeding conversation length
         return ai_question
     
     def generate_suggestion(self, following_an_action=False):
