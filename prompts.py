@@ -2,57 +2,9 @@ from langchain.prompts import PromptTemplate
 from langchain.memory import SimpleMemory
 from pprint import pprint
 
-# prompt telling LLLM how to parse actions, suggestions with state information
-task_instructions = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
-Jo is 2 years old
-Jo wants to try macarons
-Jo dislikes cherry
-Jo likes foods that taste sweet
-Jo dislikes foods that might taste bitter
-Jo strongly dislikes foods that might taste sour
-Jo prefers blue over red
-
-The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
-```
-{observable_objects}
-```
-The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
-```
-{beliefs}
-```
-As a robot arm, you can do the following two actions:
-```
-moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
-takeOffCake["take the object off of the cake and put it back in its staging area](object)
-```
-
-if asked to perform an action, output the action in the following example format:
-```
-action
-moveToCakeLoc
-pinkcandle, a1
-```
-
-when giving a suggestion, give a suggestion on what next action you can take in the following format:
-```
-suggestion
-Let's {description_of_action}.{reason_for_selecting_the_action}.{ask_what_the_human_user_thinks_of_this_idea}
-```
-Keep your reason in 1 sentence. Make your suggestion human-readable.
-Don't answer questions unrelated to the task and redirect the human back to the task.
-"""
 
 # prompt telling LLM how to classify the human input 
-classification_instructions = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
-Jo is 2 years old
-Jo wants to try macarons
-Jo dislikes cherry
-Jo likes foods that taste sweet
-Jo dislikes foods that might taste bitter
-Jo strongly dislikes foods that might taste sour
-Jo prefers blue over red
-
-The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+classification_instructions = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
@@ -60,10 +12,9 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 {beliefs}
 ```
-As a robot arm, you can do the following two actions:
+As a robot arm, you can do the following action:
 ```
-moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
-takeOffCake["take the object off of the cake and put it back in its staging area](object)
+drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
 ```
 classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
 if you should perform an action, output the one action in the following example format:
@@ -85,16 +36,7 @@ explain
 if the classification is `other`, output `other`. Your answer should be either `action`, `suggetion`, `alternative suggestion`, or `other`.
 """
 # prompt telling LLM how to parse actions
-action_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
-Jo is 2 years old
-Jo wants to try macarons
-Jo dislikes cherry
-Jo likes foods that taste sweet
-Jo dislikes foods that might taste bitter
-Jo strongly dislikes foods that might taste sour
-Jo prefers blue over red
-
-The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+action_prompt = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
@@ -102,15 +44,14 @@ The objects should be moved to and put in their corresponding staging locations 
 ```
 {beliefs}
 ```
-As a robot arm, you can do the following two actions:
+As a robot arm, you can do the following action:
 ```
-moveToCakeLoc["move the object to the specified location on the cake"](object, target_location)
-takeOffCake["take the object off of the cake and put it back in its staging area](object)
+drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
 ```
 You can only take one action at a time. If asked to perform an action, output the one next action you should perform in the following example format:
 ```
-moveToCakeLoc
-pinkcandle, a1
+drawShapeAtLocation
+heart, a1
 ```
 """
 
@@ -118,27 +59,17 @@ pinkcandle, a1
 explain_prompt = """explain the reasoning behind your last suggestion in one sentence."""
 
 # prompt telling the LLM how to parse suggestion with state information, used when the main chat agent doesn't come up with the correct suggestion format
-suggestion_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is for Jo. Here is some information about Jo:
-Jo is 2 years old
-Jo wants to try macarons
-Jo dislikes cherry
-Jo likes foods that taste sweet
-Jo dislikes foods that might taste bitter
-Jo strongly dislikes foods that might taste sour
-Jo prefers blue over red
-
-The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+suggestion_prompt = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
-There is only one of each object available in the environment. The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
 ```
 {beliefs}
 ```
-As a robot arm, you can do the following two actions:
+As a robot arm, you can do the following action:
 ```
-moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
-takeOffCake["take the object off of the cake and put it back in its staging area](object)
+drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
 ```
 
 Give a suggestion on one next action you can take in the following format:
@@ -166,7 +97,7 @@ Let's {description of action}.{reason for selecting the action}.{ask what the hu
 Keep your reason in 1 sentence. For example:
 ```
 suggestion
-Let's take the dark chocolate off since Jo dislikes bitter and the dark chocolate might be perceived as bitter. What do you think of this idea?
+Let's draw a heart at a1 since it will add a nice color to the cake. What do you think of this idea?
 ```
 """
 
@@ -185,18 +116,10 @@ I have completed the action. Let's {description of action}.{reason for selecting
 Keep your reason in 1 sentence. For example:
 ```
 suggestion
-I have completed the action. Let's take the dark chocolate off since Jo dislikes bitter and the dark chocolate might be perceived as bitter. What do you think of this idea?
+I have completed the action. Let's draw a house at d1 to balance out the heart at a1. What do you think of this idea?
 ```
 """
 
-redirect_prompt = """You are a robot arm collaborating with a human to decorate a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top.
-As a robot arm, you can do the following two actions or give suggestions on what next action to take.
-```
-moveToCakeLoc["move the object to the target location on the cake"](object, target_location)
-takeOffCake["take the object off of the cake and put it back in its staging area](object)
-```
-The user seems to be off-course. If they ask about how you Inform the user that you cannot respond to their request and redirect them back to the task.
-"""
 
 rephrase_prompt = PromptTemplate.from_template(
 """turn the following into more human-readable form:

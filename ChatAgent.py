@@ -4,7 +4,6 @@ import random
 import re
 import time
 from langchain.agents.openai_assistant import OpenAIAssistantRunnable
-from prompts import task_instructions
 from langchain.chains import LLMChain
 from langchain_openai import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
@@ -345,16 +344,16 @@ class ChatAgent:
 
     def generate_random_suggestion(self, following_an_action=False):
         """generate a random suggestion on next action given the current beliefs about the environment"""
-        canpickup_items_beliefs = self.introspect(predicate='canpickup(X)')
+        candraw_beliefs = self.introspect(predicate='candraw(X)')
         free_cake_locs_beliefs = self.introspect(predicate='freecakeloc(X)')
         free_cake_locs = set(self.get_X_var_binding(x)['X'] for x in free_cake_locs_beliefs)
-        canpickup_items = set(object_names[self.get_X_var_binding(x)['X']] for x in canpickup_items_beliefs)
+        canpickup_items = set(object_names[self.get_X_var_binding(x)['X']] for x in candraw_beliefs)
         
         suggestions = []
         for decorative_item, free_cake_loc in list(itertools.product(canpickup_items, free_cake_locs)):
             # suggest putting a random item at a random location on the cake
             random_reason = random.choice(random_reasons)
-            random_suggestion = """Let's move the {decorative_item} to location {free_cake_loc}. {random_reason}. What do you think of this idea?""".format(
+            random_suggestion = """Let's draw a {decorative_item} at location {free_cake_loc}. {random_reason}. What do you think of this idea?""".format(
                 decorative_item=decorative_item,
                 free_cake_loc=free_cake_loc,
                 random_reason=random_reason,
@@ -366,15 +365,6 @@ class ChatAgent:
         on_cake_decorative_items = set(object_names[self.get_X_var_binding(x)['X']] for x in on_cake_decorative_items_beliefs)
         on_cake_canpickup_decorative_items = canpickup_items.intersection(on_cake_decorative_items)
         print("currently on cake: ", on_cake_canpickup_decorative_items)
-        for decorative_item in on_cake_canpickup_decorative_items:
-            # suggest taking a random item off the cake
-            random_reason = random.choice(random_reasons)
-            random_suggestion = """Let's take the {decorative_item} off the cake. {random_reason}. What do you think of this idea?""".format(
-                decorative_item=decorative_item,
-                random_reason=random_reason,
-                #ask_what_the_human_user_thinks_of_this_idea="{ask what the human user thinks of this idea}"
-            )
-            suggestions.append(random_suggestion)
         
         # select a suggestion out of all possible random suggestions
         suggestion = random.choice(suggestions)
