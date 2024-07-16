@@ -85,12 +85,12 @@ class ChatAgent:
             observable_object_desc = self.translate_pred(pred='object(X, physobj)', bindings=observable_object_binding)
             observable_objects_desc.append(observable_object_desc)
         
-        beliefs_pred = self.introspect('canpickup(X)')
+        beliefs_pred = self.introspect('candraw(X)')
         beliefs_desc = []
         # translate beliefs predicates into NL descriptions for LLM
         for pred in beliefs_pred:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
-            belief_desc = self.translate_pred(pred='canpickup(X)', bindings=belief_binding)
+            belief_desc = self.translate_pred(pred='candraw(X)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
     
         beliefs_pred = self.introspect('at(X, Y)')
@@ -163,7 +163,7 @@ class ChatAgent:
     def translate_pred(self, pred:str, bindings:dict):
         pred_translations = {
             'object(X, physobj)':"there is a {X}.",
-            'canpickup(X)':"you have the capability of picking up {X}.",
+            'candraw(X)':"you have the capability of drawing {X}.",
             'at(X, Y)':"{X} is at location {Y}.",
             'on(X, cake)':"{X} is on the cake.",
             'freecakeloc(X)':"the location {X} on the cake is not occupied."
@@ -394,7 +394,36 @@ class ChatAgent:
 
     def introspect(self, predicate:str):
         """introspect on current beliefs and fill in the task instructions with information about the enviornment"""
-        beliefs = self.diarc.queryBelief(predicate=predicate)
+        #beliefs = self.diarc.queryBelief(predicate=predicate)
+        # hard coding beliefs here for now until I figure out how to use DIARC for belief management again
+        if predicate == 'candraw(X)':
+            beliefs = [
+                "candraw(heart)",
+                "candraw(house)"
+            ]
+        elif predicate == 'object(X, physobj)':
+            beliefs = ['object(cake, physobj)']
+        elif predicate == 'freecakeloc(X)': # assumes every location is open
+            beliefs = [
+                "freecakeloc(a1)",
+                "freecakeloc(a2)",
+                "freecakeloc(a3)",
+                "freecakeloc(a4)",
+                "freecakeloc(b1)",
+                "freecakeloc(b2)",
+                "freecakeloc(b3)",
+                "freecakeloc(b4)",
+                "freecakeloc(c1)",
+                "freecakeloc(c2)",
+                "freecakeloc(c3)",
+                "freecakeloc(c4)",
+                "freecakeloc(d1)",
+                "freecakeloc(d2)",
+                "freecakeloc(d3)",
+                "freecakeloc(d4)"
+            ]
+        else:
+            beliefs = []
         return beliefs
     
     def act(self, action:str, action_args:str):

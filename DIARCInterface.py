@@ -23,10 +23,11 @@ class DIARCInterface:
         data = {
             "goal":goal
         }
-        response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
+        return True
+        # response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
         
-        print("submitted goal: ", goal)
-        return self.check_response(response=response)
+        # print("submitted goal: ", goal)
+        # return self.check_response(response=response)
     
 
     def queryBelief(self, predicate):
