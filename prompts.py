@@ -4,17 +4,17 @@ from pprint import pprint
 
 
 # prompt telling LLM how to classify the human input 
-classification_instructions = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+classification_instructions = """You are a robot arm drawing shapes on a square paper. The paper is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
+drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
 ```
 classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
 if you should perform an action, output the one action in the following example format:
@@ -36,17 +36,17 @@ explain
 if the classification is `other`, output `other`. Your answer should be either `action`, `suggetion`, `alternative suggestion`, or `other`.
 """
 # prompt telling LLM how to parse actions
-action_prompt = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+action_prompt = """You are a robot arm drawing shapes on a square paper. The paper is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
+drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
 ```
 You can only take one action at a time. If asked to perform an action, output the one next action you should perform in the following example format:
 ```
@@ -59,17 +59,17 @@ heart, a1
 explain_prompt = """explain the reasoning behind your last suggestion in one sentence."""
 
 # prompt telling the LLM how to parse suggestion with state information, used when the main chat agent doesn't come up with the correct suggestion format
-suggestion_prompt = """You are a robot arm drawing shapes on a square cake. The cake is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
+suggestion_prompt = """You are a robot arm drawing shapes on a square paper. The paper is represented as a 4 x 3 grid with columns labeled as a, b, c, d from left to right and rows labeled as 1, 2, 3 from bottom to top. Currently, you observe the following objects in the environment:
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the cake. You observe the following facts about the environment:
+The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the cake"](shape, target_location)
+drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
 ```
 
 Give a suggestion on one next action you can take in the following format:
@@ -97,7 +97,7 @@ Let's {description of action}.{reason for selecting the action}.{ask what the hu
 Keep your reason in 1 sentence. For example:
 ```
 suggestion
-Let's draw a heart at a1 since it will add a nice color to the cake. What do you think of this idea?
+Let's draw a heart at a1 since it will add a nice color to the paper. What do you think of this idea?
 ```
 """
 
@@ -129,7 +129,7 @@ rephrase_prompt = PromptTemplate.from_template(
 """    
 )
 
-fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the cake or take things off. I can also give suggestions. What would you like me to do next?"
+fixed_idk = "I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the paper or take things off. I can also give suggestions. What would you like me to do next?"
 
 
 
