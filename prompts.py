@@ -8,13 +8,13 @@ classification_instructions = """You are a robot arm drawing shapes on a square 
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
+You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
+drawShapeAtLocation["draw the shape at the target location on the paper"](shape, target_location)
 ```
 classify whether you should do one of the following: `action`, `suggestion`, `alternative suggestion`, `explain`, `other`.
 if you should perform an action, output the one action in the following example format:
@@ -40,13 +40,13 @@ action_prompt = """You are a robot arm drawing shapes on a square paper. The pap
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
+You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
+drawShapeAtLocation["draw the shape at the target location on the paper"](shape, target_location)
 ```
 You can only take one action at a time. If asked to perform an action, output the one next action you should perform in the following example format:
 ```
@@ -63,13 +63,13 @@ suggestion_prompt = """You are a robot arm drawing shapes on a square paper. The
 ```
 {observable_objects}
 ```
-The objects should be moved to and put in their corresponding staging locations when they are not on the paper. You observe the following facts about the environment:
+You observe the following facts about the environment:
 ```
 {beliefs}
 ```
 As a robot arm, you can do the following action:
 ```
-drawShapeAtLocation["move the object to the target location on the paper"](shape, target_location)
+drawShapeAtLocation["draw the shape at the target location on the paper"](shape, target_location)
 ```
 
 Give a suggestion on one next action you can take in the following format:

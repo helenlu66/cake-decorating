@@ -394,36 +394,36 @@ class ChatAgent:
 
     def introspect(self, predicate:str):
         """introspect on current beliefs and fill in the task instructions with information about the enviornment"""
-        #beliefs = self.diarc.queryBelief(predicate=predicate)
+        beliefs = self.diarc.queryBelief(predicate=predicate)
         # hard coding beliefs here for now until I figure out how to use DIARC for belief management again
-        if predicate == 'candraw(X)':
-            beliefs = [
-                "candraw(heart)",
-                "candraw(house)"
-            ]
-        elif predicate == 'object(X, physobj)':
-            beliefs = ['object(cake, physobj)']
-        elif predicate == 'freecakeloc(X)': # assumes every location is open
-            beliefs = [
-                "freecakeloc(a1)",
-                "freecakeloc(a2)",
-                "freecakeloc(a3)",
-                "freecakeloc(a4)",
-                "freecakeloc(b1)",
-                "freecakeloc(b2)",
-                "freecakeloc(b3)",
-                "freecakeloc(b4)",
-                "freecakeloc(c1)",
-                "freecakeloc(c2)",
-                "freecakeloc(c3)",
-                "freecakeloc(c4)",
-                "freecakeloc(d1)",
-                "freecakeloc(d2)",
-                "freecakeloc(d3)",
-                "freecakeloc(d4)"
-            ]
-        else:
-            beliefs = []
+        # if predicate == 'candraw(X)':
+        #     beliefs = [
+        #         "candraw(heart)",
+        #         "candraw(house)"
+        #     ]
+        # elif predicate == 'object(X, physobj)':
+        #     beliefs = ['object(cake, physobj)']
+        # elif predicate == 'freecakeloc(X)': # assumes every location is open
+        #     beliefs = [
+        #         "freegridloc(a1)",
+        #         "freegridloc(a2)",
+        #         "freegridloc(a3)",
+        #         "freegridloc(a4)",
+        #         "freegridloc(b1)",
+        #         "freegridloc(b2)",
+        #         "freegridloc(b3)",
+        #         "freegridloc(b4)",
+        #         "freegridloc(c1)",
+        #         "freegridloc(c2)",
+        #         "freegridloc(c3)",
+        #         "freegridloc(c4)",
+        #         "freegridloc(d1)",
+        #         "freegridloc(d2)",
+        #         "freegridloc(d3)",
+        #         "freegridloc(d4)"
+        #     ]
+        # else:
+        #     beliefs = []
         return beliefs
     
     def act(self, action:str, action_args:str):
