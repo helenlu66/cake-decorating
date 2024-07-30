@@ -21,7 +21,7 @@ class ChatInterface:
 
         self.root = root
         self.root.title(exp_config["exp_chat_interface_title"])
-        self.welcome_message = f"Hello {exp_config['user_name']}, let's decorate a cake together. What would you like me to do first?"
+        self.welcome_message = f"Hello {exp_config['user_name']}, let's draw together. What would you like me to do first?"
         self.goodbye_message = "Goodbye! Have a nice day!"
 
 
