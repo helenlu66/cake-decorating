@@ -23,11 +23,11 @@ class DIARCInterface:
         data = {
             "goal":goal
         }
-        return True
-        # response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
+
+        response = requests.post(url=self.server_url, headers={'Content-Type': 'application/json'}, json=data)
         
-        # print("submitted goal: ", goal)
-        # return self.check_response(response=response)
+        print("submitted goal: ", goal)
+        return self.check_response(response=response)
     
 
     def queryBelief(self, predicate):
@@ -40,4 +40,4 @@ class DIARCInterface:
 
 if __name__ == "__main__":
     diarc = DIARCInterface(server_host='localhost', server_port=8080)
-    diarc.queryBelief('canpickup(X)')
+    diarc.queryBelief('object(X, physobj)')

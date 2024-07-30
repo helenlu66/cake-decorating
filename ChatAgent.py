@@ -99,16 +99,16 @@ class ChatAgent:
             belief_desc = self.translate_pred(pred='at(X, Y)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
         
-        beliefs_pred = self.introspect('on(X, cake)')
+        beliefs_pred = self.introspect('on(X, paper)')
         for pred in beliefs_pred:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
             belief_desc = self.translate_pred(pred='on(X, cake)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
         
-        beliefs_pred = self.introspect('freecakeloc(X)')
+        beliefs_pred = self.introspect('freegridloc(X)')
         for pred in beliefs_pred:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
-            belief_desc = self.translate_pred(pred='freecakeloc(X)', bindings=belief_binding)
+            belief_desc = self.translate_pred(pred='freegridloc(X)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
         print(beliefs_desc)
         # fill in the prompt with observable objects and beliefs
@@ -165,8 +165,8 @@ class ChatAgent:
             'object(X, physobj)':"there is a {X}.",
             'candraw(X)':"you have the capability of drawing {X}.",
             'at(X, Y)':"{X} is at location {Y}.",
-            'on(X, cake)':"{X} is on the cake.",
-            'freecakeloc(X)':"the location {X} on the cake is not occupied."
+            'on(X, grid)':"{X} is on the paper.",
+            'freegridloc(X)':"the location {X} on the paper is not occupied."
         }
         translation = pred_translations[pred]
         filledin_translation = translation.format(**bindings)
@@ -372,10 +372,6 @@ class ChatAgent:
             suggestion = "I have completed the action. " + suggestion
         #suggestion = self.random_suggestion_rephraser.invoke({'sentences':suggestion})['text']
         ai_message = AIMessage(content=suggestion)
-        #self.messages.append(ai_message)
-        # self.messages.append(SystemMessage(content="rephrase your last suggestion according to the human's message and make it human readable."))
-        # print('raw suggestion': suggestion)
-        # ai_message = self.chat.invoke(self.messages)
         return ai_message
         
     def redirect(self, human_message:HumanMessage):
@@ -395,35 +391,6 @@ class ChatAgent:
     def introspect(self, predicate:str):
         """introspect on current beliefs and fill in the task instructions with information about the enviornment"""
         beliefs = self.diarc.queryBelief(predicate=predicate)
-        # hard coding beliefs here for now until I figure out how to use DIARC for belief management again
-        # if predicate == 'candraw(X)':
-        #     beliefs = [
-        #         "candraw(heart)",
-        #         "candraw(house)"
-        #     ]
-        # elif predicate == 'object(X, physobj)':
-        #     beliefs = ['object(cake, physobj)']
-        # elif predicate == 'freecakeloc(X)': # assumes every location is open
-        #     beliefs = [
-        #         "freegridloc(a1)",
-        #         "freegridloc(a2)",
-        #         "freegridloc(a3)",
-        #         "freegridloc(a4)",
-        #         "freegridloc(b1)",
-        #         "freegridloc(b2)",
-        #         "freegridloc(b3)",
-        #         "freegridloc(b4)",
-        #         "freegridloc(c1)",
-        #         "freegridloc(c2)",
-        #         "freegridloc(c3)",
-        #         "freegridloc(c4)",
-        #         "freegridloc(d1)",
-        #         "freegridloc(d2)",
-        #         "freegridloc(d3)",
-        #         "freegridloc(d4)"
-        #     ]
-        # else:
-        #     beliefs = []
         return beliefs
     
     def act(self, action:str, action_args:str):
