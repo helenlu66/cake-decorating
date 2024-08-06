@@ -102,7 +102,7 @@ class ChatAgent:
         beliefs_pred = self.introspect('on(X, paper)')
         for pred in beliefs_pred:
             belief_binding = self.get_X_var_binding(filledin_predicate=pred)
-            belief_desc = self.translate_pred(pred='on(X, cake)', bindings=belief_binding)
+            belief_desc = self.translate_pred(pred='on(X, paper)', bindings=belief_binding)
             beliefs_desc.append(belief_desc)
         
         beliefs_pred = self.introspect('freegridloc(X)')
@@ -165,7 +165,7 @@ class ChatAgent:
             'object(X, physobj)':"there is a {X}.",
             'candraw(X)':"you have the capability of drawing {X}.",
             'at(X, Y)':"{X} is at location {Y}.",
-            'on(X, grid)':"{X} is on the paper.",
+            'on(X, paper)':"{X} is on the paper.",
             'freegridloc(X)':"the location {X} on the paper is not occupied."
         }
         translation = pred_translations[pred]
