@@ -245,7 +245,7 @@ class ChatAgent:
                 if not self.response_enabled: # robot not allowed to talk. Return a system status message
                     return AIMessage(content="The robot has failed to complete the action")
                 self.messages.append(SystemMessage(
-                        content="You didn't successfully complete the action. Ask the human to double-check their request or try some other action."
+                        content="You didn't successfully complete the action. Ask the human to double-check their request."
                     ))
                 ai_message = self.chat.invoke(self.messages)
                 self.messages.append(ai_message)
@@ -379,7 +379,7 @@ class ChatAgent:
         # ai_message:AIMessage = self.chat.invoke([human_message, SystemMessage(content=
         #     redirect_prompt
         # )])
-        return AIMessage(content="I'm sorry, but as a robot arm, I cannot respond to that. I can either put things on the cake or take things off.")
+        return AIMessage(content="I'm sorry, but as a robot arm, I cannot respond to that. I can only draw things.")
 
     def remove_first_line(self, paragraph):
         lines = paragraph.split('\n')  # Split the paragraph into a list of lines
